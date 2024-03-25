@@ -1,8 +1,8 @@
-numpy
-scipy
 matplotlib
-seaborn
 multiprocess
-tqdm
+numpy
 pandas
 pre-commit
+scipy
+seaborn
+tqdm
