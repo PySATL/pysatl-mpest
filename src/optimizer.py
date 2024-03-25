@@ -15,9 +15,9 @@ class Optimizer(ABC):
     @staticmethod
     @abstractmethod
     def minimize(
-            func: Callable[[Params], float],
-            params: Params,
-            jacobian: Callable[[Params], np.ndarray]
+        func: Callable[[Params], float],
+        params: Params,
+        jacobian: Callable[[Params], np.ndarray],
     ) -> Params:
         pass
 
@@ -29,8 +29,8 @@ class ScipyNewtonCG(Optimizer):
 
     @staticmethod
     def minimize(
-            func: Callable[[Params], float],
-            params: Params,
-            jacobian: Callable[[Params], np.ndarray]
+        func: Callable[[Params], float],
+        params: Params,
+        jacobian: Callable[[Params], np.ndarray],
     ) -> Params:
         return minimize(func, params, jac=jacobian, method="Newton-CG").x

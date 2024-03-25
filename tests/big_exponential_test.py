@@ -14,7 +14,7 @@ from models import ExponentialModel, Model
 
 MAX_WORKERS = 7
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     random.seed(42)
     np.random.seed(42)
 
@@ -22,7 +22,9 @@ if __name__ == '__main__':
 
     counter = Clicker()
 
-    def _generate_test(model: type[Model], o_borders: list[tuple[float, float]]) -> list[Test]:
+    def _generate_test(
+        model: type[Model], o_borders: list[tuple[float, float]]
+    ) -> list[Test]:
         return generate_mono_test(
             model=model,
             o_borders_for_data=o_borders,

@@ -15,7 +15,7 @@ from optimizer import ScipyNewtonCG
 
 MAX_WORKERS = 4
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     random.seed(42)
     np.random.seed(42)
 
@@ -23,24 +23,24 @@ if __name__ == '__main__':
 
     counter = Clicker()
 
-    def _generate_test(model: type[Model], o_borders: list[tuple[float, float]]) -> list[Test]:
+    def _generate_test(
+        model: type[Model], o_borders: list[tuple[float, float]]
+    ) -> list[Test]:
         return generate_mono_test(
             model,
             o_borders,
             counter,
-
             k_list=[1, 2, 3, 4, 5],
             sizes=[50, 100, 200, 500],
             distribution_count=1,
             base_size=1024,
             tests_per_cond=1,
             runs_per_test=1,
-
             deviation=0.01,
             max_step=16,
             prior_probability_threshold=0.001,
             prior_probability_threshold_step=3,
-            optimizer=ScipyNewtonCG
+            optimizer=ScipyNewtonCG,
         )
 
     tests += _generate_test(WeibullModelExp, [(0.25, 25), (0.25, 25)])

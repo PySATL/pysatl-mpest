@@ -14,10 +14,10 @@ from optimizer import ScipyNewtonCG
 
 # fmt: on
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     models = [
         (ExponentialModel, ((0.25, 15),)),
-        (GaussianModel, ((-15, 15), (0.25, 15)))
+        (GaussianModel, ((-15, 15), (0.25, 15))),
     ]
     k_list = [(1, 1), (1, 2), (2, 2), (2, 3)]
     sizes: list[int] = [50, 100, 200]
@@ -36,16 +36,12 @@ if __name__ == '__main__':
             x = []
             for k, model in zip((xk, yk), models):
                 for _ in range(k):
-                    o = np.array([
-                        random.uniform(border[0], border[1])
-                        for border in model[1]
-                    ])
+                    o = np.array(
+                        [random.uniform(border[0], border[1]) for border in model[1]]
+                    )
                     x += list(model[0].generate(o, per_model))
                     base_distributions.append(
-                        Distribution(
-                            model[0],
-                            model[0].params_convert_to_model(o)
-                        )
+                        Distribution(model[0], model[0].params_convert_to_model(o))
                     )
             base = np.array(x)
             for size in sizes:
@@ -53,14 +49,15 @@ if __name__ == '__main__':
                     start_distributions = []
                     for k, model in zip((xk, yk), models):
                         for _ in range(k):
-                            o = np.array([
-                                random.uniform(border[0], border[1])
-                                for border in model[1]
-                            ])
+                            o = np.array(
+                                [
+                                    random.uniform(border[0], border[1])
+                                    for border in model[1]
+                                ]
+                            )
                             start_distributions.append(
                                 Distribution(
-                                    model[0],
-                                    model[0].params_convert_to_model(o)
+                                    model[0], model[0].params_convert_to_model(o)
                                 )
                             )
                     tests.append(
@@ -68,18 +65,17 @@ if __name__ == '__main__':
                             len(tests),
                             start_distributions,
                             base_distributions,
-
                             base,
                             np.array(random.sample(x, size)),
                             xk + yk,
                             runs_per_test,
-
                             0.01,
                             max_step,
                             0.001,
                             3,
-                            ScipyNewtonCG
-                        ))
+                            ScipyNewtonCG,
+                        )
+                    )
 
     result = run_tests(tests, 14)
 

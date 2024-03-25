@@ -52,6 +52,7 @@ class WeibullModelExp(Model):
 
     O = [_k, _l]
     """
+
     @staticmethod
     def name() -> str:
         return "WeibullExp"
@@ -66,12 +67,7 @@ class WeibullModelExp(Model):
 
     @staticmethod
     def generate(params: Params, size: int = 1) -> Samples:
-        return np.array(weibull_min.rvs(
-            params[0],
-            loc=0,
-            scale=params[1],
-            size=size
-        ))
+        return np.array(weibull_min.rvs(params[0], loc=0, scale=params[1], size=size))
 
     @staticmethod
     def p(x: float, params: Params) -> float:
@@ -107,7 +103,9 @@ class WeibullModelExp(Model):
 
     @staticmethod
     def ld_params(x: float, params: Params) -> np.ndarray:
-        return np.array([WeibullModelExp.ldk(x, params), WeibullModelExp.ldl(x, params)])
+        return np.array(
+            [WeibullModelExp.ldk(x, params), WeibullModelExp.ldl(x, params)]
+        )
 
 
 class GaussianModel(Model):
@@ -118,6 +116,7 @@ class GaussianModel(Model):
 
     O = [m, _sd]
     """
+
     @staticmethod
     def name() -> str:
         return "Gaussian"
@@ -191,21 +190,21 @@ class ExponentialModel(Model):
     def p(x: float, params: Params) -> float:
         if x < 0:
             return 0
-        l, = params
+        (l,) = params
         return np.exp(l - np.exp(l) * x)
 
     @staticmethod
     def lp(x: float, params: Params) -> float:
         if x < 0:
             return -np.inf
-        l, = params
+        (l,) = params
         return l - np.exp(l) * x
 
     @staticmethod
     def ldl(x: float, params: Params) -> float:
         if x < 0:
             return -np.inf
-        l, = params
+        (l,) = params
         return 1 - np.exp(l) * x
 
     @staticmethod

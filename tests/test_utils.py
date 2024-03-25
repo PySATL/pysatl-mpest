@@ -45,7 +45,7 @@ class TestResult(NamedTuple):
     time: float
 
 
-class Clicker():
+class Clicker:
     def __init__(self):
         self._counter = -1
 
@@ -67,7 +67,7 @@ def run_test(test: Test) -> TestResult:
             max_step=test.max_step,
             prior_probability_threshold=test.prior_probability_threshold,
             prior_probability_threshold_step=test.prior_probability_threshold_step,
-            optimizer=test.optimizer
+            optimizer=test.optimizer,
         )
 
         stop = time.perf_counter()
@@ -76,17 +76,15 @@ def run_test(test: Test) -> TestResult:
     return TestResult(test, result, float(np.mean(times)))
 
 
-def run_tests(tests: list[Test], workers_count: int, shuffled: bool = True) -> list[TestResult]:
+def run_tests(
+    tests: list[Test], workers_count: int, shuffled: bool = True
+) -> list[TestResult]:
     if not shuffled:
         return process_map(run_test, tests, max_workers=workers_count)
 
     _tests = list(tests)
     random.shuffle(_tests)
-    results: list[TestResult] = process_map(
-        run_test,
-        _tests,
-        max_workers=workers_count
-    )
+    results: list[TestResult] = process_map(run_test, _tests, max_workers=workers_count)
     results.sort(key=lambda t: t.test.number)
     return results
 
@@ -95,21 +93,18 @@ def generate_mono_test(
     model: type[Model],
     o_borders_for_data: list[tuple[float, float]],
     clicker: Clicker,
-
     o_borders_for_start_params: list[tuple[float, float]] | None = None,
-
     k_list: list[int] = [1, 2, 3, 4, 5],
     sizes: list[int] = [50, 100, 200, 500],
     distribution_count: int = 1,
     base_size: int = 1024,
     tests_per_cond: int = 1,
     runs_per_test: int = 3,
-
     deviation: float = 0.01,
     max_step: int = 16,
     prior_probability_threshold: float = 0.001,
     prior_probability_threshold_step: int = 3,
-    optimizer: type[Optimizer] = ScipyNewtonCG
+    optimizer: type[Optimizer] = ScipyNewtonCG,
 ) -> list[Test]:
     new_tests: list[Test] = []
 
@@ -119,10 +114,12 @@ def generate_mono_test(
             base_params = []
             x = []
             for _ in range(k):
-                o = np.array([
-                    random.uniform(border[0], border[1])
-                    for border in o_borders_for_data
-                ])
+                o = np.array(
+                    [
+                        random.uniform(border[0], border[1])
+                        for border in o_borders_for_data
+                    ]
+                )
                 x += list(model.generate(o, per_model))
                 base_params.append(o)
 
@@ -137,10 +134,12 @@ def generate_mono_test(
             for size in sizes:
                 for _ in range(tests_per_cond):
                     start_params = [
-                        np.array([
-                            random.uniform(border[0], border[1])
-                            for border in params_borders
-                        ])
+                        np.array(
+                            [
+                                random.uniform(border[0], border[1])
+                                for border in params_borders
+                            ]
+                        )
                         for _ in range(k)
                     ]
                     new_tests.append(
@@ -148,31 +147,27 @@ def generate_mono_test(
                             clicker.get(),
                             [
                                 Distribution(
-                                    model,
-                                    model.params_convert_to_model(params)
+                                    model, model.params_convert_to_model(params)
                                 )
                                 for params in start_params
                             ],
                             [
                                 Distribution(
-                                    model,
-                                    model.params_convert_to_model(params)
+                                    model, model.params_convert_to_model(params)
                                 )
                                 for params in base_params
-
                             ],
-
                             base,
                             np.array(random.sample(x, size)),
                             k,
                             runs_per_test,
-
                             deviation,
                             max_step,
                             prior_probability_threshold,
                             prior_probability_threshold_step,
-                            optimizer
-                        ))
+                            optimizer,
+                        )
+                    )
     return new_tests
 
 

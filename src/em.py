@@ -17,7 +17,7 @@ class EM:
         max_step: int | None = None,
         prior_probability_threshold: float | None = None,
         prior_probability_threshold_step: int = 3,
-        optimizer: type[Optimizer] = ScipyNewtonCG
+        optimizer: type[Optimizer] = ScipyNewtonCG,
     ):
         self.deviation = deviation
         self.max_step = max_step
@@ -42,32 +42,32 @@ class EM:
         max_step: int | None = 50,
         prior_probability_threshold: float | None = None,
         prior_probability_threshold_step: int = 3,
-        optimizer: type[Optimizer] = ScipyNewtonCG
+        optimizer: type[Optimizer] = ScipyNewtonCG,
     ) -> "EM.Result":
         step = 0
 
-        class DistributionInProgress():
+        class DistributionInProgress:
             def __init__(self, distribution: Distribution, ind: int):
                 self.content = distribution
                 self._is_active = True
                 self.ind = ind
 
             def make_inactive(self):
-                if (self.content.prior_probability is not None) \
-                        and not np.isfinite(self.content.prior_probability):
+                if (self.content.prior_probability is not None) and not np.isfinite(
+                    self.content.prior_probability
+                ):
                     new_prior_probability = self.content.prior_probability
                 else:
                     new_prior_probability = None
                 self.content = Distribution(
-                    self.content.model,
-                    self.content.params,
-                    new_prior_probability
+                    self.content.model, self.content.params, new_prior_probability
                 )
                 self._is_active = False
 
             def _check_if_finite(self) -> bool:
-                if (self.content.prior_probability is not None) \
-                        and not np.isfinite(self.content.prior_probability):
+                if (self.content.prior_probability is not None) and not np.isfinite(
+                    self.content.prior_probability
+                ):
                     return False
                 return bool(np.all(np.isfinite(self.content.params)))
 
@@ -90,7 +90,7 @@ class EM:
                     return False
                 return True
 
-        class DistributionsInProgress():
+        class DistributionsInProgress:
             def __init__(self, distributions: list[Distribution]):
                 self._active: list[DistributionInProgress] = []
                 self._stopped: list[DistributionInProgress] = []
@@ -105,15 +105,18 @@ class EM:
 
             @property
             def all_distributions(self) -> tuple[Distribution, ...]:
-                return tuple([
-                    d.content
-                    for d in sorted(self._active + self._stopped, key=lambda d: d.ind)
-                ])
+                return tuple(
+                    [
+                        d.content
+                        for d in sorted(
+                            self._active + self._stopped, key=lambda d: d.ind
+                        )
+                    ]
+                )
 
             @property
             def active_distributions(self) -> tuple[Distribution, ...]:
-                if self._distributions_changed \
-                        or self._active_distributions is None:
+                if self._distributions_changed or self._active_distributions is None:
                     self._active_distributions = self._update()
                 return self._active_distributions
 
@@ -142,15 +145,14 @@ class EM:
                             d.content = Distribution(
                                 d.content.model,
                                 d.content.params,
-                                d.content.prior_probability + w_mean
+                                d.content.prior_probability + w_mean,
                             )
 
                 self._active = new_active
                 return tuple([d.content for d in self._active])
 
         def end_cond(
-            prev: tuple[Distribution, ...] | None,
-            curr: tuple[Distribution, ...]
+            prev: tuple[Distribution, ...] | None, curr: tuple[Distribution, ...]
         ) -> bool:
             if (max_step is not None) and (step >= max_step):
                 return False
@@ -164,14 +166,15 @@ class EM:
             for d_p, d_c in zip(prev, curr):
                 if np.any(np.abs(d_p.params - d_c.params) > deviation):
                     return True
-                if np.any(np.abs(d_p.prior_probability - d_c.prior_probability) > deviation):
+                if np.any(
+                    np.abs(d_p.prior_probability - d_c.prior_probability) > deviation
+                ):
                     return True
             return False
 
-        curr = DistributionsInProgress([
-            Distribution(model, o, 1 / k)
-            for model, o, _ in distributions
-        ])
+        curr = DistributionsInProgress(
+            [Distribution(model, o, 1 / k) for model, o, _ in distributions]
+        )
         curr_a = curr.active_distributions
         prev = None
 
@@ -184,10 +187,7 @@ class EM:
             p_xij = []
             a_samples = []
             for x in samples:
-                p = np.array([
-                    model.p(x, o)
-                    for model, o, _ in curr_a
-                ])
+                p = np.array([model.p(x, o) for model, o, _ in curr_a])
                 if np.any(p):
                     p_xij.append(p)
                     a_samples.append(x)
@@ -196,23 +196,20 @@ class EM:
                 return EM.Result(
                     list(curr.all_distributions),
                     step,
-                    Exception("All models can't match")
+                    Exception("All models can't match"),
                 )
 
             # h[j, i] contains probability of X_i to be a part of distribution j
             m = len(p_xij)
             k = len(curr_a)
             h = np.zeros([k, m], dtype=float)
-            curr_w = np.array(
-                [d.prior_probability for d in curr_a])
+            curr_w = np.array([d.prior_probability for d in curr_a])
             for i, p in enumerate(p_xij):
                 wp = curr_w * p
                 swp = np.sum(wp)
                 if not swp:
                     return EM.Result(
-                        list(curr.all_distributions),
-                        step,
-                        Exception("Error in E step")
+                        list(curr.all_distributions), step, Exception("Error in E step")
                     )
                 h[:, i] = wp / swp
 
@@ -230,27 +227,16 @@ class EM:
 
                 def jacobian(o, ch, model):
                     return -np.sum(
-                        ch * np.swapaxes(
-                            [model.ld_params(x, o)for x in a_samples],
-                            0,
-                            1
-                        ),
-                        axis=1
+                        ch
+                        * np.swapaxes([model.ld_params(x, o) for x in a_samples], 0, 1),
+                        axis=1,
                     )
 
                 # maximizing log of likelihood function for every active distribution
                 new_o = optimizer.minimize(
-                    functools.partial(
-                        log_likelihood,
-                        ch=ch,
-                        model=model
-                    ),
+                    functools.partial(log_likelihood, ch=ch, model=model),
                     o,
-                    jacobian=functools.partial(
-                        jacobian,
-                        ch=ch,
-                        model=model
-                    )
+                    jacobian=functools.partial(jacobian, ch=ch, model=model),
                 )
                 curr.set_distribution(j, Distribution(model, new_o, new_w[j]))
 
@@ -260,7 +246,7 @@ class EM:
                 return EM.Result(
                     list(curr.all_distributions),
                     step,
-                    Exception("All models can't match due prior probability")
+                    Exception("All models can't match due prior probability"),
                 )
 
             step += 1
@@ -281,13 +267,15 @@ class EM:
             max_step=self.max_step,
             prior_probability_threshold=self.prior_probability_threshold,
             prior_probability_threshold_step=self.prior_probability_threshold_step,
-            optimizer=self.optimizer
+            optimizer=self.optimizer,
         )
 
     def predict(self, x):
         if not self.result:
             return 0
-        return np.sum([
-            model.p(x, o) * w if w is not None else 0
-            for model, o, w in self.result.distributions
-        ])
+        return np.sum(
+            [
+                model.p(x, o) * w if w is not None else 0
+                for model, o, w in self.result.distributions
+            ]
+        )
