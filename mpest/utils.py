@@ -192,10 +192,10 @@ def timer(func: Callable[P, R]) -> Callable[P, TimerResultWrapper[R]]:
 
     @functools.wraps(func)
     def wrapper_timer(*args: P.args, **kwargs: P.kwargs) -> TimerResultWrapper[R]:
-        start = time.perf_counter_ns()
+        start = time.perf_counter()
         result = func(*args, **kwargs)
-        finish = time.perf_counter_ns()
-        runtime = (finish - start) * 1e-6
+        finish = time.perf_counter()
+        runtime = (finish - start)
         return TimerResultWrapper(result, runtime)
 
     return wrapper_timer
