@@ -208,11 +208,11 @@ class EM(ASolver):
         return method.step(problem)
 
     def solve_logged(
-            self,
-            problem: Problem,
-            normalize=True,
-            create_history: bool = False,
-            remember_time: bool = False,
+        self,
+        problem: Problem,
+        normalize=True,
+        create_history: bool = False,
+        remember_time: bool = False,
     ) -> ResultWithLog[ResultWithError[MixtureDistribution], Log]:
         """
         The parameter estimation of mixture distribution problem solver,
@@ -263,8 +263,8 @@ class EM(ASolver):
             save_time=remember_time,
         )
         def make_step(
-                step: int,
-                distributions: EM._DistributionMixtureAlive,
+            step: int,
+            distributions: EM._DistributionMixtureAlive,
         ) -> ResultWithError[EM._DistributionMixtureAlive]:
             """EM algorithm full step with checking distributions"""
 

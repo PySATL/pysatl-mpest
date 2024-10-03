@@ -195,7 +195,7 @@ def timer(func: Callable[P, R]) -> Callable[P, TimerResultWrapper[R]]:
         start = time.perf_counter()
         result = func(*args, **kwargs)
         finish = time.perf_counter()
-        runtime = (finish - start)
+        runtime = finish - start
         return TimerResultWrapper(result, runtime)
 
     return wrapper_timer
