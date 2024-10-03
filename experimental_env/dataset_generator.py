@@ -1,10 +1,10 @@
 """Module from generating datasets with the given sample size, experimental counts and mixture"""
 
+import argparse
 from json import JSONEncoder, dump
 from random import uniform
 
 import numpy
-from alive_progress import alive_bar
 from scipy.stats import dirichlet
 
 from mpest import Distribution, MixtureDistribution
@@ -73,48 +73,53 @@ class DataSetGenerator:
         """
 
         dataset = []
-        with alive_bar():
-            for _ in range(exp_count):
-                mixture = self.create_mixture(models)
-                distribution_dict = {}
-                sample = mixture.generate(sample_size)
-                for d in mixture:
-                    if d.model.name in distribution_dict:
-                        distribution_dict[d.model.name] += [d.params] + [
-                            d.prior_probability
-                        ]
-                    else:
-                        distribution_dict[d.model.name] = [d.params] + [
-                            d.prior_probability
-                        ]
+        for _ in range(exp_count):
+            mixture = self.create_mixture(models)
+            distribution_dict = {}
+            sample = mixture.generate(sample_size)
+            for d in mixture:
+                if d.model.name in distribution_dict:
+                    distribution_dict[d.model.name] += [d.params] + [
+                        d.prior_probability
+                    ]
+                else:
+                    distribution_dict[d.model.name] = [d.params] + [d.prior_probability]
 
-                dataset.append([distribution_dict, numpy.sort(sample)])
+            dataset.append([distribution_dict, numpy.sort(sample)])
 
         module_names = "".join(d.model.name[0] for d in mixture)
         output_fname = f"ds_{module_names}_{sample_size}.json"
         with open(output_fname, "w+", encoding="UTF-8") as f:
             dump(dataset, f, cls=NumpyEncoder)
 
-    def generate(self):
+    def generate(self, exp_count, sample_size, model_names):
         """
-        Interface for CLI
+        :param exp_count: Count of experiments (The length of the outer list in the file).
+        :param sample_size: Sample size.
+        :param models: list of model names.
         """
-
-        input("Welcome to dataset generator, press Enter to start...")
-        exp_count = int(input("Enter count of experiments\n"))
-        sample_size = int(input("Enter sample size\n"))
-        model_names = input(
-            "Enter distribution models (Exponential, Gaussian, WeibullExp) separated by a space\n"
-        ).split(" ")
         models = [DISTS[name] for name in model_names]
-
         self.generate_dataset(exp_count, sample_size, models)
 
 
 def main():
-    """Main function"""
+    """
+    Main function
+    """
+    parser = argparse.ArgumentParser("Generate datasets")
+    parser.add_argument("exp_count", type=int, help="Count of experiments")
+    parser.add_argument("sample_size", type=int, help="Size of generated sample")
+    parser.add_argument(
+        "--m",
+        nargs="+",
+        choices=DISTS.keys(),
+        help="Models which will be used in mixture",
+    )
+
+    items = parser.parse_args()
+    exp_count, sample_size, model_names = items.exp_count, items.sample_size, items.m
     ds_generator = DataSetGenerator()
-    ds_generator.generate()
+    ds_generator.generate(exp_count, sample_size, model_names)
 
 
 if __name__ == "__main__":
