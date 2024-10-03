@@ -208,10 +208,11 @@ class EM(ASolver):
         return method.step(problem)
 
     def solve_logged(
-        self,
-        problem: Problem,
-        create_history: bool = False,
-        remember_time: bool = False,
+            self,
+            problem: Problem,
+            normalize=True,
+            create_history: bool = False,
+            remember_time: bool = False,
     ) -> ResultWithLog[ResultWithError[MixtureDistribution], Log]:
         """
         The parameter estimation of mixture distribution problem solver,
@@ -225,65 +226,6 @@ class EM(ASolver):
                 distributions.content.all_distributions,
                 distributions.error,
             )
-
-        @logged(
-            history,
-            save_results=create_history,
-            save_results_mapper=log_map,
-            save_time=remember_time,
-        )
-        def make_step(
-            step: int,
-            distributions: EM._DistributionMixtureAlive,
-        ) -> ResultWithError[EM._DistributionMixtureAlive]:
-            """EM algorithm full step with checking distributions"""
-
-            new_problem = Problem(problem.samples, distributions)
-            result = EM.step(new_problem, self.method)
-
-            if result.error:
-                return ResultWithError(
-                    distributions,
-                    result.error,
-                )
-
-            distributions.update(
-                result.content,
-                lambda d: self.distribution_checker.is_alive(step, d),
-            )
-
-            error = (
-                Exception("All distributions failed")
-                if len(distributions) == 0
-                else None
-            )
-
-            return ResultWithError(distributions, error)
-
-        previous_step = None
-        distributions = EM._DistributionMixtureAlive(list(problem.distributions))
-        step = 0
-
-        while not self.breakpointer.is_over(step, previous_step, distributions):
-            previous_step = distributions.all_distributions
-            if make_step(step, distributions).content.error:
-                break
-            step += 1
-
-        return ResultWithLog(
-            ResultWithError(distributions.all_distributions),
-            EM.Log(history, step),
-        )
-
-    def solve(self, problem: Problem, normalize: bool = True) -> Result:
-        """
-        Solve problem with EM algorithm
-
-        :param problem: Problem with your mixture with initial parameters
-
-        :param normalize: Normalize parameters inside EM algo.
-        Default is True which means to normalize params, False if you don't want to normalize
-        """
 
         def preprocess_problem(problem: Problem) -> Problem:
             mixture = problem.distributions
@@ -314,9 +256,65 @@ class EM(ASolver):
 
             return ResultWithError(new_mixture, result.error)
 
-        if normalize:
-            new_problem = preprocess_problem(problem)
-            result = self.solve_logged(new_problem, False, False).content
-            return postprocess_result(result)
+        @logged(
+            history,
+            save_results=create_history,
+            save_results_mapper=log_map,
+            save_time=remember_time,
+        )
+        def make_step(
+                step: int,
+                distributions: EM._DistributionMixtureAlive,
+        ) -> ResultWithError[EM._DistributionMixtureAlive]:
+            """EM algorithm full step with checking distributions"""
 
-        return self.solve_logged(problem, False, False).content
+            new_problem = Problem(problem.samples, distributions)
+            result = EM.step(new_problem, self.method)
+
+            if result.error:
+                return ResultWithError(
+                    distributions,
+                    result.error,
+                )
+
+            distributions.update(
+                result.content,
+                lambda d: self.distribution_checker.is_alive(step, d),
+            )
+
+            error = (
+                Exception("All distributions failed")
+                if len(distributions) == 0
+                else None
+            )
+
+            return ResultWithError(distributions, error)
+
+        if normalize:
+            problem = preprocess_problem(problem)
+
+        previous_step = None
+        distributions = EM._DistributionMixtureAlive(list(problem.distributions))
+        step = 0
+
+        while not self.breakpointer.is_over(step, previous_step, distributions):
+            previous_step = distributions.all_distributions
+            if make_step(step, distributions).content.error:
+                break
+            step += 1
+
+        return ResultWithLog(
+            postprocess_result(ResultWithError(distributions.all_distributions)),
+            EM.Log(history, step),
+        )
+
+    def solve(self, problem: Problem, normalize: bool = True) -> Result:
+        """
+        Solve problem with EM algorithm
+
+        :param problem: Problem with your mixture with initial parameters
+        :param normalize: Normalize parameters inside EM algo.
+        Default is True which means to normalize params, False if you don't want to normalize
+        """
+
+        return self.solve_logged(problem, normalize, False, False).content
