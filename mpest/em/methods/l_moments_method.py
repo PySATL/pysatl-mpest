@@ -1,5 +1,6 @@
 """ The module in which the L moments method is presented """
 import json
+from math import ceil
 
 import numpy as np
 from scipy.stats import dirichlet
@@ -139,7 +140,7 @@ class LMomentsMStep(AMaximization[EResult]):
         for k in range(r):
             b_num = np.sum(
                 [
-                    binoms[f"{round(np.sum(indicators[j][:i+1]))} {k}"]
+                    binoms[f"{ceil(np.sum(indicators[j][:i+1]))} {k}"]
                     * samples[i]
                     * indicators[j][i]
                     for i in range(k, n)
@@ -147,7 +148,7 @@ class LMomentsMStep(AMaximization[EResult]):
             )
 
             ind_sum = np.sum(indicators[j])
-            b_den = ind_sum * binoms[f"{round(ind_sum)} {k}"]
+            b_den = ind_sum * binoms[f"{ceil(ind_sum)} {k}"]
 
             b_k = b_num / b_den
             p_rk = (

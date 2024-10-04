@@ -2,19 +2,11 @@
 
 import argparse
 from json import JSONEncoder, dump
-from random import uniform
 
 import numpy
-from scipy.stats import dirichlet
 
-from mpest import Distribution, MixtureDistribution
-from mpest.models import AModel, ExponentialModel, GaussianModel, WeibullModelExp
-
-DISTS = {
-    ExponentialModel().name: ExponentialModel,
-    GaussianModel().name: GaussianModel,
-    WeibullModelExp().name: WeibullModelExp,
-}
+from experimental_env.utils import DISTS, create_mixture
+from mpest.models import AModel
 
 
 class NumpyEncoder(JSONEncoder):
@@ -38,22 +30,6 @@ class DataSetGenerator:
     You can select the sample size and the number of experiments.
     """
 
-    def create_mixture(self, models: list[type[AModel]]):
-        """Function for generating random mixture"""
-        dists = []
-        priors = dirichlet.rvs([1 for _ in range(len(models))], 1)[0]
-        for m in models:
-            if m == ExponentialModel:
-                params = [uniform(0.1, 5)]
-            elif m == GaussianModel:
-                params = [uniform(-5, 5), uniform(0.1, 5)]
-            else:
-                params = [uniform(0.1, 5), uniform(0.1, 5)]
-
-            dists.append(Distribution.from_params(m, params))
-
-        return MixtureDistribution.from_distributions(dists, priors)
-
     def generate_dataset(
         self, exp_count: int, sample_size: int, models: list[type[AModel]]
     ):
@@ -74,7 +50,7 @@ class DataSetGenerator:
 
         dataset = []
         for _ in range(exp_count):
-            mixture = self.create_mixture(models)
+            mixture = create_mixture(models)
             distribution_dict = {}
             sample = mixture.generate(sample_size)
             for d in mixture:
