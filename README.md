@@ -1,7 +1,7 @@
-![PyLint](https://github.com/ToxaKaz/EM-algo/actions/workflows/pylint.yml/badge.svg)
-![Check code style](https://github.com/ToxaKaz/EM-algo/actions/workflows/code_style.yml/badge.svg)
+![PyLint](https://github.com/PySATL/MPEst/actions/workflows/pylint.yml/badge.svg)
+![Check code style](https://github.com/PySATL/MPEst/actions/workflows/code_style.yml/badge.svg)
 [![Code style](https://img.shields.io/badge/Code%20style-black-000000.svg)](https://github.com/psf/black)
-![Unit Tests](https://github.com/ToxaKaz/EM-algo/actions/workflows/test.yml/badge.svg)
+![Unit Tests](https://github.com/PySATL/MPEst/actions/workflows/test.yml/badge.svg)
 
 ## Installation
 
