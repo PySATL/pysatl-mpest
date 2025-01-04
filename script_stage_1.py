@@ -1,3 +1,5 @@
+""" The script implements the first step of the experiment """
+
 from pathlib import Path
 
 import numpy as np
@@ -21,7 +23,7 @@ mixtures = [
     [WeibullModelExp, GaussianModel],
     [ExponentialModel, GaussianModel],
     [WeibullModelExp, WeibullModelExp],
-    [ExponentialModel, ExponentialModel]
+    [ExponentialModel, ExponentialModel],
 ]
 for models in mixtures:
     r_generator.generate(SAMPLES_SIZE, models, Path(WORKING_DIR), exp_count=100)

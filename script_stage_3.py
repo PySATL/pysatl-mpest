@@ -1,3 +1,5 @@
+""" The script implements the third step of the experiment """
+
 from pathlib import Path
 
 from experimental_env.analysis.analysis import Analysis

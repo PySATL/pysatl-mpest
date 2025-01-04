@@ -1,7 +1,7 @@
+""" The script implements the second step of the experiment """
+
 import random
 from pathlib import Path
-
-import numpy as np
 
 from experimental_env.experiment.estimators import (
     LikelihoodEstimator,
@@ -9,9 +9,6 @@ from experimental_env.experiment.estimators import (
 )
 from experimental_env.experiment.experiment_executors.random_executor import (
     RandomExperimentExecutor,
-)
-from experimental_env.experiment.experiment_executors.standart_executor import (
-    StandartExperimentExecutor,
 )
 from experimental_env.preparation.dataset_parser import SamplesDatasetParser
 from mpest.em.breakpointers import StepCountBreakpointer
