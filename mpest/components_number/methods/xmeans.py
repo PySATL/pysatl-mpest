@@ -1,3 +1,5 @@
+"""Module which contains X-Means Method"""
+
 from itertools import combinations_with_replacement
 
 import numpy as np
@@ -17,19 +19,26 @@ from mpest.models import AModel, ExponentialModel, GaussianModel, WeibullModelEx
 
 
 class XMeans(AComponentsNumber):
+    """
+    X-Means method
+    -----
+    :param kmax:       int                       — Assumed maximum number of components
+    :criterion:        ACriterion                — Information criterion
+    :estep:            AExpectation              — Selected EStep for EM
+    :mstep:            AMaximization             — Selected MStep for EM
+    """
+
     def __init__(
         self,
         kmax: int,
         criterion: ACriterion,
         estep: AExpectation,
         mstep: AMaximization,
-        random_state: int | None = None,
     ) -> None:
         self.kmax = kmax
         self.criterion = criterion
         self.estep = estep
         self.mstep = mstep
-        self.random_state = random_state
         self.models = (GaussianModel, WeibullModelExp, ExponentialModel)
 
     @property
@@ -46,7 +55,7 @@ class XMeans(AComponentsNumber):
             k = np.random.uniform(0.5, 5)
             l = np.random.uniform(0.1, 10)
             return [k, l]
-        if model is ExponentialModel:
+        else:
             l = np.random.uniform(0.1, 10)
             return [l]
 
@@ -64,7 +73,6 @@ class XMeans(AComponentsNumber):
 
     def estimate(self, samples: Samples) -> float:
         negative = samples.min() < 0
-        np.random.seed(self.random_state)
 
         method = Method(self.estep, self.mstep)
         em_algo = EM(
