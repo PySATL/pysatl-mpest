@@ -12,7 +12,7 @@ class Silhouette(AComponentsNumber):
     Silhouette method with KMeans++
     -----
     :param kmax:       int                       — Assumed maximum number of components
-    :param k_init:     int         default: 1   — Number of times the KMeans is run
+    :param k_init:     int         default: 1    — Number of times the KMeans is run
     :param k_max_iter: int         default: 300  — Maximum number of iterations in KMeans
     :random_state:     int | None  default: None — Determines random generation for KMeans
     """
@@ -33,8 +33,8 @@ class Silhouette(AComponentsNumber):
     def name(self) -> str:
         return "Silhouette"
 
-    def estimate(self, sample: Samples) -> int:
-        sample = sample.reshape(-1, 1)
+    def estimate(self, samples: Samples) -> int:
+        samples = samples.reshape(-1, 1)
         k_range = range(2, self.kmax + 1)  # possible components: [2, kmax]
         silhouettes = []
 
@@ -45,8 +45,8 @@ class Silhouette(AComponentsNumber):
                 init="k-means++",
                 n_init=self.k_init,
                 random_state=self.random_state,
-            ).fit(sample)
-            silhouettes.append(silhouette_score(sample, kmeans_silhouette.labels_))
+            ).fit(samples)
+            silhouettes.append(silhouette_score(samples, kmeans_silhouette.labels_))
 
         optimal_k = silhouettes.index(max(silhouettes)) + 2
 

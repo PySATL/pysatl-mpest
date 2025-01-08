@@ -12,7 +12,7 @@ class Elbow(AComponentsNumber):
     Elbow method with KMeans++
     -----
     :param kmax:       int                       — Assumed maximum number of components
-    :param k_init:     int         default: 1   — Number of times the KMeans is run
+    :param k_init:     int         default: 1    — Number of times the KMeans is run
     :param k_max_iter: int         default: 300  — Maximum number of iterations in KMeans
     :random_state:     int | None  default: None — Determines random generation for KMeans
     """
@@ -33,20 +33,20 @@ class Elbow(AComponentsNumber):
     def name(self) -> str:
         return "Elbow"
 
-    def estimate(self, sample: Samples) -> int:
+    def estimate(self, samples: Samples) -> int:
 
-        sample = sample.reshape(-1, 1)
+        samples = samples.reshape(-1, 1)
         k_range = range(1, self.kmax + 2)  # possible components: [2, kmax]
         wcss = []
 
         for k in k_range:
             kmeans_elbow = KMeans(
-                n_clusters=k,
                 max_iter=self.k_max_iter,
+                n_clusters=k,
                 init="k-means++",
                 n_init=self.k_init,
                 random_state=self.random_state,
-            ).fit(sample)
+            ).fit(samples)
             wcss.append(kmeans_elbow.inertia_)
 
         knee = KneeLocator(k_range, wcss, curve="convex", direction="decreasing").elbow
