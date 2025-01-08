@@ -34,7 +34,6 @@ class Elbow(AComponentsNumber):
         return "Elbow"
 
     def estimate(self, samples: Samples) -> int:
-
         samples = samples.reshape(-1, 1)
         k_range = range(1, self.kmax + 2)  # possible components: [2, kmax]
         wcss = []
