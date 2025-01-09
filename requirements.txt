@@ -1,3 +1,4 @@
+kneed
 matplotlib
 multiprocess
 numpy
@@ -7,4 +8,3 @@ scikit-learn
 scipy
 seaborn
 tqdm
-kneed
