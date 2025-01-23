@@ -10,7 +10,7 @@ from mpest.exceptions import SampleError
 from mpest.mixture_distribution import MixtureDistribution
 from mpest.models import AModel, AModelDifferentiable
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
-from mpest.problem import Problem
+from mpest.problem import Problem, Result
 from mpest.utils import ResultWithError
 
 EResult = tuple[list[float], np.ndarray, Problem] | ResultWithError[MixtureDistribution]
@@ -89,7 +89,7 @@ class LikelihoodMStep(AMaximization[EResult]):
         """
         self.optimizer = optimizer
 
-    def step(self, e_result: EResult) -> ResultWithError[MixtureDistribution]:
+    def step(self, e_result: EResult) -> Result:
         """
         A function that performs E step
 

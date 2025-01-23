@@ -1,4 +1,5 @@
 """Module that represents method class"""
+
 from typing import Generic, TypeVar
 
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization

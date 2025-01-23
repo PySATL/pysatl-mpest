@@ -1,6 +1,7 @@
 """Module which provides many useful utils for improving code writing experience"""
 
 import functools
+import os
 import time
 from abc import ABC, abstractmethod
 from typing import Callable, Generic, Iterator, ParamSpec, TypeVar
@@ -191,10 +192,10 @@ def timer(func: Callable[P, R]) -> Callable[P, TimerResultWrapper[R]]:
 
     @functools.wraps(func)
     def wrapper_timer(*args: P.args, **kwargs: P.kwargs) -> TimerResultWrapper[R]:
-        start = time.perf_counter_ns()
+        start = time.perf_counter()
         result = func(*args, **kwargs)
-        finish = time.perf_counter_ns()
-        runtime = (finish - start) * 1e-6
+        finish = time.perf_counter()
+        runtime = finish - start
         return TimerResultWrapper(result, runtime)
 
     return wrapper_timer
@@ -271,3 +272,15 @@ def in_bounds(min_value: float, max_value: float):
         return wrapper_apply
 
     return current_in_bounds
+
+
+def find_file(name, path):
+    """
+    A function for finding the path to a file
+    """
+    # pylint: disable=unused-variable
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)
+
+    return ""

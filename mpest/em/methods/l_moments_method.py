@@ -1,13 +1,17 @@
 """ The module in which the L moments method is presented """
-import numpy as np
-from scipy.stats import dirichlet
 
+import json
+from math import ceil
+
+import numpy as np
+
+from mpest import Samples
 from mpest.distribution import Distribution
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
 from mpest.exceptions import EStepError, MStepError
 from mpest.mixture_distribution import MixtureDistribution
-from mpest.problem import Problem
-from mpest.utils import ResultWithError
+from mpest.problem import Problem, Result
+from mpest.utils import ResultWithError, find_file
 
 EResult = tuple[Problem, list[float], np.ndarray] | ResultWithError[MixtureDistribution]
 
@@ -22,19 +26,9 @@ class IndicatorEStep(AExpectation[EResult]):
         Object constructor
         """
 
-        self.indicators = np.array([])
+        self.indicators: np.ndarray
 
-    def init_indicators(self, problem: Problem) -> None:
-        """
-        A function that initializes a matrix with indicators
-
-        :param problem: Object of class Problem, which contains samples and mixture.
-        """
-
-        k, m = len(problem.distributions), len(problem.samples)
-        self.indicators = np.transpose(dirichlet.rvs([1 for _ in range(k)], m))
-
-    def calc_indicators(self, problem: Problem):
+    def calc_indicators(self, problem: Problem) -> None:
         """
         A function that recalculates the matrix with indicators.
 
@@ -53,7 +47,7 @@ class IndicatorEStep(AExpectation[EResult]):
 
         denominators = np.sum(priors[:, np.newaxis] * pdf_values, axis=0)
         if 0.0 in denominators:
-            self.indicators = []
+            self.indicators = np.ndarray([])
             return None
 
         for j in range(k):
@@ -71,8 +65,7 @@ class IndicatorEStep(AExpectation[EResult]):
         :return: List with prior probabilities
         """
 
-        samples, mixture = problem.samples, problem.distributions
-        k, m = len(mixture), len(samples)
+        k, m = len(problem.distributions), len(problem.samples)
 
         new_priors = []
         for j in range(k):
@@ -88,87 +81,85 @@ class IndicatorEStep(AExpectation[EResult]):
         :param problem: Object of class Problem, which contains samples and mixture.
         :return: Tuple with problem, new_priors and indicators.
         """
+        sorted_problem = Problem(np.sort(problem.samples), problem.distributions)
 
-        if not hasattr(self, "indicators"):
-            self.init_indicators(problem)
+        if (
+            any(d.model.name == "Gaussian" for d in sorted_problem.distributions)
+            and sorted_problem.samples[0] < 0
+            and not hasattr(self, "indicators")
+        ):
+            self.indicators = distribute_numbers_transposed(
+                sorted_problem.samples, sorted_problem.distributions
+            )
         else:
-            self.calc_indicators(problem)
-            if len(self.indicators) == 0:
-                error = EStepError("The indicators could not be calculated")
-                return ResultWithError(problem.distributions, error)
+            self.calc_indicators(sorted_problem)
 
-        new_priors = self.update_priors(problem)
+        if self.indicators.shape == ():
+            error = EStepError("The indicators could not be calculated")
+            return ResultWithError(sorted_problem.distributions, error)
+
+        if np.isnan(self.indicators).any():
+            return ResultWithError(sorted_problem.distributions, EStepError(""))
+
+        new_priors = self.update_priors(sorted_problem)
         new_problem = Problem(
-            problem.samples,
-            MixtureDistribution.from_distributions(problem.distributions, new_priors),
+            sorted_problem.samples,
+            MixtureDistribution.from_distributions(
+                sorted_problem.distributions, new_priors
+            ),
         )
         return new_problem, new_priors, self.indicators
 
 
-class MStep(AMaximization[EResult]):
+class LMomentsMStep(AMaximization[EResult]):
     """
     Class which calculate new params using matrix with indicator from E step.
     """
 
-    def calculate_m1(self, problem: Problem, indicators: np.ndarray) -> list[float]:
-        """
-        A function that calculates the list of first moments of each distribution.
+    def __init__(self):
+        with open(find_file("binoms.json", "/"), "r", encoding="utf-8") as f:
+            self.binoms = json.load(f)
 
-        :param problem: Object of class Problem, which contains samples and mixture.
+    def calculate_mr_j(
+        self, r: int, j: int, samples: Samples, indicators: np.ndarray
+    ) -> float:
+        """
+        A function that calculates the list of n-th moments of each distribution.
+
+        :param r: Order of L-moment.
+        :param j: The number of the distribution for which we count the L moment.
+        :param samples: Ndarray with samples.
         :param indicators: Matrix with indicators
-        :return: List with first moments
+
+        :return: lj_r L-moment
         """
 
-        samples, mixture = problem.samples, problem.distributions
-        ordered_samples = np.sort(samples)
-        k, m = len(mixture), len(samples)
-
-        moments = []
-        for j in range(k):
-            denominator = np.sum([indicators[j][i] for i in range(m)])
-            if denominator == 0:
-                return []
-
-            numerator = np.sum(
-                [indicators[j][i] * ordered_samples[i] for i in range(m)]
+        n = len(samples)
+        binoms = self.binoms
+        mr_j = 0
+        for k in range(r):
+            b_num = np.sum(
+                [
+                    binoms[f"{round(np.sum(indicators[j][:i+1]))} {k}"]
+                    * samples[i]
+                    * indicators[j][i]
+                    for i in range(k, n)
+                ]
             )
-            moments.append(numerator / denominator)
 
-        return moments
+            ind_sum = np.sum(indicators[j])
+            b_den = ind_sum * binoms[f"{ceil(ind_sum)} {k}"]
+            b_k = b_num / b_den
+            p_rk = (
+                (-1) ** (r - k - 1)
+                * binoms[f"{r - 1} {k}"]
+                * binoms[f"{r + k - 1} {k}"]
+            )
 
-    def calculate_m2(
-        self, problem: Problem, indicators: np.ndarray, m1: list[float]
-    ) -> list[float]:
-        """
-        A function that calculates the list of second moments of each distribution.
+            mr_j += p_rk * b_k
+        return mr_j
 
-        :param problem: Object of class Problem, which contains samples and mixture.
-        :param indicators: Matrix with indicators
-        :return: List with second moments
-        """
-
-        samples, mixture = problem.samples, problem.distributions
-        ordered_samples = np.sort(samples)
-        k, m = len(mixture), len(samples)
-
-        moments = []
-        for j in range(k):
-            sum_z_ji = np.sum([indicators[j][i] for i in range(m)])
-            denominator = sum_z_ji**2 - sum_z_ji
-            if denominator == 0:
-                return []
-
-            numerator = 0
-            for i in range(m):
-                sum_z_less = np.sum([indicators[j][l] for l in range(i)])
-                numerator += indicators[j][i] * ordered_samples[i] * sum_z_less
-
-            m2_j = ((2 * numerator) / denominator) - m1[j]
-            moments.append(m2_j)
-
-        return moments
-
-    def step(self, e_result: EResult) -> ResultWithError[MixtureDistribution]:
+    def step(self, e_result: EResult) -> Result:
         """
         A function that performs E step
 
@@ -179,19 +170,25 @@ class MStep(AMaximization[EResult]):
             return e_result
 
         problem, new_priors, indicators = e_result
-        m1 = self.calculate_m1(problem, indicators)
-        m2 = self.calculate_m2(problem, indicators, m1)
+        samples, mixture = problem.samples, problem.distributions
 
-        if len(m1) == 0 or len(m2) == 0:
-            error = MStepError("It was not possible to calculate one of the L moments")
-            return ResultWithError(problem.distributions, error)
+        max_params_count = max(len(d.params) for d in mixture)
+        l_moments = np.zeros(shape=[len(mixture), max_params_count])
+        for j, d in enumerate(mixture):
+            for r in range(len(d.params)):
+                l_moments[j][r] = self.calculate_mr_j(r + 1, j, samples, indicators)
 
-        mixture = problem.distributions
+        for i, d in enumerate(mixture):
+            if d.model.name == "WeibullExp" and (l_moments[i][0] * l_moments[i][1] < 0):
+                error = MStepError(
+                    "The weibul distribution degenerated in the first step."
+                )
+                return ResultWithError(mixture.distributions, error)
+
         new_distributions = []
 
         for j, d in enumerate(mixture):
-            moments = [m1[j], m2[j]]
-            new_params = d.model.calc_params(moments)
+            new_params = d.model.calc_params(l_moments[j])
             new_d = Distribution(d.model, d.model.params_convert_to_model(new_params))
             new_distributions.append(new_d)
 
@@ -199,3 +196,31 @@ class MStep(AMaximization[EResult]):
             new_distributions, new_priors
         )
         return ResultWithError(new_mixture)
+
+
+def distribute_numbers_transposed(numbers, mixture: MixtureDistribution):
+    """
+    A function that implements a heuristic for negative elements
+    """
+
+    # TODO: To complete the heuristic approach
+
+    n = len(numbers)
+    m = len(mixture)
+
+    gaussian_indices = [
+        i for i, dist in enumerate(mixture) if dist.model.name == "Gaussian"
+    ]
+    gaussian_index = gaussian_indices[0]
+
+    result = np.zeros((m, n))
+
+    for i, num in enumerate(numbers):
+        if num < 0:
+            result[gaussian_index, i] = 1
+        else:
+            uniform_probability = 1 / len(mixture)
+            for j in range(len(mixture)):
+                result[j, i] = uniform_probability
+
+    return result

@@ -1,4 +1,5 @@
 """Module which contains Weibull model class"""
+
 import math
 
 import numpy as np
@@ -18,7 +19,7 @@ class LMomentsParameterMixin:
         The function for calculating the parameter k for the Weibull distribution
         """
 
-        m1, m2 = moments
+        m1, m2 = moments[0], moments[1]
         return -np.log(2) / np.log(1 - (m2 / m1))
 
     def calc_lambda(self, moments: list[float]) -> float:
