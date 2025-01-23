@@ -2,7 +2,6 @@
 import random
 from abc import ABC, abstractmethod
 
-
 from mpest import Distribution, MixtureDistribution
 from mpest.models import AModel
 
