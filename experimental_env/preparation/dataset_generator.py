@@ -42,9 +42,7 @@ class RandomDatasetGenerator:
         with tqdm(total=exp_count) as tbar:
             for i in range(exp_count):
                 tbar.update()
-                mixture = DatasetMixtureGenerator().create_mixture(
-                    models, self._seed + i
-                )
+                mixture = DatasetMixtureGenerator().create_mixture(models)
                 samples = mixture.generate(samples_size)
                 descr = DatasetDescrciption(samples_size, samples, mixture, i + 1)
 
