@@ -16,7 +16,7 @@ from mpest.em.methods.method import Method
 from mpest.optimizers import ALL_OPTIMIZERS
 from mpest.utils import ANamed, Factory, ResultWithLog
 
-METHODS = {
+METHODS: dict = {
     "Likelihood": [[Factory(BayesEStep), Factory(LikelihoodMStep, optimizer)] for optimizer in ALL_OPTIMIZERS],
     "L-moments": [Factory(IndicatorEStep), Factory(LMomentsMStep)],
 }

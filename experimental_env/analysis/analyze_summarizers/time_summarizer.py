@@ -23,11 +23,11 @@ class TimeSummarizer(AnalysisSummarizer):
         """
         times = []
         for result in results:
-            time = np.sum(step.time for step in result.steps)
+            time = np.sum([step.time for step in result.steps])
             times.append(time)
 
         mean = np.sum(times) / len(times)
-        deviation = np.sqrt(np.sum((x - mean) ** 2 for x in times) / len(times))
+        deviation = np.sqrt(np.sum([(x - mean) ** 2 for x in times]) / len(times))
         return float(mean), float(deviation)
 
     def analyze_method(self, results: list[ExperimentDescription], method: str):

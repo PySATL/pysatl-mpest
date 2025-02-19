@@ -13,7 +13,7 @@ from mpest.em.methods.abstract_steps import AExpectation, AMaximization
 from mpest.exceptions import EStepError, MStepError
 from mpest.utils import ResultWithError, find_file
 
-EResult = tuple[Problem, list[float], np.ndarray] | ResultWithError[MixtureDistribution]
+EResult = tuple[Problem, list[float | None], np.ndarray] | ResultWithError[MixtureDistribution]
 
 
 class IndicatorEStep(AExpectation[EResult]):
@@ -57,7 +57,7 @@ class IndicatorEStep(AExpectation[EResult]):
         self.indicators = z
         return None
 
-    def update_priors(self, problem: Problem) -> list[float]:
+    def update_priors(self, problem: Problem) -> list[float | None]:
         """
         A function that recalculates the list with prior probabilities.
 

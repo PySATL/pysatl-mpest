@@ -246,7 +246,7 @@ class EM(ASolver):
 
             return ResultWithError(new_mixture, result.error)
 
-        history = []
+        history: list = []
 
         def log_map(distributions: ResultWithError[EM._DistributionMixtureAlive]):
             return ResultWithError(

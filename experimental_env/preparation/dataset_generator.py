@@ -60,8 +60,8 @@ class ConcreteDatasetGenerator:
 
     def __init__(self, seed: int = 42):
         np.random.seed(seed)
-        self._dists = []
-        self._priors = []
+        self._dists: list[Distribution] = []
+        self._priors: list[float | None] = []
 
     def add_distribution(self, model: type[AModel], params: list[float], prior: float) -> None:
         """

@@ -202,6 +202,9 @@ def timer(func: Callable[P, R]) -> Callable[P, TimerResultWrapper[R]]:
     return wrapper_timer
 
 
+# TODO: Fix type annotation. Here the lambda function does not match the annotation.
+
+
 def history(holder: list[T], mapper: Callable[[R], T] = lambda x: x):
     """
     Decorator factory which allows you
@@ -222,6 +225,9 @@ def history(holder: list[T], mapper: Callable[[R], T] = lambda x: x):
         return wrapped_history
 
     return current_history
+
+
+# TODO: Fix type annotation. Here the lambda function does not match the annotation.
 
 
 def logged(

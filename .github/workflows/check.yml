@@ -19,18 +19,19 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install poetry
-        run: |
-          pipx install poetry
+        run: pipx install poetry
 
       - name: Install dependencies
-        run: |
-          poetry install --with dev
+        run: poetry install --with dev
 
       - name: Ruff
         run: poetry run ruff check
 
+      - name: Install stubs
+        run: poetry run pip install types-PyYAML types-tqdm
+
       - name: Mypy
-        run: poetry run mypy .
+        run: poetry run mypy
 
       - name: Pytest
         run:  poetry run python -m pytest tests
