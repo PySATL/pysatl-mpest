@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
+from mpest.annotations import Params, Samples
 from mpest.models import AModel, AModelWithGenerator
-from mpest.types import Params, Samples
 
 
 class APDFAble(ABC):

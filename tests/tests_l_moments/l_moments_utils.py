@@ -1,5 +1,6 @@
 """TODO"""
 
+from mpest.core.problem import Problem, Result
 from mpest.em import EM
 from mpest.em.breakpointers import ParamDifferBreakpointer, StepCountBreakpointer
 from mpest.em.distribution_checkers import (
@@ -8,7 +9,6 @@ from mpest.em.distribution_checkers import (
 )
 from mpest.em.methods.l_moments_method import IndicatorEStep, LMomentsMStep
 from mpest.em.methods.method import Method
-from mpest.problem import Problem, Result
 
 
 def run_test(problem: Problem, deviation: float) -> Result:

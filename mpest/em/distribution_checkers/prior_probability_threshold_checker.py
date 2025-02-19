@@ -1,9 +1,9 @@
 """Module which contains distribution checker by using prior probability threshold"""
 
+from mpest.core.mixture_distribution import DistributionInMixture
 from mpest.em.distribution_checkers.unionable_distribution_checker import (
     AUnionableDistributionChecker,
 )
-from mpest.mixture_distribution import DistributionInMixture
 
 
 class PriorProbabilityThresholdChecker(AUnionableDistributionChecker):

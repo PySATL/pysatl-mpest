@@ -2,8 +2,8 @@
 
 import copy
 
-from mpest.mixture_distribution import MixtureDistribution
-from mpest.types import Samples
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import MixtureDistribution
 
 
 class DatasetDescrciption:

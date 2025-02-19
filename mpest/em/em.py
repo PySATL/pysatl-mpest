@@ -7,10 +7,10 @@ Module which represents EM algorithm and few of it's params:
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 
-from mpest.distribution import Distribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import DistributionInMixture, MixtureDistribution
+from mpest.core.problem import ASolver, Problem, Result
 from mpest.em.methods.method import Method
-from mpest.mixture_distribution import DistributionInMixture, MixtureDistribution
-from mpest.problem import ASolver, Problem, Result
 from mpest.utils import (
     ANamed,
     ObjectWrapper,

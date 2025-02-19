@@ -2,8 +2,8 @@
 
 import numpy as np
 
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.em.breakpointers.unionable_breakpointer import AUnionableBreakpointer
-from mpest.mixture_distribution import MixtureDistribution
 
 
 class ParamDifferBreakpointer(AUnionableBreakpointer):

@@ -5,8 +5,8 @@ from collections.abc import Callable
 import numpy as np
 from scipy.optimize import minimize
 
+from mpest.annotations import Params
 from mpest.optimizers.abstract_optimizer import AOptimizerJacobian
-from mpest.types import Params
 
 
 class ScipyNewtonCG(AOptimizerJacobian):

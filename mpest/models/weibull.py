@@ -5,8 +5,8 @@ import math
 import numpy as np
 from scipy.stats import weibull_min
 
+from mpest.annotations import Params, Samples
 from mpest.models.abstract_model import AModelDifferentiable, AModelWithGenerator
-from mpest.types import Params, Samples
 
 
 class LMomentsParameterMixin:
