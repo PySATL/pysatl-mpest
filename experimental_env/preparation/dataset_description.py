@@ -1,4 +1,5 @@
 """Module which describes dataset"""
+
 import copy
 
 from mpest.mixture_distribution import MixtureDistribution

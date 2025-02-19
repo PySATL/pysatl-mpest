@@ -1,6 +1,6 @@
 """Module which contains truncated Newton (TNC) optimizer"""
 
-from typing import Callable
+from collections.abc import Callable
 
 from scipy.optimize import minimize
 

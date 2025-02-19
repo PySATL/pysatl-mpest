@@ -1,6 +1,6 @@
 """Module which contains Sequential Least Squares Programming (SLSQP) optimizer"""
 
-from typing import Callable
+from collections.abc import Callable
 
 from scipy.optimize import minimize
 

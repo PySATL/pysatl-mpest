@@ -1,6 +1,6 @@
 """Module which contains Newton-CG optimizer"""
 
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 from scipy.optimize import minimize

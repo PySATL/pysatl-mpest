@@ -1,4 +1,4 @@
-""" A module containing a class for parsing the second stage of the experiment"""
+"""A module containing a class for parsing the second stage of the experiment"""
 
 import os
 from pathlib import Path
@@ -23,13 +23,13 @@ class ExperimentParser:
     def _get_steps(self, exp_dir: Path):
         steps = []
         for step in sort_human(os.listdir(exp_dir)):
-            if not "step" in step:
+            if "step" not in step:
                 continue
             step_dir = exp_dir.joinpath(step)
             step_config_p = step_dir.joinpath("config.yaml")
 
             # Get step
-            with open(step_config_p, "r", encoding="utf-8") as config_file:
+            with open(step_config_p, encoding="utf-8") as config_file:
                 config = yaml.safe_load(config_file)
                 step_time = config["time"]
                 step_mixture = create_mixture_by_key(config, "step_distributions")
@@ -61,7 +61,7 @@ class ExperimentParser:
                 samples = genfromtxt(samples_p, delimiter=",")
 
                 # Get base mixture
-                with open(config_p, "r", encoding="utf-8") as config_file:
+                with open(config_p, encoding="utf-8") as config_file:
                     config = yaml.safe_load(config_file)
                     samples_size = config["samples_size"]
                     exp_num = config["exp_num"]
@@ -74,13 +74,9 @@ class ExperimentParser:
                 steps = self._get_steps(experiment_dir)
 
                 # Save results of experiment
-                ds_descr = DatasetDescrciption(
-                    samples_size, samples, base_mixture, exp_num
-                )
+                ds_descr = DatasetDescrciption(samples_size, samples, base_mixture, exp_num)
 
-                result_descr = ExperimentDescription.from_steps(
-                    init_mixture, steps, ds_descr, error
-                )
+                result_descr = ExperimentDescription.from_steps(init_mixture, steps, ds_descr, error)
 
                 mixture_name_list.append(result_descr)
 

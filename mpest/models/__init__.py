@@ -1,4 +1,5 @@
 """Module which represents models and abstract classes for extending"""
+
 from mpest.models.abstract_model import (
     AModel,
     AModelDifferentiable,

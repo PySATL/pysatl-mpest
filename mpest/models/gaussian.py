@@ -47,9 +47,7 @@ class GaussianModel(AModelDifferentiable, AModelWithGenerator, LMomentsParameter
     def params_convert_from_model(self, params: Params) -> Params:
         return np.array([params[0], np.exp(params[1])])
 
-    def generate(
-        self, params: Params, size: int = 1, normalized: bool = True
-    ) -> Samples:
+    def generate(self, params: Params, size: int = 1, normalized: bool = True) -> Samples:
         if not normalized:
             return np.array(norm.rvs(loc=params[0], scale=params[1], size=size))
 

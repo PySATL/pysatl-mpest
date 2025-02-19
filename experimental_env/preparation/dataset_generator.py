@@ -1,4 +1,5 @@
 """Module from generating datasets with the given sample size, experimental counts and mixture"""
+
 import random
 from pathlib import Path
 
@@ -62,9 +63,7 @@ class ConcreteDatasetGenerator:
         self._dists = []
         self._priors = []
 
-    def add_distribution(
-        self, model: type[AModel], params: list[float], prior: float
-    ) -> None:
+    def add_distribution(self, model: type[AModel], params: list[float], prior: float) -> None:
         """
         Add distribution with params and prior to mixture.
         """
@@ -88,7 +87,7 @@ class ConcreteDatasetGenerator:
 
             descr = DatasetDescrciption(samples_size, samples, mixture, i + 1)
             mixture_name_dir: Path = working_path.joinpath(descr.get_dataset_name())
-            exp_dir: Path = mixture_name_dir.joinpath(f"experiment_{i+1}")
+            exp_dir: Path = mixture_name_dir.joinpath(f"experiment_{i + 1}")
 
             if exp_dir.exists():
                 continue

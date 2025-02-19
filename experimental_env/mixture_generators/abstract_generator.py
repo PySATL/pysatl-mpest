@@ -1,4 +1,5 @@
-""" A module that provides an abstract class for generating a mixture. """
+"""A module that provides an abstract class for generating a mixture."""
+
 import random
 from abc import ABC, abstractmethod
 

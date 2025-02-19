@@ -1,4 +1,4 @@
-""" A module that provides a class that save data about how the time of estimation is distributed """
+"""A module that provides a class that save data about how the time of estimation is distributed"""
 
 from pathlib import Path
 

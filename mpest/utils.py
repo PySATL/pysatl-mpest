@@ -4,7 +4,8 @@ import functools
 import os
 import time
 from abc import ABC, abstractmethod
-from typing import Callable, Generic, Iterator, ParamSpec, TypeVar
+from collections.abc import Callable, Iterator
+from typing import Generic, ParamSpec, TypeVar
 
 P = ParamSpec("P")
 R = TypeVar("R")

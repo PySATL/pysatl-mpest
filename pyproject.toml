@@ -24,6 +24,7 @@ dependencies = [
     "seaborn (>=0.13.2,<0.14.0)"
 ]
 
+
 [tool.poetry]
 
 [tool.poetry.group.dev.dependencies]
@@ -33,11 +34,26 @@ ruff = "^0.9.6"
 mypy = "^1.15.0"
 sphinx = "^8.2.0"
 
-
 [tool.poetry.group.experiments.dependencies]
 tqdm = "^4.67.1"
 multiprocess = "^0.70.17"
 ruamel-yaml = "^0.18.10"
+
+
+[tool.ruff]
+line-length = 120
+output-format = "grouped"
+exclude = ["*.ipynb", "__init__.py"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = ["A", "E", "F", "I", "PL", "RUF", "SIM", "UP", "W"]
+ignore = ["PLR0913"]
+
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

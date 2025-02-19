@@ -1,7 +1,7 @@
 """Module which contains abstract optimizer classes"""
 
 from abc import ABC, abstractmethod
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 
