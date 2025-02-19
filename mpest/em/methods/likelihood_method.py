@@ -59,17 +59,17 @@ class BayesEStep(AExpectation[EResult]):
         return active_samples, h, problem
 
 
-class ML(AExpectation[EResult]):
-    """
-    Class which represents ML method for calculating matrix for M step in likelihood method
-    """
-
-    def step(self, problem: Problem) -> EResult:
-        """
-        A function that performs E step
-
-        :param problem: Object of class Problem, which contains samples and mixture.
-        """
+# class ML(AExpectation[EResult]):
+#     """
+#     Class which represents ML method for calculating matrix for M step in likelihood method
+#     """
+#
+#     def step(self, problem: Problem) -> EResult:
+#         """
+#         A function that performs E step
+#
+#         :param problem: Object of class Problem, which contains samples and mixture.
+#         """
 
 
 class LikelihoodMStep(AMaximization[EResult]):

@@ -16,7 +16,7 @@ class AMixtureGenerator(ABC):
         random.seed(seed)
 
     @abstractmethod
-    def generate_priors(self, models: list[type[AModel]]) -> list[float]:
+    def generate_priors(self, models: list[type[AModel]]) -> list[float | None]:
         """
         A method for choosing how a prior probabilities will be generated.
         The function is needed so that, with a uniform distribution, degenerate distributions are not generated.

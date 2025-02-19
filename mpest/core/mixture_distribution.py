@@ -122,11 +122,11 @@ class MixtureDistribution(APDFAble, AWithGenerator, Sized, Iterable[Distribution
             )
         )
 
-        x = []
+        temp = []
         for i, model in enumerate(models):
-            x += list(model[0].generate(x_models.count(i)))
+            temp += list(model[0].generate(x_models.count(i)))
 
-        x = np.array(x)
+        x = np.array(temp)
         np.random.shuffle(x)
 
         return x
