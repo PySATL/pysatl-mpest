@@ -96,7 +96,7 @@ def result_to_df_diff(result: SingleSolverResult):
         "time": result.time,
         "model": result.test.true_mixture[0].model.name,
         "size": len(result.test.problem.samples),
-        "success": (result.steps < 128) and not failed, # noqa: PLR2004
+        "success": (result.steps < 128) and not failed,  # noqa: PLR2004
         "failed": failed,
         "occur": nll(result.test.all_data, mixture_distribution),
         "start": start,
@@ -125,7 +125,7 @@ def result_to_df(result: SingleSolverResult):
         [
             (
                 d
-                if (d.prior_probability is not None) and (d.prior_probability > 0.001) # noqa: PLR2004
+                if (d.prior_probability is not None) and (d.prior_probability > 0.001)  # noqa: PLR2004
                 else DistributionInMixture(d.model, d.params, None)
             )
             for d in result.result.content
@@ -146,7 +146,7 @@ def result_to_df(result: SingleSolverResult):
         "time": result.time,
         "model": result.test.true_mixture[0].model.name,
         "size": len(result.test.problem.samples),
-        "success": (result.steps < 16) and failed, # noqa: PLR2004
+        "success": (result.steps < 16) and failed,  # noqa: PLR2004
         "failed": failed,
         "occur": nll(result.test.all_data, mixture_distribution),
     }
