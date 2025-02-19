@@ -22,9 +22,7 @@ if __name__ == "__main__":
 
     counter = Clicker()
 
-    def _generate_test(
-        model: type[AModelWithGenerator], o_borders: list[tuple[float, float]]
-    ) -> list[Test]:
+    def _generate_test(model: type[AModelWithGenerator], o_borders: list[tuple[float, float]]) -> list[Test]:
         return generate_mono_test(
             model_t=model,
             params_borders=o_borders,
@@ -36,10 +34,7 @@ if __name__ == "__main__":
             tests_per_size=8,
             tests_per_cond=2,
             runs_per_test=1,
-            solvers=[
-                init_solver(16, 0.1, 0.001, 3, optimizer)
-                for optimizer in TESTS_OPTIMIZERS
-            ],
+            solvers=[init_solver(16, 0.1, 0.001, 3, optimizer) for optimizer in TESTS_OPTIMIZERS],
         )
 
     tests += _generate_test(WeibullModelExp, [(0.25, 25), (0.25, 25)])

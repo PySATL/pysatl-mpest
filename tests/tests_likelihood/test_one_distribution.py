@@ -61,9 +61,7 @@ def test_one_distribution(
 
     problem = Problem(
         samples=x,
-        distributions=MixtureDistribution.from_distributions(
-            [Distribution(model, start_params)]
-        ),
+        distributions=MixtureDistribution.from_distributions([Distribution(model, start_params)]),
     )
 
     results = run_test(problem=problem, deviation=deviation)

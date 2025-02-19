@@ -1,4 +1,4 @@
-""" A module containing an abstract summarizer class for analysis methods. """
+"""A module containing an abstract summarizer class for analysis methods."""
 
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -8,7 +8,8 @@ from experimental_env.experiment.experiment_description import ExperimentDescrip
 
 class AnalysisSummarizer(ABC):
     """
-    A class that provides functionality for analyzing methods by examining the overall set of experimental results for a given mixture.
+    A class that provides functionality for analyzing methods
+    by examining the overall set of experimental results for a given mixture.
     """
 
     def __init__(self):
@@ -31,7 +32,8 @@ class AnalysisSummarizer(ABC):
         """
         Analysis of the method for all experiments on this mixture.
 
-        :param results: The results of the method on the second stage of the experiment, which was obtained using a parser.
+        :param results: The results of the method on the second stage of the experiment,
+        which was obtained using a parser.
         :param method: The name of the method that we are analyzing
         """
 
@@ -48,8 +50,10 @@ class AnalysisSummarizer(ABC):
         """
         A function for comparing the methods
 
-        :param results_1: The results of the first method on the second stage of the experiment, which was obtained using a parser.
-        :param results_2: The results of the second method on the second stage of the experiment, which was obtained using a parser.
+        :param results_1: The results of the first method on the second stage of the experiment,
+         which was obtained using a parser.
+        :param results_2: The results of the second method on the second stage of the experiment,
+         which was obtained using a parser.
         :param method_1: Name of the first method
         :param method_2: Name of the second method
         """

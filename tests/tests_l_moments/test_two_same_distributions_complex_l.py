@@ -135,9 +135,5 @@ def test_two_same_distributions_simple(
     )
 
     result = run_test(problem=problem, deviation=deviation)
-    assert check_for_params_error_tolerance(
-        [result], base_mixture, expected_params_error
-    )
-    assert check_for_priors_error_tolerance(
-        [result], base_mixture, expected_priors_error
-    )
+    assert check_for_params_error_tolerance([result], base_mixture, expected_params_error)
+    assert check_for_priors_error_tolerance([result], base_mixture, expected_priors_error)

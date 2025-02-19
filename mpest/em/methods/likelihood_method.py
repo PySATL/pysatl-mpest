@@ -1,4 +1,4 @@
-""" The module in which the maximum likelihood method is presented """
+"""The module in which the maximum likelihood method is presented"""
 
 from functools import partial
 
@@ -39,9 +39,7 @@ class BayesEStep(AExpectation[EResult]):
                 active_samples.append(x)
 
         if not active_samples:
-            error = SampleError(
-                "None of the elements in the sample is correct for this mixture"
-            )
+            error = SampleError("None of the elements in the sample is correct for this mixture")
             return ResultWithError(mixture, error)
 
         # h[j, i] contains probability of X_i to be a part of distribution j
@@ -116,8 +114,7 @@ class LikelihoodMStep(AMaximization[EResult]):
 
             def jacobian(params, ch, model: AModelDifferentiable):
                 return -np.sum(
-                    ch
-                    * np.swapaxes([model.ld_params(x, params) for x in samples], 0, 1),
+                    ch * np.swapaxes([model.ld_params(x, params) for x in samples], 0, 1),
                     axis=1,
                 )
 
@@ -138,6 +135,4 @@ class LikelihoodMStep(AMaximization[EResult]):
                 )
 
             new_distributions.append(Distribution(d.model, new_params))
-        return ResultWithError(
-            MixtureDistribution.from_distributions(new_distributions, new_w)
-        )
+        return ResultWithError(MixtureDistribution.from_distributions(new_distributions, new_w))

@@ -55,9 +55,7 @@ class AModelWithGenerator(AModel, ABC):
     """
 
     @abstractmethod
-    def generate(
-        self, params: Params, size: int = 1, normalized: bool = False
-    ) -> Samples:
+    def generate(self, params: Params, size: int = 1, normalized: bool = False) -> Samples:
         """
         Method which generates samples by given params
         :param size: sample size

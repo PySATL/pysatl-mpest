@@ -33,8 +33,7 @@ def idfunc(vals):
 
 
 @pytest.mark.parametrize(
-    "models, params, start_params, prior_probabilities, size, deviation, expected_params_error,"
-    "expected_priors_error",
+    "models, params, start_params, prior_probabilities, size, deviation, expected_params_error,expected_priors_error",
     [
         (
             [WeibullModelExp(), GaussianModel()],
@@ -111,9 +110,5 @@ def test(
     )
 
     results = run_test(problem=problem, deviation=deviation)
-    assert check_for_params_error_tolerance(
-        results, base_mixture, expected_params_error
-    )
-    assert check_for_priors_error_tolerance(
-        results, base_mixture, expected_priors_error
-    )
+    assert check_for_params_error_tolerance(results, base_mixture, expected_params_error)
+    assert check_for_priors_error_tolerance(results, base_mixture, expected_priors_error)

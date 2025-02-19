@@ -25,6 +25,4 @@ class StepCountBreakpointer(AUnionableBreakpointer):
         previous_step: MixtureDistribution | None,
         current_step: MixtureDistribution,
     ) -> bool:
-        if (self.max_step is not None) and (step >= self.max_step):
-            return True
-        return False
+        return (self.max_step is not None) and (step >= self.max_step)

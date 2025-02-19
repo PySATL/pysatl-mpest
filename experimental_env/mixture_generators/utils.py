@@ -1,4 +1,5 @@
-""" A module containing parameter generators for mixture generators. """
+"""A module containing parameter generators for mixture generators."""
+
 from random import uniform
 
 from mpest import Distribution

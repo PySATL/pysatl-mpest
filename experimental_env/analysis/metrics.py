@@ -1,4 +1,4 @@
-""" A module that provides various metrics for evaluating the quality of parameter estimation. """
+"""A module that provides various metrics for evaluating the quality of parameter estimation."""
 
 from abc import ABC, abstractmethod
 from itertools import permutations
@@ -27,8 +27,12 @@ class AMetric(ANamed, ABC):
 
 
 class SquaredError(AMetric):
-    """
-    The class that calculates the SquaredError
+    r"""
+    The class that calculates the SquaredError.
+
+    .. math::
+       \text{err} = \int_{-\infty}^{+\infty} (f_1(x) - f_2(x))^2 \,dx
+
     """
 
     @property
@@ -45,7 +49,8 @@ class SquaredError(AMetric):
 
 class Parametric(AMetric):
     """
-    A class that calculates the absolute difference in the parameters of mixtures. Does not use the difference of a prior probabilities
+    A class that calculates the absolute difference in the parameters of mixtures.
+     Does not use the difference of a prior probabilities.
     """
 
     @property
@@ -53,14 +58,9 @@ class Parametric(AMetric):
         return "ParamsError"
 
     def error(self, base_mixture, result_mixture):
-        base_p, res_p = (
-            [d.params for d in ld] for ld in (base_mixture, result_mixture)
-        )
+        base_p, res_p = ([d.params for d in ld] for ld in (base_mixture, result_mixture))
 
-        param_diff = min(
-            sum(sum(abs(x - y)) for x, y in zip(base_p, _res_p))
-            for _res_p in permutations(res_p)
-        )
+        param_diff = min(sum(sum(abs(x - y)) for x, y in zip(base_p, _res_p)) for _res_p in permutations(res_p))
 
         return param_diff
 

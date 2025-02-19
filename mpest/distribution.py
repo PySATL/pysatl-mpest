@@ -75,6 +75,4 @@ class Distribution(APDFAble, AWithGenerator):
         """
         if not isinstance(self.model, AModelWithGenerator):
             raise TypeError(f"Model {self.model} hasn't got a generator")
-        return self.model.generate(
-            self.model.params_convert_to_model(self.params), size=size
-        )
+        return self.model.generate(self.model.params_convert_to_model(self.params), size=size)

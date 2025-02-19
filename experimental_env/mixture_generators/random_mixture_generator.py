@@ -1,4 +1,5 @@
-""" A module that provides a mixture generator class in which parameters are generated using a uniform distribution. """
+"""A module that provides a mixture generator class in which parameters are generated using a uniform distribution."""
+
 from experimental_env.mixture_generators.abstract_generator import AMixtureGenerator
 from experimental_env.mixture_generators.utils import generate_uniform_params
 

@@ -1,7 +1,7 @@
 """Module which contains mixture distributions of single model tests generator"""
 
 import random
-from typing import Iterable
+from collections.abc import Iterable
 
 import numpy as np
 
@@ -42,9 +42,7 @@ def generate_mono_test(
             models: list[AModel] = []
 
             for _ in range(k):
-                params = np.array(
-                    [random.uniform(border[0], border[1]) for border in params_borders]
-                )
+                params = np.array([random.uniform(border[0], border[1]) for border in params_borders])
                 model = model_t()
                 x += list(model.generate(params, per_model, normalized=False))
 
@@ -62,12 +60,7 @@ def generate_mono_test(
                     samples = random.sample(x, size)
                     for _ in range(tests_per_size):
                         start_params = [
-                            np.array(
-                                [
-                                    random.uniform(border[0], border[1])
-                                    for border in start_params_borders
-                                ]
-                            )
+                            np.array([random.uniform(border[0], border[1]) for border in start_params_borders])
                             for _ in range(k)
                         ]
                         tests.append(
@@ -91,9 +84,7 @@ def generate_mono_test(
                                                 model,
                                                 params,
                                             )
-                                            for model, params in zip(
-                                                models, start_params
-                                            )
+                                            for model, params in zip(models, start_params)
                                         ]
                                     ),
                                 ),

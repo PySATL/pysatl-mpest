@@ -1,5 +1,6 @@
-""" A module containing classes for storing information about the results of estimating at the second stage """
-from typing import Iterable, Iterator
+"""A module containing classes for storing information about the results of estimating at the second stage"""
+
+from collections.abc import Iterable, Iterator
 
 import numpy as np
 
@@ -79,9 +80,7 @@ class ExperimentDescription(Iterable):
         """
         self = cls()
         self._init_mixture = init_mixture
-        self._steps = [
-            StepDescription(step.result.content, step.time) for step in result.log.log
-        ]
+        self._steps = [StepDescription(step.result.content, step.time) for step in result.log.log]
         self._ds_descr = ds_descr
         self._error = bool(result.log.log[-1].result.error)
         return self
