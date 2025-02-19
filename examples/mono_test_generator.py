@@ -6,11 +6,11 @@ from collections.abc import Iterable
 import numpy as np
 
 from examples.utils import Clicker, Test
-from mpest.distribution import Distribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem
 from mpest.em import EM
-from mpest.mixture_distribution import MixtureDistribution
 from mpest.models import AModel, AModelWithGenerator
-from mpest.problem import Problem
 
 
 def generate_mono_test(

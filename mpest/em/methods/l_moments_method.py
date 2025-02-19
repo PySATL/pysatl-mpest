@@ -6,11 +6,11 @@ from math import ceil
 import numpy as np
 
 from mpest import Samples
-from mpest.distribution import Distribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem, Result
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
 from mpest.exceptions import EStepError, MStepError
-from mpest.mixture_distribution import MixtureDistribution
-from mpest.problem import Problem, Result
 from mpest.utils import ResultWithError, find_file
 
 EResult = tuple[Problem, list[float], np.ndarray] | ResultWithError[MixtureDistribution]

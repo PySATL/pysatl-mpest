@@ -10,6 +10,9 @@ import numpy as np
 from tqdm.contrib.concurrent import process_map
 
 from examples.config import RESULTS_FOLDER
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem, Result
 from mpest.em import EM
 from mpest.em.breakpointers import ParamDifferBreakpointer, StepCountBreakpointer
 from mpest.em.distribution_checkers import (
@@ -17,10 +20,7 @@ from mpest.em.distribution_checkers import (
     PriorProbabilityThresholdChecker,
 )
 from mpest.em.methods.likelihood_method import LikelihoodMethod
-from mpest.mixture_distribution import MixtureDistribution
 from mpest.optimizers import TOptimizer
-from mpest.problem import Problem, Result
-from mpest.types import Samples
 
 np.seterr(all="ignore")
 

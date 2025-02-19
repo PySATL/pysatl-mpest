@@ -9,9 +9,9 @@ from collections.abc import Iterable, Iterator, Sized
 
 import numpy as np
 
-from mpest.distribution import APDFAble, AWithGenerator, Distribution
+from mpest.annotations import Params
+from mpest.core.distribution import APDFAble, AWithGenerator, Distribution
 from mpest.models import AModel, AModelWithGenerator
-from mpest.types import Params
 from mpest.utils import IteratorWrapper
 
 

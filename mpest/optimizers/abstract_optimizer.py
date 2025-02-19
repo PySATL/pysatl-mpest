@@ -5,7 +5,7 @@ from collections.abc import Callable
 
 import numpy as np
 
-from mpest.types import Params
+from mpest.annotations import Params
 from mpest.utils import ANamed
 
 

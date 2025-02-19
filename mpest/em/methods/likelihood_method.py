@@ -4,13 +4,13 @@ from functools import partial
 
 import numpy as np
 
-from mpest.distribution import Distribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem, Result
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
 from mpest.exceptions import SampleError
-from mpest.mixture_distribution import MixtureDistribution
 from mpest.models import AModel, AModelDifferentiable
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
-from mpest.problem import Problem, Result
 from mpest.utils import ResultWithError
 
 EResult = tuple[list[float], np.ndarray, Problem] | ResultWithError[MixtureDistribution]

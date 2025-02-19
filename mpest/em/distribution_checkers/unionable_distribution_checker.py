@@ -2,8 +2,8 @@
 
 from abc import ABC
 
+from mpest.core.mixture_distribution import DistributionInMixture
 from mpest.em import EM
-from mpest.mixture_distribution import DistributionInMixture
 
 
 class UnionDistributionChecker(EM.ADistributionChecker):

@@ -3,8 +3,8 @@
 import numpy as np
 from scipy.stats import expon
 
+from mpest.annotations import Params, Samples
 from mpest.models.abstract_model import AModelDifferentiable, AModelWithGenerator
-from mpest.types import Params, Samples
 
 
 class LMomentsParameterMixin:

@@ -10,8 +10,8 @@ from experimental_env.mixture_generators.dataset_mixture_generator import (
     DatasetMixtureGenerator,
 )
 from experimental_env.preparation.dataset_saver import DatasetDescrciption, DatasetSaver
-from mpest.distribution import Distribution
-from mpest.mixture_distribution import MixtureDistribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.models.abstract_model import AModel
 
 

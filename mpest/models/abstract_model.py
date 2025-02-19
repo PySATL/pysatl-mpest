@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from mpest.types import Params, Samples
+from mpest.annotations import Params, Samples
 from mpest.utils import ANamed
 
 

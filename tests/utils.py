@@ -4,7 +4,7 @@ from itertools import permutations
 
 import numpy as np
 
-from mpest.mixture_distribution import MixtureDistribution
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.utils import ResultWithError
 
 
