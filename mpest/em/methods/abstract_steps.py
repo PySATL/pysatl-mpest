@@ -3,8 +3,8 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
-from mpest.mixture_distribution import MixtureDistribution
-from mpest.problem import Problem
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem
 from mpest.utils import ResultWithError
 
 T = TypeVar("T")

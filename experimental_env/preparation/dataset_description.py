@@ -1,8 +1,10 @@
 """Module which describes dataset"""
-import copy
 
-from mpest.mixture_distribution import MixtureDistribution
-from mpest.types import Samples
+import copy
+from typing import Any
+
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import MixtureDistribution
 
 
 class DatasetDescrciption:
@@ -60,9 +62,9 @@ class DatasetDescrciption:
         """
         Convert info about mixture to yaml format
         """
-        # pylint: disable=duplicate-code
 
-        output = {}
+        output: dict[str, Any] = {}
+
         # Add name
         output["name"] = self.get_dataset_name()
         output["samples_size"] = self._samples_size

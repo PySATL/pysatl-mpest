@@ -1,16 +1,16 @@
-""" The module in which the maximum likelihood method is presented """
+"""The module in which the maximum likelihood method is presented"""
 
 from functools import partial
 
 import numpy as np
 
-from mpest.distribution import Distribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem, Result
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
 from mpest.exceptions import SampleError
-from mpest.mixture_distribution import MixtureDistribution
 from mpest.models import AModel, AModelDifferentiable
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
-from mpest.problem import Problem, Result
 from mpest.utils import ResultWithError
 
 EResult = tuple[list[float], np.ndarray, Problem] | ResultWithError[MixtureDistribution]
@@ -39,9 +39,7 @@ class BayesEStep(AExpectation[EResult]):
                 active_samples.append(x)
 
         if not active_samples:
-            error = SampleError(
-                "None of the elements in the sample is correct for this mixture"
-            )
+            error = SampleError("None of the elements in the sample is correct for this mixture")
             return ResultWithError(mixture, error)
 
         # h[j, i] contains probability of X_i to be a part of distribution j
@@ -61,17 +59,17 @@ class BayesEStep(AExpectation[EResult]):
         return active_samples, h, problem
 
 
-class ML(AExpectation[EResult]):
-    """
-    Class which represents ML method for calculating matrix for M step in likelihood method
-    """
-
-    def step(self, problem: Problem) -> EResult:
-        """
-        A function that performs E step
-
-        :param problem: Object of class Problem, which contains samples and mixture.
-        """
+# class ML(AExpectation[EResult]):
+#     """
+#     Class which represents ML method for calculating matrix for M step in likelihood method
+#     """
+#
+#     def step(self, problem: Problem) -> EResult:
+#         """
+#         A function that performs E step
+#
+#         :param problem: Object of class Problem, which contains samples and mixture.
+#         """
 
 
 class LikelihoodMStep(AMaximization[EResult]):
@@ -116,8 +114,7 @@ class LikelihoodMStep(AMaximization[EResult]):
 
             def jacobian(params, ch, model: AModelDifferentiable):
                 return -np.sum(
-                    ch
-                    * np.swapaxes([model.ld_params(x, params) for x in samples], 0, 1),
+                    ch * np.swapaxes([model.ld_params(x, params) for x in samples], 0, 1),
                     axis=1,
                 )
 
@@ -138,6 +135,4 @@ class LikelihoodMStep(AMaximization[EResult]):
                 )
 
             new_distributions.append(Distribution(d.model, new_params))
-        return ResultWithError(
-            MixtureDistribution.from_distributions(new_distributions, new_w)
-        )
+        return ResultWithError(MixtureDistribution.from_distributions(new_distributions, new_w))

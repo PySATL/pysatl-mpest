@@ -2,10 +2,10 @@
 
 import numpy as np
 
+from mpest.core.mixture_distribution import DistributionInMixture
 from mpest.em.distribution_checkers.unionable_distribution_checker import (
     AUnionableDistributionChecker,
 )
-from mpest.mixture_distribution import DistributionInMixture
 
 
 class FiniteChecker(AUnionableDistributionChecker):
@@ -20,8 +20,6 @@ class FiniteChecker(AUnionableDistributionChecker):
         step: int,
         distribution: DistributionInMixture,
     ) -> bool:
-        if (distribution.prior_probability is not None) and not np.isfinite(
-            distribution.prior_probability
-        ):
+        if (distribution.prior_probability is not None) and not np.isfinite(distribution.prior_probability):
             return False
         return bool(np.all(np.isfinite(distribution.params)))

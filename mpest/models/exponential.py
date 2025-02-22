@@ -3,8 +3,8 @@
 import numpy as np
 from scipy.stats import expon
 
+from mpest.annotations import Params, Samples
 from mpest.models.abstract_model import AModelDifferentiable, AModelWithGenerator
-from mpest.types import Params, Samples
 
 
 class LMomentsParameterMixin:
@@ -20,15 +20,13 @@ class LMomentsParameterMixin:
         return 1 / moments[0]
 
 
-class ExponentialModel(
-    AModelDifferentiable, AModelWithGenerator, LMomentsParameterMixin
-):
+class ExponentialModel(AModelDifferentiable, AModelWithGenerator, LMomentsParameterMixin):
     """
-    f(x) = l * e^(-lx)
+    f(x) = lm * e^(-lx)
 
-    l = e^(_l)
+    lm = e^(_lm)
 
-    O = [_l]
+    O = [_lm]
     """
 
     @property
@@ -41,9 +39,7 @@ class ExponentialModel(
     def params_convert_from_model(self, params):
         return np.exp(params)
 
-    def generate(
-        self, params: Params, size: int = 1, normalized: bool = True
-    ) -> Samples:
+    def generate(self, params: Params, size: int = 1, normalized: bool = True) -> Samples:
         if not normalized:
             return np.array(expon.rvs(scale=1 / params[0], size=size))
 
@@ -53,22 +49,22 @@ class ExponentialModel(
     def pdf(self, x: float, params: Params) -> float:
         if x < 0:
             return 0
-        (l,) = params
-        return np.exp(l - np.exp(l) * x)
+        (lm,) = params
+        return np.exp(lm - np.exp(lm) * x)
 
     def lpdf(self, x: float, params: Params) -> float:
         if x < 0:
             return -np.inf
-        (l,) = params
-        return l - np.exp(l) * x
+        (lm,) = params
+        return lm - np.exp(lm) * x
 
     def ldl(self, x: float, params: Params) -> float:
-        """Method which returns logarithm of derivative with respect to parameter l"""
+        """Method which returns logarithm of derivative with respect to parameter lm"""
 
         if x < 0:
             return -np.inf
-        (l,) = params
-        return 1 - np.exp(l) * x
+        (lm,) = params
+        return 1 - np.exp(lm) * x
 
     def ld_params(self, x: float, params: Params) -> np.ndarray:
         return np.array([self.ldl(x, params)])

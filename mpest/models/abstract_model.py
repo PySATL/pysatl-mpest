@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from mpest.types import Params, Samples
+from mpest.annotations import Params, Samples
 from mpest.utils import ANamed
 
 
@@ -55,9 +55,7 @@ class AModelWithGenerator(AModel, ABC):
     """
 
     @abstractmethod
-    def generate(
-        self, params: Params, size: int = 1, normalized: bool = False
-    ) -> Samples:
+    def generate(self, params: Params, size: int = 1, normalized: bool = False) -> Samples:
         """
         Method which generates samples by given params
         :param size: sample size

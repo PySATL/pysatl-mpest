@@ -1,4 +1,5 @@
-""" A module containing a class for parsing datasets from the first stage of the experiment """
+"""A module containing a class for parsing datasets from the first stage of the experiment"""
+
 import os
 from pathlib import Path
 
@@ -29,7 +30,9 @@ class SamplesDatasetParser:
 
             # Open each experiment dir
             for exp in os.listdir(mixture_name_dir):
-                # TODO: For macOS, there is a problem of finding files.DS_Store at which the program crashes. It is necessary to sort such files.
+                # TODO: For macOS, there is a problem of finding files.DS_Store at which the program crashes.
+                #  It is necessary to sort such files.
+
                 experiment_dir: Path = mixture_name_dir.joinpath(exp)
                 samples_p: Path = experiment_dir.joinpath("samples.csv")
                 config_p: Path = experiment_dir.joinpath("config.yaml")
@@ -38,15 +41,13 @@ class SamplesDatasetParser:
                 samples = genfromtxt(samples_p, delimiter=",")
 
                 # Get mixture
-                with open(config_p, "r", encoding="utf-8") as config_file:
+                with open(config_p, encoding="utf-8") as config_file:
                     config = yaml.safe_load(config_file)
                     exp_count = config["exp_num"]
                     samples_size = config["samples_size"]
                     base_mixture = create_mixture_by_key(config, "distributions")
 
-                mixture_name_dict.append(
-                    DatasetDescrciption(samples_size, samples, base_mixture, exp_count)
-                )
+                mixture_name_dict.append(DatasetDescrciption(samples_size, samples, base_mixture, exp_count))
 
             output[mixture_name] = mixture_name_dict
         return output

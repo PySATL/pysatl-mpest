@@ -1,4 +1,5 @@
 """Functions for experimental environment"""
+
 import math
 import re
 
@@ -17,17 +18,12 @@ def create_mixture_by_key(config: dict, key: str) -> MixtureDistribution:
         config[key] = [config[key]]
 
     priors = [d["prior"] for d in config[key]]
-    dists = [
-        Distribution.from_params(ALL_MODELS[d["type"]], d["params"])
-        for d in config[key]
-    ]
+    dists = [Distribution.from_params(ALL_MODELS[d["type"]], d["params"]) for d in config[key]]
 
     return MixtureDistribution.from_distributions(dists, priors)
 
 
-def choose_best_mle(
-    base_mixture: MixtureDistribution, results: list[ResultWithLog]
-) -> ResultWithLog:
+def choose_best_mle(base_mixture: MixtureDistribution, results: list[ResultWithLog]) -> ResultWithLog:
     """
     The method for choosing the best result in the maximum likelihood method
     """
@@ -74,13 +70,15 @@ class OrderedProblem(Problem):
         return self._number
 
 
-def sort_human(l: list):
+def sort_human(lst: list):
     """
     Function for sorting list in alphanumerical order.
     """
-    # pylint: disable = [unnecessary-lambda-assignment]
-    convert = lambda text: float(text) if text.isdigit() else text
-    alphanum = lambda key: [
-        convert(c) for c in re.split(r"([-+]?[0-9]*\.?[0-9]*)", key)
-    ]
-    return sorted(l, key=alphanum)
+
+    def convert(text):
+        return float(text) if text.isdigit() else text
+
+    def alphanum(key):
+        return [convert(c) for c in re.split(r"([-+]?[0-9]*\.?[0-9]*)", key)]
+
+    return sorted(lst, key=alphanum)

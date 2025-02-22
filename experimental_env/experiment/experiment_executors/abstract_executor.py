@@ -1,4 +1,4 @@
-""" A module that provides an abstract class for performing the 2nd stage of the experiment """
+"""A module that provides an abstract class for performing the 2nd stage of the experiment"""
 
 import warnings
 from abc import ABC, abstractmethod
@@ -34,9 +34,7 @@ class AExecutor(ABC):
         np.random.seed(self._seed)
 
     @abstractmethod
-    def init_problems(
-        self, ds_descriptions: list[DatasetDescrciption], models: list[type[AModel]]
-    ) -> list[Problem]:
+    def init_problems(self, ds_descriptions: list[DatasetDescrciption], models: list[type[AModel]]) -> list[Problem]:
         """
         Function for generate problem any method user want.
         """
@@ -63,12 +61,8 @@ class AExecutor(ABC):
 
             # Saving results
             for i, ds_descr in enumerate(ds_descriptions):
-                exp_dir: Path = mixture_name_dir.joinpath(
-                    f"experiment_{ds_descr.exp_num}"
-                )
+                exp_dir: Path = mixture_name_dir.joinpath(f"experiment_{ds_descr.exp_num}")
                 result = results[i]
 
-                result_descr = ExperimentDescription.from_result(
-                    problems[i].distributions, result, ds_descr
-                )
+                result_descr = ExperimentDescription.from_result(problems[i].distributions, result, ds_descr)
                 ExperimentSaver(exp_dir).save(result_descr)

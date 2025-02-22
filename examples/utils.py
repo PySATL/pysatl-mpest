@@ -4,12 +4,15 @@ import pickle
 import random
 import time
 from functools import partial
-from typing import Callable, NamedTuple
+from typing import ClassVar, NamedTuple
 
 import numpy as np
 from tqdm.contrib.concurrent import process_map
 
 from examples.config import RESULTS_FOLDER
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem, Result
 from mpest.em import EM
 from mpest.em.breakpointers import ParamDifferBreakpointer, StepCountBreakpointer
 from mpest.em.distribution_checkers import (
@@ -17,10 +20,7 @@ from mpest.em.distribution_checkers import (
     PriorProbabilityThresholdChecker,
 )
 from mpest.em.methods.likelihood_method import LikelihoodMethod
-from mpest.mixture_distribution import MixtureDistribution
 from mpest.optimizers import TOptimizer
-from mpest.problem import Problem, Result
-from mpest.types import Samples
 
 np.seterr(all="ignore")
 
@@ -48,7 +48,7 @@ class SingleSolverResult(NamedTuple):
     steps: int
     time: float
 
-    log: list[EM.Log.Item] = []
+    log: ClassVar[list[EM.Log.Item]] = []
 
 
 class TestResult(NamedTuple):
@@ -133,7 +133,10 @@ def run_tests(
     )
 
     if shuffled:
-        key: Callable[[TestResult], int] = lambda t: t.test.index
+
+        def key(t):
+            return t.test.index
+
         results.sort(key=key)
 
     return results
@@ -170,8 +173,6 @@ def init_solver(
     return EM(
         breakpointer,
         FiniteChecker()
-        + PriorProbabilityThresholdChecker(
-            prior_probability_threshold, prior_probability_threshold_step
-        ),
+        + PriorProbabilityThresholdChecker(prior_probability_threshold, prior_probability_threshold_step),
         method,
     )

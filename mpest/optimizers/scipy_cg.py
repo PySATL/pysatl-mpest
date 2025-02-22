@@ -1,11 +1,11 @@
 """Module which contains CG (Conjugate Gradient iteration) optimizer"""
 
-from typing import Callable
+from collections.abc import Callable
 
 from scipy.optimize import minimize
 
+from mpest.annotations import Params
 from mpest.optimizers.abstract_optimizer import AOptimizer
-from mpest.types import Params
 
 
 class ScipyCG(AOptimizer):

@@ -4,7 +4,7 @@ from itertools import permutations
 
 import numpy as np
 
-from mpest.mixture_distribution import MixtureDistribution
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.utils import ResultWithError
 
 
@@ -20,10 +20,7 @@ def check_for_params_error_tolerance(
 
         a_p, b_p = ([d.params for d in ld] for ld in (a, b))
 
-        return min(
-            sum(np.sum(np.abs(x - y)) for x, y in zip(a_p, _b_p))
-            for _b_p in permutations(b_p)
-        )
+        return min(sum(np.sum(np.abs(x - y)) for x, y in zip(a_p, _b_p)) for _b_p in permutations(b_p))
 
     for result in results:
         assert result.error is None
@@ -48,10 +45,7 @@ def check_for_priors_error_tolerance(
 
         a_p, b_p = ([d.prior_probability for d in ld] for ld in (a, b))
 
-        return min(
-            sum(np.sum(np.abs(x - y)) for x, y in zip(a_p, _b_p))
-            for _b_p in permutations(b_p)
-        )
+        return min(sum(np.sum(np.abs(x - y)) for x, y in zip(a_p, _b_p)) for _b_p in permutations(b_p))
 
     for result in results:
         assert result.error is None

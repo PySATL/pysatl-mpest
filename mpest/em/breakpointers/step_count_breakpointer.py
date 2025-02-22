@@ -1,7 +1,7 @@
 """Module which contains EM breakpointer by step count"""
 
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.em.breakpointers.unionable_breakpointer import AUnionableBreakpointer
-from mpest.mixture_distribution import MixtureDistribution
 
 
 class StepCountBreakpointer(AUnionableBreakpointer):
@@ -25,6 +25,4 @@ class StepCountBreakpointer(AUnionableBreakpointer):
         previous_step: MixtureDistribution | None,
         current_step: MixtureDistribution,
     ) -> bool:
-        if (self.max_step is not None) and (step >= self.max_step):
-            return True
-        return False
+        return (self.max_step is not None) and (step >= self.max_step)

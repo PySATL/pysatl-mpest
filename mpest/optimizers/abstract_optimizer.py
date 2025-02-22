@@ -1,11 +1,11 @@
 """Module which contains abstract optimizer classes"""
 
 from abc import ABC, abstractmethod
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 
-from mpest.types import Params
+from mpest.annotations import Params
 from mpest.utils import ANamed
 
 

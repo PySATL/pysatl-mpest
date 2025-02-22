@@ -26,9 +26,7 @@ def run_test():
 
     counter = Clicker()
 
-    def _generate_test(
-        model: type[AModelWithGenerator], params_borders: list[tuple[float, float]]
-    ) -> list[Test]:
+    def _generate_test(model: type[AModelWithGenerator], params_borders: list[tuple[float, float]]) -> list[Test]:
         test = generate_mono_test(
             model_t=model,
             clicker=counter,
@@ -40,10 +38,7 @@ def run_test():
             tests_per_size=1,
             tests_per_cond=1,
             runs_per_test=1,
-            solvers=[
-                init_solver(16, 0.1, 0.001, 3, optimizer)
-                for optimizer in ALL_OPTIMIZERS
-            ],
+            solvers=[init_solver(16, 0.1, 0.001, 3, optimizer) for optimizer in ALL_OPTIMIZERS],
         )
         return test
 

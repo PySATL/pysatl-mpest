@@ -6,15 +6,15 @@
 import numpy as np
 import pytest
 
-from mpest.distribution import Distribution
-from mpest.mixture_distribution import MixtureDistribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem
 from mpest.models import (
     AModelWithGenerator,
     ExponentialModel,
     GaussianModel,
     WeibullModelExp,
 )
-from mpest.problem import Problem
 from tests.tests_likelihood.likelihood_utils import run_test
 from tests.utils import check_for_params_error_tolerance
 

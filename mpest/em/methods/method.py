@@ -2,9 +2,9 @@
 
 from typing import Generic, TypeVar
 
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
-from mpest.mixture_distribution import MixtureDistribution
-from mpest.problem import Problem
 from mpest.utils import ResultWithError
 
 T = TypeVar("T")

@@ -7,15 +7,15 @@
 import numpy as np
 import pytest
 
-from mpest.distribution import Distribution
-from mpest.mixture_distribution import MixtureDistribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
+from mpest.core.problem import Problem
 from mpest.models import (
     AModelWithGenerator,
     ExponentialModel,
     GaussianModel,
     WeibullModelExp,
 )
-from mpest.problem import Problem
 from mpest.utils import Factory
 from tests.tests_l_moments.l_moments_utils import run_test
 from tests.utils import (
@@ -135,9 +135,5 @@ def test_two_same_distributions_simple(
     )
 
     result = run_test(problem=problem, deviation=deviation)
-    assert check_for_params_error_tolerance(
-        [result], base_mixture, expected_params_error
-    )
-    assert check_for_priors_error_tolerance(
-        [result], base_mixture, expected_priors_error
-    )
+    assert check_for_params_error_tolerance([result], base_mixture, expected_params_error)
+    assert check_for_priors_error_tolerance([result], base_mixture, expected_priors_error)

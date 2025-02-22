@@ -2,8 +2,8 @@
 
 from abc import ABC
 
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.em import EM
-from mpest.mixture_distribution import MixtureDistribution
 
 
 class UnionBreakpointer(EM.ABreakpointer):
@@ -11,9 +11,7 @@ class UnionBreakpointer(EM.ABreakpointer):
 
     def __init__(self, breakpointers: list[EM.ABreakpointer] | None) -> None:
         super().__init__()
-        self._breakpointers: list[EM.ABreakpointer] = (
-            [] if breakpointers is None else breakpointers
-        )
+        self._breakpointers: list[EM.ABreakpointer] = [] if breakpointers is None else breakpointers
 
     @property
     def name(self):
@@ -22,7 +20,7 @@ class UnionBreakpointer(EM.ABreakpointer):
     def __add__(self, additional: "UnionBreakpointer | EM.ABreakpointer"):
         if isinstance(additional, UnionBreakpointer):
             return UnionBreakpointer(self._breakpointers + additional._breakpointers)
-        return UnionBreakpointer(self._breakpointers + [additional])
+        return UnionBreakpointer([*self._breakpointers, additional])
 
     def __radd__(self, additional: "UnionBreakpointer | EM.ABreakpointer"):
         return self + additional
@@ -45,10 +43,7 @@ class UnionBreakpointer(EM.ABreakpointer):
         previous_step: MixtureDistribution | None,
         current_step: MixtureDistribution,
     ) -> bool:
-        for breakpointer in self._breakpointers:
-            if breakpointer.is_over(step, previous_step, current_step):
-                return True
-        return False
+        return any(breakpointer.is_over(step, previous_step, current_step) for breakpointer in self._breakpointers)
 
 
 class AUnionableBreakpointer(EM.ABreakpointer, ABC):

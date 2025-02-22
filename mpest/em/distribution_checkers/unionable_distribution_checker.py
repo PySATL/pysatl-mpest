@@ -2,8 +2,8 @@
 
 from abc import ABC
 
+from mpest.core.mixture_distribution import DistributionInMixture
 from mpest.em import EM
-from mpest.mixture_distribution import DistributionInMixture
 
 
 class UnionDistributionChecker(EM.ADistributionChecker):
@@ -11,26 +11,19 @@ class UnionDistributionChecker(EM.ADistributionChecker):
 
     def __init__(self, breakpointers: list[EM.ADistributionChecker] | None) -> None:
         super().__init__()
-        self._distribution_checkers: list[EM.ADistributionChecker] = (
-            [] if breakpointers is None else breakpointers
-        )
+        self._distribution_checkers: list[EM.ADistributionChecker] = [] if breakpointers is None else breakpointers
 
     @property
     def name(self):
-        return " + ".join(
-            distribution_checker.name
-            for distribution_checker in self._distribution_checkers
-        )
+        return " + ".join(distribution_checker.name for distribution_checker in self._distribution_checkers)
 
     def __add__(
         self,
         additional: "UnionDistributionChecker | EM.ADistributionChecker",
     ):
         if isinstance(additional, UnionDistributionChecker):
-            return UnionDistributionChecker(
-                self._distribution_checkers + additional._distribution_checkers
-            )
-        return UnionDistributionChecker(self._distribution_checkers + [additional])
+            return UnionDistributionChecker(self._distribution_checkers + additional._distribution_checkers)
+        return UnionDistributionChecker([*self._distribution_checkers, additional])
 
     def __radd__(
         self,

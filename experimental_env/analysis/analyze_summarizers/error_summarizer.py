@@ -1,4 +1,4 @@
-""" A module that provides a class that save data about how the metric error is distributed """
+"""A module that provides a class that save data about how the metric error is distributed"""
 
 from math import isnan
 from pathlib import Path
@@ -39,9 +39,7 @@ class ErrorSummarizer(AnalysisSummarizer):
             errors.append(error)
 
         mean = np.sum(errors) / len(errors)
-        standart_deviation = np.sqrt(
-            np.sum((x - mean) ** 2 for x in errors) / len(errors)
-        )
+        standart_deviation = np.sqrt(np.sum([(x - mean) ** 2 for x in errors]) / len(errors))
 
         errors.sort()
         median = errors[len(errors) // 2]

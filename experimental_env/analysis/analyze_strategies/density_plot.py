@@ -1,4 +1,4 @@
-""" A module providing a class for saving a distribution density graph. """
+"""A module providing a class for saving a distribution density graph."""
 
 import matplotlib.pyplot as plt
 import numpy as np

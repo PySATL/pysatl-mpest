@@ -1,9 +1,9 @@
 """Module which contains distribution checker by using prior probability threshold"""
 
+from mpest.core.mixture_distribution import DistributionInMixture
 from mpest.em.distribution_checkers.unionable_distribution_checker import (
     AUnionableDistributionChecker,
 )
-from mpest.mixture_distribution import DistributionInMixture
 
 
 class PriorProbabilityThresholdChecker(AUnionableDistributionChecker):
@@ -45,9 +45,7 @@ class PriorProbabilityThresholdChecker(AUnionableDistributionChecker):
             return False
         if self.prior_probability_threshold is None:
             return True
-        if self.prior_probability_threshold_step is not None:
-            if step < self.prior_probability_threshold_step:
-                return True
-        if distribution.prior_probability < self.prior_probability_threshold:
-            return False
-        return True
+        if (self.prior_probability_threshold_step is not None) and (step < self.prior_probability_threshold_step):
+            return True
+
+        return not (distribution.prior_probability < self.prior_probability_threshold)

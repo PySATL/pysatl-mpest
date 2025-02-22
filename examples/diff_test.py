@@ -28,11 +28,7 @@ tests = []
 for sp in gaussian_start_params:
     main_distr = list(gaussian.generate(np.array(sp), BASE_SIZE // 2, normalized=False))
     for second_sp in np.linspace(sp[0] - 5, sp[0] + 5, num=8, endpoint=True):
-        x = main_distr + list(
-            gaussian.generate(
-                np.array((second_sp, 3.0)), BASE_SIZE // 2, normalized=False
-            )
-        )
+        x = main_distr + list(gaussian.generate(np.array((second_sp, 3.0)), BASE_SIZE // 2, normalized=False))
         random.shuffle(x)
 
         start_params_borders = [
@@ -45,12 +41,7 @@ for sp in gaussian_start_params:
                 samples = random.sample(x, size)
                 for _ in range(TESTS_PER_SIZE):
                     start_params = [
-                        np.array(
-                            [
-                                random.uniform(border[0], border[1])
-                                for border in start_params_borders
-                            ]
-                        )
+                        np.array([random.uniform(border[0], border[1]) for border in start_params_borders])
                         for _ in range(2)
                     ]
                     tests.append(
@@ -81,10 +72,7 @@ for sp in gaussian_start_params:
                                     ]
                                 ),
                             ),
-                            [
-                                init_solver(16, 0.1, 0.001, 3, optimizer)
-                                for optimizer in TESTS_OPTIMIZERS
-                            ],
+                            [init_solver(16, 0.1, 0.001, 3, optimizer) for optimizer in TESTS_OPTIMIZERS],
                             1,
                         )
                     )
@@ -92,11 +80,7 @@ for sp in gaussian_start_params:
 for sp in weibull_start_params:
     main_distr = list(weibull.generate(np.array(sp), BASE_SIZE // 2, normalized=False))
     for second_sp in np.linspace(max(sp[0] - 5, 0.1), sp[0] + 5, num=8, endpoint=True):
-        x = main_distr + list(
-            weibull.generate(
-                np.array((second_sp, 1.0)), BASE_SIZE // 2, normalized=False
-            )
-        )
+        x = main_distr + list(weibull.generate(np.array((second_sp, 1.0)), BASE_SIZE // 2, normalized=False))
         random.shuffle(x)
 
         start_params_borders = [
@@ -109,12 +93,7 @@ for sp in weibull_start_params:
                 samples = random.sample(x, size)
                 for _ in range(TESTS_PER_SIZE):
                     start_params = [
-                        np.array(
-                            [
-                                random.uniform(border[0], border[1])
-                                for border in start_params_borders
-                            ]
-                        )
+                        np.array([random.uniform(border[0], border[1]) for border in start_params_borders])
                         for _ in range(2)
                     ]
                     tests.append(
@@ -145,10 +124,7 @@ for sp in weibull_start_params:
                                     ]
                                 ),
                             ),
-                            [
-                                init_solver(16, 0.1, 0.001, 3, optimizer)
-                                for optimizer in TESTS_OPTIMIZERS
-                            ],
+                            [init_solver(16, 0.1, 0.001, 3, optimizer) for optimizer in TESTS_OPTIMIZERS],
                             1,
                         )
                     )

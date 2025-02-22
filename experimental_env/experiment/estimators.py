@@ -1,4 +1,5 @@
 """Estimators for estimating parameters in second stage of experiment"""
+
 import random
 from abc import abstractmethod
 from concurrent.futures import as_completed
@@ -15,11 +16,8 @@ from mpest.em.methods.method import Method
 from mpest.optimizers import ALL_OPTIMIZERS
 from mpest.utils import ANamed, Factory, ResultWithLog
 
-METHODS = {
-    "Likelihood": [
-        [Factory(BayesEStep), Factory(LikelihoodMStep, optimizer)]
-        for optimizer in ALL_OPTIMIZERS
-    ],
+METHODS: dict = {
+    "Likelihood": [[Factory(BayesEStep), Factory(LikelihoodMStep, optimizer)] for optimizer in ALL_OPTIMIZERS],
     "L-moments": [Factory(IndicatorEStep), Factory(LMomentsMStep)],
 }
 
@@ -31,9 +29,7 @@ class AEstimator(ANamed):
     """
 
     @abstractmethod
-    def estimate(
-        self, problems: list[Problem], cpu_count: int, seed: int
-    ) -> list[ResultWithLog]:
+    def estimate(self, problems: list[Problem], cpu_count: int, seed: int) -> list[ResultWithLog]:
         """
         The process of estimating the parameters of the mixture
         """
@@ -45,9 +41,7 @@ class LikelihoodEstimator(AEstimator):
     During the estimating process, the result with the best approximation is returned.
     """
 
-    def __init__(
-        self, brkpointer: EM.ABreakpointer, dst_checker: EM.ADistributionChecker
-    ):
+    def __init__(self, brkpointer: EM.ABreakpointer, dst_checker: EM.ADistributionChecker):
         """
         Class constructor
         """
@@ -62,35 +56,26 @@ class LikelihoodEstimator(AEstimator):
         """
         Helper function for multiprocessed estimation
         """
-        methods = [
-            Method(step[0].construct(), step[1].construct())
-            for step in METHODS["Likelihood"]
-        ]
+        methods = [Method(step[0].construct(), step[1].construct()) for step in METHODS["Likelihood"]]
         ems = [EM(self._brkpointer, self._dst_checker, method) for method in methods]
         results = [em.solve_logged(problem, True, True, True) for em in ems]
         return choose_best_mle(problem.distributions, results), problem.number
 
-    def estimate(
-        self, problems: list[Problem], cpu_count: int, seed: int = 42
-    ) -> list[ResultWithLog]:
+    def estimate(self, problems: list[Problem], cpu_count: int, seed: int = 42) -> list[ResultWithLog]:
         output = {}
         random.seed(seed)
         print("Starting Likelihood estimation")
         ordered_problem = [
-            OrderedProblem(problem.samples, problem.distributions, i)
-            for i, problem in enumerate(problems)
+            OrderedProblem(problem.samples, problem.distributions, i) for i, problem in enumerate(problems)
         ]
-        with tqdm(total=len(problems)) as pbar:
-            with ProcessPoolExecutor(max_workers=cpu_count) as executor:
-                fs = [
-                    executor.submit(self._helper, problem)
-                    for problem in ordered_problem
-                ]
+        with tqdm(total=len(problems)) as pbar, ProcessPoolExecutor(max_workers=cpu_count) as executor:
+            fs = [executor.submit(self._helper, problem) for problem in ordered_problem]
 
-                for f in as_completed(fs):
-                    pbar.update()
-                    res = f.result()
-                    output[res[1]] = res[0]
+            for f in as_completed(fs):
+                pbar.update()
+                res = f.result()
+                output[res[1]] = res[0]
+
         return [res for num, res in sorted(output.items())]
 
 
@@ -120,25 +105,18 @@ class LMomentsEstimator(AEstimator):
             problem.number,
         )
 
-    def estimate(
-        self, problems: list[Problem], cpu_count: int, seed: int = 42
-    ) -> list[ResultWithLog]:
+    def estimate(self, problems: list[Problem], cpu_count: int, seed: int = 42) -> list[ResultWithLog]:
         output = {}
         random.seed(seed)
         print("Starting L-moments estimation")
         ordered_problem = [
-            OrderedProblem(problem.samples, problem.distributions, i)
-            for i, problem in enumerate(problems)
+            OrderedProblem(problem.samples, problem.distributions, i) for i, problem in enumerate(problems)
         ]
-        with tqdm(total=len(problems)) as pbar:
-            with ProcessPoolExecutor(max_workers=cpu_count) as executor:
-                fs = [
-                    executor.submit(self._helper, problem)
-                    for problem in ordered_problem
-                ]
-                for f in as_completed(fs):
-                    pbar.update()
-                    res = f.result()
-                    output[res[1]] = res[0]
+        with tqdm(total=len(problems)) as pbar, ProcessPoolExecutor(max_workers=cpu_count) as executor:
+            fs = [executor.submit(self._helper, problem) for problem in ordered_problem]
+            for f in as_completed(fs):
+                pbar.update()
+                res = f.result()
+                output[res[1]] = res[0]
 
         return [res for num, res in sorted(output.items())]

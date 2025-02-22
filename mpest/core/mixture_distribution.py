@@ -5,13 +5,13 @@ Distribution mixture can be defined as
 p(x | list[pdf], list[params], list[prior_probability]) = sum(prior_probability * pdf(x | params))
 """
 
-from typing import Iterable, Iterator, Sized
+from collections.abc import Iterable, Iterator, Sized
 
 import numpy as np
 
-from mpest.distribution import APDFAble, AWithGenerator, Distribution
+from mpest.annotations import Params
+from mpest.core.distribution import APDFAble, AWithGenerator, Distribution
 from mpest.models import AModel, AModelWithGenerator
-from mpest.types import Params
 from mpest.utils import IteratorWrapper
 
 
@@ -47,9 +47,7 @@ class DistributionInMixture(Distribution):
         return self.prior_probability * super().pdf(x)
 
 
-class MixtureDistribution(
-    APDFAble, AWithGenerator, Sized, Iterable[DistributionInMixture]
-):
+class MixtureDistribution(APDFAble, AWithGenerator, Sized, Iterable[DistributionInMixture]):
     """
     Class which represents distributions mixture.
 
@@ -79,16 +77,9 @@ class MixtureDistribution(
             k = len(distributions)
             prior_probabilities = list([1 / k] * k)
         elif len(prior_probabilities) != len(distributions):
-            raise ValueError(
-                "Sizes of 'distributions' and 'prior_probabilities' must be the same"
-            )
+            raise ValueError("Sizes of 'distributions' and 'prior_probabilities' must be the same")
 
-        return cls(
-            [
-                DistributionInMixture(d.model, d.params, p)
-                for d, p in zip(distributions, prior_probabilities)
-            ]
-        )
+        return cls([DistributionInMixture(d.model, d.params, p) for d, p in zip(distributions, prior_probabilities)])
 
     def __iter__(self) -> Iterator[DistributionInMixture]:
         def iterate(instance: MixtureDistribution, index: int):
@@ -111,9 +102,7 @@ class MixtureDistribution(
     def has_generator(self):
         """Returns True if contained model has generator"""
         return all(
-            isinstance(d.model, AModelWithGenerator)
-            for d in self.distributions
-            if d.prior_probability is not None
+            isinstance(d.model, AModelWithGenerator) for d in self.distributions if d.prior_probability is not None
         )
 
     def generate(self, size=1) -> Params:
@@ -133,11 +122,11 @@ class MixtureDistribution(
             )
         )
 
-        x = []
+        temp = []
         for i, model in enumerate(models):
-            x += list(model[0].generate(x_models.count(i)))
+            temp += list(model[0].generate(x_models.count(i)))
 
-        x = np.array(x)
+        x = np.array(temp)
         np.random.shuffle(x)
 
         return x
@@ -153,14 +142,10 @@ class MixtureDistribution(
             return
         s = sum(s)
 
-        prior_probabilities = [
-            d.prior_probability / s if d.prior_probability else None
-            for d in self._distributions
-        ]
+        prior_probabilities = [d.prior_probability / s if d.prior_probability else None for d in self._distributions]
 
         self._distributions = [
-            DistributionInMixture(d.model, d.params, p)
-            for d, p in zip(self._distributions, prior_probabilities)
+            DistributionInMixture(d.model, d.params, p) for d, p in zip(self._distributions, prior_probabilities)
         ]
 
     @property

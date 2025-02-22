@@ -1,4 +1,5 @@
 """Module from generating datasets with the given sample size, experimental counts and mixture"""
+
 import random
 from pathlib import Path
 
@@ -9,8 +10,8 @@ from experimental_env.mixture_generators.dataset_mixture_generator import (
     DatasetMixtureGenerator,
 )
 from experimental_env.preparation.dataset_saver import DatasetDescrciption, DatasetSaver
-from mpest.distribution import Distribution
-from mpest.mixture_distribution import MixtureDistribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.models.abstract_model import AModel
 
 
@@ -59,12 +60,10 @@ class ConcreteDatasetGenerator:
 
     def __init__(self, seed: int = 42):
         np.random.seed(seed)
-        self._dists = []
-        self._priors = []
+        self._dists: list[Distribution] = []
+        self._priors: list[float | None] = []
 
-    def add_distribution(
-        self, model: type[AModel], params: list[float], prior: float
-    ) -> None:
+    def add_distribution(self, model: type[AModel], params: list[float], prior: float) -> None:
         """
         Add distribution with params and prior to mixture.
         """
@@ -88,7 +87,7 @@ class ConcreteDatasetGenerator:
 
             descr = DatasetDescrciption(samples_size, samples, mixture, i + 1)
             mixture_name_dir: Path = working_path.joinpath(descr.get_dataset_name())
-            exp_dir: Path = mixture_name_dir.joinpath(f"experiment_{i+1}")
+            exp_dir: Path = mixture_name_dir.joinpath(f"experiment_{i + 1}")
 
             if exp_dir.exists():
                 continue

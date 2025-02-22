@@ -4,7 +4,7 @@ for solving the parameter estimation of mixture distribution problem __init__ fi
 """
 
 from mpest import em, models, optimizers, utils
-from mpest.distribution import Distribution
-from mpest.mixture_distribution import DistributionInMixture, MixtureDistribution
-from mpest.problem import Problem, Result
-from mpest.types import Params, Samples
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import DistributionInMixture, MixtureDistribution
+from mpest.core.problem import Problem, Result
+from mpest.annotations import Params, Samples

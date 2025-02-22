@@ -1,4 +1,4 @@
-""" A module providing a class for saving the convergence graph of the error function. """
+"""A module providing a class for saving the convergence graph of the error function."""
 
 from matplotlib import pyplot as plt
 

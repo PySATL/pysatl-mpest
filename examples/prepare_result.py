@@ -9,8 +9,8 @@ from tqdm.contrib.concurrent import process_map
 from examples.config import MAX_WORKERS
 from examples.mono_test_generator import Clicker
 from examples.utils import SingleSolverResult, TestResult
-from mpest.mixture_distribution import DistributionInMixture, MixtureDistribution
-from mpest.types import Samples
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import DistributionInMixture, MixtureDistribution
 
 
 def nll(samples: Samples, mixture: MixtureDistribution) -> float:
@@ -21,9 +21,7 @@ def nll(samples: Samples, mixture: MixtureDistribution) -> float:
     return occur
 
 
-def identity_guessing_chance(
-    dx: MixtureDistribution, dy: MixtureDistribution, sample: Samples
-):
+def identity_guessing_chance(dx: MixtureDistribution, dy: MixtureDistribution, sample: Samples):
     """Identity guessing chance metric"""
 
     dxs = list(dx)
@@ -64,9 +62,7 @@ def result_to_df_diff(result: SingleSolverResult):
                         dct[clicker.click()] = (sp[0], second_sp)
 
     for sp in weibull_start_params:
-        for second_sp in np.linspace(
-            max(sp[0] - 5, 0.1), sp[0] + 5, num=8, endpoint=True
-        ):
+        for second_sp in np.linspace(max(sp[0] - 5, 0.1), sp[0] + 5, num=8, endpoint=True):
             for _ in sizes:
                 for _ in range(tests_per_cond):
                     for _ in range(tests_per_size):
@@ -76,7 +72,7 @@ def result_to_df_diff(result: SingleSolverResult):
         [
             (
                 d
-                if (d.prior_probability is not None) and (d.prior_probability > 0.001)
+                if (d.prior_probability is not None) and (d.prior_probability > 0.001)  # noqa: PLR2004
                 else DistributionInMixture(d.model, d.params, None)
             )
             for d in result.result.content
@@ -100,14 +96,12 @@ def result_to_df_diff(result: SingleSolverResult):
         "time": result.time,
         "model": result.test.true_mixture[0].model.name,
         "size": len(result.test.problem.samples),
-        "success": (result.steps < 128) and not failed,
+        "success": (result.steps < 128) and not failed,  # noqa: PLR2004
         "failed": failed,
         "occur": nll(result.test.all_data, mixture_distribution),
         "start": start,
         "diff": diff,
-        "res_err": identity_guessing_chance(
-            result.test.true_mixture, result.result.content, result.test.all_data
-        ),
+        "res_err": identity_guessing_chance(result.test.true_mixture, result.result.content, result.test.all_data),
     }
 
 
@@ -131,7 +125,7 @@ def result_to_df(result: SingleSolverResult):
         [
             (
                 d
-                if (d.prior_probability is not None) and (d.prior_probability > 0.001)
+                if (d.prior_probability is not None) and (d.prior_probability > 0.001)  # noqa: PLR2004
                 else DistributionInMixture(d.model, d.params, None)
             )
             for d in result.result.content
@@ -152,7 +146,7 @@ def result_to_df(result: SingleSolverResult):
         "time": result.time,
         "model": result.test.true_mixture[0].model.name,
         "size": len(result.test.problem.samples),
-        "success": (result.steps < 16) and failed,
+        "success": (result.steps < 16) and failed,  # noqa: PLR2004
         "failed": failed,
         "occur": nll(result.test.all_data, mixture_distribution),
     }

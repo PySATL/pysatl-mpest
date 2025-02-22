@@ -5,12 +5,12 @@ Module which represents EM algorithm and few of it's params:
 """
 
 from abc import ABC, abstractmethod
-from typing import Callable
+from collections.abc import Callable
 
-from mpest.distribution import Distribution
+from mpest.core.distribution import Distribution
+from mpest.core.mixture_distribution import DistributionInMixture, MixtureDistribution
+from mpest.core.problem import ASolver, Problem, Result
 from mpest.em.methods.method import Method
-from mpest.mixture_distribution import DistributionInMixture, MixtureDistribution
-from mpest.problem import ASolver, Problem, Result
 from mpest.utils import (
     ANamed,
     ObjectWrapper,
@@ -118,9 +118,7 @@ class EM(ASolver):
                 self._checker = distribution_checker
 
             if len(mixture_distribution) != len(self._active):
-                raise ValueError(
-                    "New mixture distribution size must be the same with previous"
-                )
+                raise ValueError("New mixture distribution size must be the same with previous")
 
             new_active_indexes: list[int] = []
             for ind, d in zip(self._active_indexes, mixture_distribution):
@@ -248,7 +246,7 @@ class EM(ASolver):
 
             return ResultWithError(new_mixture, result.error)
 
-        history = []
+        history: list = []
 
         def log_map(distributions: ResultWithError[EM._DistributionMixtureAlive]):
             return ResultWithError(
@@ -282,11 +280,7 @@ class EM(ASolver):
                 lambda d: self.distribution_checker.is_alive(step, d),
             )
 
-            error = (
-                Exception("All distributions failed")
-                if len(distributions) == 0
-                else None
-            )
+            error = Exception("All distributions failed") if len(distributions) == 0 else None
 
             return ResultWithError(distributions, error)
 
@@ -303,10 +297,7 @@ class EM(ASolver):
                 break
             step += 1
 
-        history = [
-            TimerResultWrapper(postprocess_result(result.content), result.runtime)
-            for result in history
-        ]
+        history = [TimerResultWrapper(postprocess_result(result.content), result.runtime) for result in history]
 
         return ResultWithLog(
             postprocess_result(ResultWithError(distributions.all_distributions)),

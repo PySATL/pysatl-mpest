@@ -1,4 +1,4 @@
-""" A module that provides a class for saving a graph showing the execution time of each step """
+"""A module that provides a class for saving a graph showing the execution time of each step"""
 
 import matplotlib.pyplot as plt
 

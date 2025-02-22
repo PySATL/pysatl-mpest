@@ -1,4 +1,4 @@
-""" A module that provides a class for generating initial mixtures with uniform distribution. """
+"""A module that provides a class for generating initial mixtures with uniform distribution."""
 
 from experimental_env.experiment.experiment_executors.abstract_executor import AExecutor
 from experimental_env.mixture_generators.random_mixture_generator import (

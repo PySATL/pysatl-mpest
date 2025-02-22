@@ -1,5 +1,6 @@
 """TODO"""
 
+from mpest.core.problem import Problem, Result
 from mpest.em import EM
 from mpest.em.breakpointers import ParamDifferBreakpointer, StepCountBreakpointer
 from mpest.em.distribution_checkers import (
@@ -9,7 +10,6 @@ from mpest.em.distribution_checkers import (
 from mpest.em.methods.likelihood_method import BayesEStep, LikelihoodMStep
 from mpest.em.methods.method import Method
 from mpest.optimizers import ALL_OPTIMIZERS
-from mpest.problem import Problem, Result
 
 
 def run_test(problem: Problem, deviation: float) -> list[Result]:

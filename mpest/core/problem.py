@@ -2,8 +2,8 @@
 
 from abc import ABC, abstractmethod
 
-from mpest.mixture_distribution import MixtureDistribution
-from mpest.types import Samples
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.utils import ResultWithError
 
 
@@ -13,6 +13,7 @@ class Problem:
 
     Described by samples and the initial approximation.
     Initial approximation is an mixture distribution.
+
     """
 
     def __init__(

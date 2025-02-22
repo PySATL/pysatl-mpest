@@ -1,4 +1,4 @@
-""" A module with saver for second stage of experiment """
+"""A module with saver for second stage of experiment"""
 
 from pathlib import Path
 
