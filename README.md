@@ -1,7 +1,6 @@
-![PyLint](https://github.com/PySATL/MPEst/actions/workflows/pylint.yml/badge.svg)
-![Check code style](https://github.com/PySATL/MPEst/actions/workflows/code_style.yml/badge.svg)
-[![Code style](https://img.shields.io/badge/Code%20style-black-000000.svg)](https://github.com/psf/black)
-![Unit Tests](https://github.com/PySATL/MPEst/actions/workflows/test.yml/badge.svg)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![CI](https://github.com/PySATL/pysatl-mpest/actions/workflows/check.yml/badge.svg)
+<a href="https://github.com/PySATL/pysatl-mpest/blob/main/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg"></a>
 
 ## Installation
 
@@ -98,6 +97,6 @@ plt.show()
 ![plot](https://github.com/toxakaz/EM-algo/raw/main/examples/readme_example/example.png)
 
 ## Requirements
-- python 3.11
+- python >= 3.11
 - numpy
 - scipy
