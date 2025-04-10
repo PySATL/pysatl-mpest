@@ -1,15 +1,15 @@
-"""Module which contains Silhouette Method"""
+"""Module which contains Elbow Method"""
 
+from kneed import KneeLocator
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
 
-from mpest.components_number.methods.abstract_estimator import AComponentsNumber
-from mpest.types import Samples
+from mpest.annotations import Samples
+from mpest.preprocessing.components_number.methods.abstract_estimator import AComponentsNumber
 
 
-class Silhouette(AComponentsNumber):
+class Elbow(AComponentsNumber):
     """
-    Silhouette method with KMeans++
+    Elbow method with KMeans++
     -----
     :param kmax:       int                       — Assumed maximum number of components
     :param k_init:     int         default: 1    — Number of times the KMeans is run
@@ -31,23 +31,23 @@ class Silhouette(AComponentsNumber):
 
     @property
     def name(self) -> str:
-        return "Silhouette"
+        return "Elbow"
 
     def estimate(self, samples: Samples) -> int:
         samples = samples.reshape(-1, 1)
-        k_range = range(2, self.kmax + 1)  # possible components: [2, kmax]
-        silhouettes = []
+        k_range = range(1, self.kmax + 2)  # possible components: [2, kmax]
+        wcss = []
 
         for k in k_range:
-            kmeans_silhouette = KMeans(
-                n_clusters=k,
+            kmeans_elbow = KMeans(
                 max_iter=self.k_max_iter,
+                n_clusters=k,
                 init="k-means++",
                 n_init=self.k_init,
                 random_state=self.random_state,
             ).fit(samples)
-            silhouettes.append(silhouette_score(samples, kmeans_silhouette.labels_))
+            wcss.append(kmeans_elbow.inertia_)
 
-        optimal_k = silhouettes.index(max(silhouettes)) + 2
+        knee = KneeLocator(k_range, wcss, curve="convex", direction="decreasing").elbow
 
-        return optimal_k
+        return knee

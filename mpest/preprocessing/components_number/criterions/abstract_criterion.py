@@ -3,8 +3,8 @@
 from abc import ABC, abstractmethod
 from math import log
 
-from mpest.mixture_distribution import DistributionInMixture
-from mpest.types import Samples
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import DistributionInMixture
 from mpest.utils import ANamed
 
 
@@ -19,7 +19,7 @@ class ACriterion(ANamed, ABC):
     ) -> float:
         """The function for calculating the likelihood of a mixture model for a sample"""
 
-        llh = 0
+        llh = 0.0
         for x in samples:
             lh = sum(
                 d.prior_probability * d.model.pdf(x, d.params) for d in distributions

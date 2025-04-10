@@ -5,17 +5,14 @@ from itertools import combinations_with_replacement
 import numpy as np
 
 from mpest import Distribution, MixtureDistribution, Problem, Samples
-from mpest.components_number.criterions.abstract_criterion import ACriterion
-from mpest.components_number.methods.abstract_estimator import AComponentsNumber
 from mpest.em import EM
 from mpest.em.breakpointers import ParamDifferBreakpointer, StepCountBreakpointer
-from mpest.em.distribution_checkers import (
-    FiniteChecker,
-    PriorProbabilityThresholdChecker,
-)
+from mpest.em.distribution_checkers import FiniteChecker, PriorProbabilityThresholdChecker
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
 from mpest.em.methods.method import Method
-from mpest.models import AModel, ExponentialModel, GaussianModel, WeibullModelExp
+from mpest.models import AModel, AModelDifferentiable, ExponentialModel, GaussianModel, WeibullModelExp
+from mpest.preprocessing.components_number.criterions.abstract_criterion import ACriterion
+from mpest.preprocessing.components_number.methods.abstract_estimator import AComponentsNumber
 
 
 class XMeans(AComponentsNumber):
@@ -34,44 +31,50 @@ class XMeans(AComponentsNumber):
         criterion: ACriterion,
         estep: AExpectation,
         mstep: AMaximization,
+        random_state: int | None = None
     ) -> None:
         self.kmax = kmax
         self.criterion = criterion
         self.estep = estep
         self.mstep = mstep
-        self.models = (GaussianModel, WeibullModelExp, ExponentialModel)
+        self.random_state = random_state
+        self.models = (GaussianModel(), WeibullModelExp(), ExponentialModel())
 
     @property
     def name(self) -> str:
         return "X-Means"
 
-    @staticmethod
-    def _generate_params(model: AModel, samples: Samples) -> list[float]:
-        if model is GaussianModel:
+    def _generate_params(self, model: AModel, samples: Samples) -> np.ndarray:
+
+        if isinstance(model, GaussianModel):
             m = np.mean(samples) + np.random.normal(0, 0.1 * np.std(samples))
             sd = np.abs(np.random.normal(0.5 * np.std(samples), 0.25 * np.std(samples)))
-            return [m, sd]
-        if model is WeibullModelExp:
+            return np.array([m, sd])
+        if isinstance(model, WeibullModelExp):
             k = np.random.uniform(0.5, 5)
-            l = np.random.uniform(0.1, 10)
-            return [k, l]
+            lm = np.random.uniform(0.1, 10)
+            return np.array([k, lm])
         else:
-            l = np.random.uniform(0.1, 10)
-            return [l]
+            lm = np.random.uniform(0.1, 10)
+            return np.array([lm])
 
-    def _generate_problem(self, models: list[AModel], samples: Samples) -> Problem:
+    def _generate_problem(self, models: tuple[AModelDifferentiable, ...], samples: Samples) -> Problem:
+
         params = []
         for model in models:
             params.append(self._generate_params(model, samples))
         problem = Problem(
             samples=samples,
             distributions=MixtureDistribution.from_distributions(
-                [Distribution(model(), param) for model, param in zip(models, params)]
+                [Distribution(model, param) for model, param in zip(models, params)]
             ),
         )
         return problem
 
     def estimate(self, samples: Samples) -> float:
+        np.random.seed(self.random_state)
+        search_limit = 2
+
         negative = samples.min() < 0
 
         method = Method(self.estep, self.mstep)
@@ -85,15 +88,13 @@ class XMeans(AComponentsNumber):
         distributions = []
 
         for k in range(1, self.kmax + 1):
-            if k == 2:
-                model_combinations = combinations_with_replacement(self.models, 2)
+            if k <= search_limit:
+                model_combinations = list(combinations_with_replacement(self.models, k))
             else:
-                model_combinations = [
-                    [self.models[i] for _ in range(k)] for i in range(len(self.models))
-                ]
+                model_combinations = [tuple([self.models[i] for _ in range(k)]) for i in range(len(self.models))]
 
             for models in model_combinations:
-                if negative and GaussianModel not in models:
+                if negative and not any([isinstance(model, GaussianModel) for model in models]):
                     continue
                 problem = self._generate_problem(models, samples)
                 result = em_algo.solve(problem).content.distributions

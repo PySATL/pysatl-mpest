@@ -2,8 +2,8 @@
 
 import pytest
 
-from mpest.components_number.methods import Silhouette
 from mpest.models import ExponentialModel, GaussianModel, WeibullModelExp
+from mpest.preprocessing.components_number.methods import Silhouette
 from tests.tests_components_number.components_num_utils import run_test
 
 

@@ -5,8 +5,8 @@ from math import ceil
 import numpy as np
 from scipy.signal import find_peaks
 
-from mpest.components_number.methods.abstract_estimator import AComponentsNumber
-from mpest.types import Samples
+from mpest.annotations import Samples
+from mpest.preprocessing.components_number.methods.abstract_estimator import AComponentsNumber
 
 
 class Peaks(AComponentsNumber):

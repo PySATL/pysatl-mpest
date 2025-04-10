@@ -3,8 +3,8 @@
 import numpy as np
 
 from mpest import Distribution, MixtureDistribution
-from mpest.components_number.methods import AComponentsNumber
 from mpest.models import AModelWithGenerator
+from mpest.preprocessing.components_number.methods import AComponentsNumber
 
 
 def run_test(

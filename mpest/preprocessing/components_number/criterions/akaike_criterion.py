@@ -1,8 +1,8 @@
 """Module which contains Akaike Information Criterion class"""
 
-from mpest.components_number.criterions.abstract_criterion import ACriterion
-from mpest.mixture_distribution import DistributionInMixture
-from mpest.types import Samples
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import DistributionInMixture
+from mpest.preprocessing.components_number.criterions.abstract_criterion import ACriterion
 
 
 class AIC(ACriterion):

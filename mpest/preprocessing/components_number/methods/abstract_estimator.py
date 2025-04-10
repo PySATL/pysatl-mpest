@@ -1,13 +1,13 @@
-"""Module which contains abstract сlass for methods estimating number of components in mixture"""
+"""Module which contains abstract class for methods estimating number of components in mixture"""
 
 from abc import ABC, abstractmethod
 
-from mpest.types import Samples
+from mpest.annotations import Samples
 from mpest.utils import ANamed
 
 
 class AComponentsNumber(ANamed, ABC):
-    """Abstract сlass for methods estimating number of components in mixture"""
+    """Abstract class for methods estimating number of components in mixture"""
 
     @abstractmethod
     def estimate(self, samples: Samples) -> float:
