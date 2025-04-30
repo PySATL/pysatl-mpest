@@ -1,15 +1,15 @@
 """The module in which the maximum likelihood method is presented"""
-
 from functools import partial
 
 import numpy as np
 
+from mpest import DistributionInMixture
 from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem, Result
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
 from mpest.exceptions import SampleError
-from mpest.models import AModel, AModelDifferentiable
+from mpest.models import AModel, AModelDifferentiable, WeibullModelExp
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
 from mpest.utils import ResultWithError
 
@@ -59,17 +59,127 @@ class BayesEStep(AExpectation[EResult]):
         return active_samples, h, problem
 
 
-# class ML(AExpectation[EResult]):
-#     """
-#     Class which represents ML method for calculating matrix for M step in likelihood method
-#     """
-#
-#     def step(self, problem: Problem) -> EResult:
-#         """
-#         A function that performs E step
-#
-#         :param problem: Object of class Problem, which contains samples and mixture.
-#         """
+import numpy as np
+from typing import List
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from scipy.stats import weibull_min
+
+
+class ML(AExpectation[EResult]):
+    """
+    Improved ML initialization with proper distribution parameterization
+    and tail handling to avoid divergence to -infinity
+    """
+
+    def __init__(self, models: List[AModel], n_components: int, method: str = "kmeans") -> None:
+        self._n_components = n_components
+        self._method = method
+        self._models = models
+        self._initialized = False
+        self._current_mixture = None
+
+    def _estimate_weibull_params(self, data: np.ndarray) -> np.ndarray:
+        """Robust Weibull parameter estimation using MLE"""
+        try:
+            params = weibull_min.fit(data, floc=0)
+            return np.array([params[0], params[2]])
+        except:
+            return np.array([0.5, np.mean(data)])
+
+    def _initialize_distributions(self, X: np.ndarray) -> MixtureDistribution:
+        """Improved initialization with distribution-aware parameter estimation"""
+        if self._initialized:
+            return self._current_mixture
+
+        if self._method == 'kmeans':
+            kmeans = KMeans(n_clusters=self._n_components)
+            labels = kmeans.fit_predict(X.reshape(-1, 1))
+        elif self._method == 'dbscan':
+            dbscan = DBSCAN(eps=0.3, min_samples=5)
+            labels = dbscan.fit_predict(X.reshape(-1, 1))
+            if -1 in labels:
+                labels[labels == -1] = np.random.choice(range(self._n_components), np.sum(labels == -1))
+        elif self._method == 'agglo':
+            agglo = AgglomerativeClustering(n_clusters=self._n_components)
+            labels = agglo.fit_predict(X.reshape(-1, 1))
+        else:
+            raise ValueError("Can't find this clustering method.")
+
+        distributions = []
+        weights = []
+
+        for k in range(self._n_components):
+            X_k = X[labels == k]
+            weight = len(X_k) / len(X)
+
+            if len(X_k) == 0:
+                X_k = np.random.choice(X, size=10, replace=True)
+                weight = 1.0 / self._n_components
+
+            model = self._models[k]
+            if isinstance(model, WeibullModelExp):
+                params = self._estimate_weibull_params(X_k)
+                params = np.clip(params, [0.1, 0.1], [2.0, 1000.0])
+            else:
+                mean = np.mean(X_k)
+                std = np.clip(np.std(X_k), 0.1, 100.0)
+                params = np.array([mean, std])
+
+            distributions.append(
+                DistributionInMixture(
+                    model=model,
+                    params=params,
+                    prior_probability=weight
+                )
+            )
+            weights.append(weight)
+
+        self._current_mixture = MixtureDistribution.from_distributions(distributions, weights)
+        self._initialized = True
+        return self._current_mixture
+
+    def step(self, problem: Problem) -> EResult:
+        """E-step with improved numerical stability"""
+        mixture_dist = self._initialize_distributions(problem.samples)
+        samples = problem.samples
+
+        p_xij = []
+        active_samples = []
+
+        min_prob = 1e-100
+
+        for x in samples:
+            p = np.zeros(len(mixture_dist.distributions))
+            for i, d in enumerate(mixture_dist.distributions):
+                try:
+                    pdf_val = d.model.pdf(x, d.params)
+                    p[i] = max(pdf_val, min_prob)
+                except:
+                    p[i] = min_prob
+
+            if np.any(p > min_prob):
+                p_xij.append(p)
+                active_samples.append(x)
+
+        if not active_samples:
+            error = SampleError("None of the elements in the sample is correct for this mixture")
+            return ResultWithError(mixture_dist, error)
+
+        m = len(p_xij)
+        k = len(mixture_dist.distributions)
+        h = np.zeros([k, m], dtype=float)
+        curr_w = np.array([d.prior_probability for d in mixture_dist.distributions])
+
+        for i, p in enumerate(p_xij):
+            wp = curr_w * p
+            swp = np.sum(wp)
+
+            if swp < min_prob:
+                h[:, i] = curr_w / np.sum(curr_w)
+            else:
+                h[:, i] = wp / swp
+
+        return active_samples, h, problem
 
 
 class LikelihoodMStep(AMaximization[EResult]):
