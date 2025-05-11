@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
-from scipy.stats import weibull_min, norm
+from scipy.stats import norm, weibull_min
 
-from mpest import Problem, MixtureDistribution, Distribution
+from mpest import Distribution, MixtureDistribution, Problem
 from mpest.em.methods.likelihood_method import ML
-from mpest.models import WeibullModelExp, GaussianModel
+from mpest.models import GaussianModel, WeibullModelExp
 
 
 @pytest.fixture
@@ -19,36 +19,36 @@ def sample_data():
 class TestMLInitialization:
     def test_initialization(self):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2, method="kmeans")
-        assert ml._n_components == 2
+        ml = ML(models, method="kmeans")
+        assert ml._n_components == len(models)
         assert ml._method == "kmeans"
-        assert len(ml._models) == 2
+        assert len(ml._models) == len(models)
         assert not ml._initialized
-        assert ml._current_mixture is None
+        assert ml._current_mixture.distributions == []
 
     def test_initialization_with_invalid_method(self):
         models = [WeibullModelExp(), GaussianModel()]
         with pytest.raises(ValueError):
-            ML(models, n_components=2, method="invalid_method")._initialize_distributions(np.ndarray([]))
+            ML(models, method="invalid_method")._initialize_distributions(np.ndarray([]))
 
 
 class TestWeibullParamEstimation:
     def test_weibull_param_estimation(self):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2)
-
+        ml = ML(models)
+        count_of_params = 2
         data = weibull_min.rvs(1.5, scale=2.0, size=1000)
-        params = ml._estimate_weibull_params(data)
-        assert len(params) == 2
+        params = ml.estimate_weibull_params(data)
+        assert len(params) == count_of_params
         assert params[0] > 0
         assert params[1] > 0
 
     def test_weibull_param_estimation_with_bad_data(self):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2)
+        ml = ML(models)
 
         data = np.array([0, 0, 0])
-        params = ml._estimate_weibull_params(data)
+        params = ml.estimate_weibull_params(data)
         assert params[0] > 0
         assert isinstance(params[1], float)
 
@@ -56,42 +56,41 @@ class TestWeibullParamEstimation:
 class TestDistributionInitialization:
     def test_kmeans_initialization(self, sample_data):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2, method="kmeans")
+        ml = ML(models, method="kmeans")
 
         mixture = ml._initialize_distributions(sample_data)
-        assert len(mixture.distributions) == 2
+        assert len(mixture.distributions) == len(models)
 
     def test_dbscan_initialization(self, sample_data):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2, method="dbscan")
+        ml = ML(models, method="dbscan")
 
         mixture = ml._initialize_distributions(sample_data)
-        assert len(mixture.distributions) > 0
+        assert len(mixture.distributions) == len(models)
 
     def test_agglo_initialization(self, sample_data):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2, method="agglo")
+        ml = ML(models, method="agglo")
 
         mixture = ml._initialize_distributions(sample_data)
-        assert len(mixture.distributions) == 2
+        assert len(mixture.distributions) == len(models)
 
 
 class TestEStep:
     def test_e_step(self, sample_data):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2, method="kmeans")
+        ml = ML(models, method="kmeans")
 
         initial_mixture = MixtureDistribution.from_distributions(
             [
                 Distribution.from_params(WeibullModelExp, [1.0, 1.0]),
                 Distribution.from_params(GaussianModel, [0.0, 1.0]),
             ],
-            [0.5, 0.5]
+            [0.5, 0.5],
         )
         problem = Problem(sample_data, initial_mixture)
 
         result = ml.step(problem)
-        assert len(result) == 3
 
         active_samples, h, _ = result
         assert len(active_samples) == len(sample_data)
@@ -103,14 +102,14 @@ class TestEStep:
     def test_e_step_with_empty_cluster(self):
         data = np.concatenate([np.zeros(500), np.ones(500)])
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2, method="kmeans")
+        ml = ML(models, method="kmeans")
 
         initial_mixture = MixtureDistribution.from_distributions(
             [
                 Distribution.from_params(WeibullModelExp, [1.0, 1.0]),
                 Distribution.from_params(GaussianModel, [0.0, 1.0]),
             ],
-            [0.5, 0.5]
+            [0.5, 0.5],
         )
         problem = Problem(data, initial_mixture)
 
@@ -120,16 +119,15 @@ class TestEStep:
         assert h.shape == (2, len(data))
 
 
-
 class TestEdgeCases:
     def test_empty_input(self):
         models = [WeibullModelExp(), GaussianModel()]
-        ml = ML(models, n_components=2)
+        ml = ML(models)
         with pytest.raises(ValueError):
             ml._initialize_distributions(np.array([]))
 
     def test_single_component(self, sample_data):
         models = [WeibullModelExp()]
-        ml = ML(models, n_components=1)
+        ml = ML(models)
         mixture = ml._initialize_distributions(sample_data)
         assert len(mixture.distributions) == 1
