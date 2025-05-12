@@ -4,7 +4,7 @@ from math import log
 
 from mpest.annotations import Samples
 from mpest.core.mixture_distribution import DistributionInMixture
-from mpest.preprocessing.components_number.criterions.abstract_criterion import ACriterion
+from mpest.preprocessing.criterions.abstract_criterion import ACriterion
 
 
 class BIC(ACriterion):

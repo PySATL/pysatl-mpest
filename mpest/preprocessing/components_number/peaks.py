@@ -6,7 +6,7 @@ import numpy as np
 from scipy.signal import find_peaks
 
 from mpest.annotations import Samples
-from mpest.preprocessing.components_number.methods.abstract_estimator import AComponentsNumber
+from mpest.preprocessing.components_number.abstract_estimator import AComponentsNumber
 
 
 class Peaks(AComponentsNumber):

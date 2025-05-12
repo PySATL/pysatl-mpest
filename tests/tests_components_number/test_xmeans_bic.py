@@ -5,8 +5,8 @@ import pytest
 from mpest.em.methods.likelihood_method import BayesEStep, LikelihoodMStep
 from mpest.models import ExponentialModel, GaussianModel, WeibullModelExp
 from mpest.optimizers.scipy_slsqp import ScipySLSQP
-from mpest.preprocessing.components_number.criterions import BIC
-from mpest.preprocessing.components_number.methods import XMeans
+from mpest.preprocessing.criterions import BIC
+from mpest.preprocessing.components_number import XMeans
 from tests.tests_components_number.components_num_utils import run_test
 
 

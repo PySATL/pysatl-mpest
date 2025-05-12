@@ -3,6 +3,8 @@
 from abc import ABC, abstractmethod
 from math import log
 
+import numpy as np
+
 from mpest.annotations import Samples
 from mpest.core.mixture_distribution import DistributionInMixture
 from mpest.utils import ANamed
@@ -30,10 +32,12 @@ class ACriterion(ANamed, ABC):
     @staticmethod
     def _k_parameters(distributions: list[DistributionInMixture]) -> int:
         """The function for calculating the number of parameters mixture model"""
+        unique_models = len(np.unique([distribution.model.name for distribution in distributions]))
+
         k = len(distributions) - 1
         for d in distributions:
             k += len(d.params)
-        return k
+        return k + unique_models
 
     @abstractmethod
     def estimate(

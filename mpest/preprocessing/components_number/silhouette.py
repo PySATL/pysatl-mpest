@@ -4,17 +4,17 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 from mpest.annotations import Samples
-from mpest.preprocessing.components_number.methods.abstract_estimator import AComponentsNumber
+from mpest.preprocessing.components_number.abstract_estimator import AComponentsNumber
 
 
 class Silhouette(AComponentsNumber):
     """
     Silhouette method with KMeans++
     -----
-    :param kmax:       int                       — Assumed maximum number of components
-    :param k_init:     int         default: 1    — Number of times the KMeans is run
-    :param k_max_iter: int         default: 300  — Maximum number of iterations in KMeans
-    :random_state:     int | None  default: None — Determines random generation for KMeans
+    :param kmax:         int                       — Assumed maximum number of components
+    :param k_init:       int         default: 1    — Number of times the KMeans is run
+    :param k_max_iter:   int         default: 300  — Maximum number of iterations in KMeans
+    :param random_state: int | None  default: None — Determines random generation for KMeans
     """
 
     def __init__(

@@ -10,5 +10,5 @@ class AComponentsNumber(ANamed, ABC):
     """Abstract class for methods estimating number of components in mixture"""
 
     @abstractmethod
-    def estimate(self, samples: Samples) -> float:
+    def estimate(self, samples: Samples) -> int:
         """The function for estimating number of components"""

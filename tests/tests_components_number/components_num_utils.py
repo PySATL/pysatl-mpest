@@ -4,7 +4,7 @@ import numpy as np
 
 from mpest import Distribution, MixtureDistribution
 from mpest.models import AModelWithGenerator
-from mpest.preprocessing.components_number.methods import AComponentsNumber
+from mpest.preprocessing.components_number import AComponentsNumber
 
 
 def run_test(
