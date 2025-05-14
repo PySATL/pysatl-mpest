@@ -303,7 +303,7 @@ def _save_comparison_plots(methods: list, mixture: MixtureDistribution,
             em = EM(StepCountBreakpointer(max_step=128), FiniteChecker(), method=method)
             result = em.solve(problem)
 
-        metrics = summary_metrics[name]
+        # metrics = summary_metrics[name]
 
         title = (
             f"{name}"
