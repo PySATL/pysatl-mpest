@@ -100,18 +100,84 @@ def evaluate_clustering(X: np.ndarray, labels: np.ndarray) -> dict:
 
 
 def plot_distributions(ax, x, true_mixture, fitted_mixture, title):
-    sns.histplot(x, color="lightsteelblue", ax=ax, stat="density", alpha=0.5)
-    ax.set_xlabel("x")
-    ax.set_title(title)
+    label_fontsize = 16
+    title_fontsize = 18
+    legend_fontsize = 14
+    tick_fontsize = 14
+
+    sns.histplot(x, color="royalblue", ax=ax, stat="density", alpha=0.8,
+                 binwidth=0.5, edgecolor='white', linewidth=1)
+
+    ax.set_xlabel("Значение x", fontsize=label_fontsize, fontweight='bold', labelpad=10)
+    ax.set_ylabel("Плотность (density)", fontsize=label_fontsize, fontweight='bold', labelpad=10)
+    ax.set_title(title, fontsize=title_fontsize, fontweight='bold', pad=15)
+    ax.grid(True, linestyle='--', alpha=0.5, linewidth=1)
+    ax.set_xlim(0, 20)
+
+    ax.set_xticks(np.arange(0, 21, 2))
+    ax.set_yticks(np.linspace(0, ax.get_yticks().max(), len(ax.get_yticks())))
+
+    ax.tick_params(axis='both', which='both',
+                   labelsize=tick_fontsize,
+                   width=3, length=8,
+                   pad=8,
+                   colors='black',
+                   grid_color='black',
+                   grid_alpha=0.5)
+
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontweight('bold')
+
+    for spine in ax.spines.values():
+        spine.set_linewidth(3)
+        spine.set_color('black')
 
     ax_ = ax.twinx()
-    ax_.set_ylabel("p(x)")
+    ax_.set_ylabel("p(x)", fontsize=label_fontsize, fontweight='bold', labelpad=15)
     ax_.set_yscale("log")
 
-    X_plot = np.linspace(0.001, max(x), 3000)
-    ax_.plot(X_plot, [true_mixture.pdf(xi) for xi in X_plot], color="green", label="True distribution")
-    ax_.plot(X_plot, [fitted_mixture.pdf(xi) for xi in X_plot], color="red", label="Fitted distribution")
-    ax_.legend()
+    y_ticks = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0]
+    ax_.set_yticks(y_ticks)
+    ax_.set_yticklabels([f"{tick:.2f}" for tick in y_ticks],
+                        fontsize=tick_fontsize,
+                        fontweight='bold',
+                        color='black')
+
+    ax_.tick_params(axis='y', which='both',
+                    width=3, length=8,
+                    pad=10,
+                    colors='black')
+
+    ax_.set_ylim(bottom=y_ticks[0], top=y_ticks[-1])
+
+    for spine in ax_.spines.values():
+        spine.set_linewidth(3)
+        spine.set_color('black')
+
+    X_plot = np.linspace(0.001, 20, 1000)
+    ax_.plot(X_plot, [true_mixture.pdf(xi) for xi in X_plot],
+             color="darkgreen", label="Истинное распределение",
+             linewidth=4, linestyle='-', alpha=0.9)
+    ax_.plot(X_plot, [fitted_mixture.pdf(xi) for xi in X_plot],
+             color="crimson", label="Подобранное распределение",
+             linewidth=4, linestyle='--', alpha=0.9)
+
+    legend = ax_.legend(loc='upper right',
+                        fontsize=legend_fontsize,
+                        framealpha=1,
+                        edgecolor='black',
+                        facecolor='white',
+                        frameon=True,
+                        borderpad=1)
+    legend.get_frame().set_linewidth(2)
+
+    ax.minorticks_on()
+    ax_.minorticks_on()
+    ax.tick_params(axis='both', which='minor', width=2, length=5)
+    ax_.tick_params(axis='both', which='minor', width=2, length=5)
+
+    for y in y_ticks:
+        ax_.axhline(y=y, color='gray', linestyle=':', alpha=0.3, linewidth=1)
 
 
 def save_metrics_table(metrics_data: dict[str, dict[str, float]], filename: str, title: str):
@@ -159,28 +225,24 @@ def save_metrics_table(metrics_data: dict[str, dict[str, float]], filename: str,
     df.to_csv(f"results/tables/{filename}.csv")
 
 
-def _setup_problem(x: np.ndarray) -> Problem:
-    """Create and return a Problem instance for EM algorithm"""
-    return Problem(
-        x,
-        MixtureDistribution.from_distributions(
-            [
-                Distribution.from_params(WeibullModelExp, [1.0, 2.0]),
-                Distribution.from_params(GaussianModel, [0.0, 5.0]),
-            ],
-            [0.5, 0.5],
-        ),
-    )
 
-
-def _initialize_methods(x: np.ndarray) -> list[tuple]:
+def _initialize_methods(x: np.ndarray, mixture: MixtureDistribution) -> list[tuple]:
     """Initialize all methods to be tested"""
+    models = []
+    for dist in mixture.distributions:
+        model_type = type(dist.model)
+        if model_type == WeibullModelExp:
+            models.append(WeibullModelExp())
+        elif model_type == GaussianModel:
+            models.append(GaussianModel())
+        else:
+            raise ValueError(f"Unsupported model type: {model_type}")
+
     return [
         ("BayesEStep", None, BayesEStep()),
-        ("KMeans+ML", "kmeans", EnhancedML([WeibullModelExp(), GaussianModel()], method="kmeans")),
-        ("Agglo+ML", "agglo", EnhancedML([WeibullModelExp(), GaussianModel()], method="agglo")),
-        ("DBSCAN+ML", "dbscan", EnhancedML([WeibullModelExp(), GaussianModel()],
-                                           method="dbscan", eps=EnhancedML.auto_eps(x))),
+        ("KMeans+ML", "kmeans", EnhancedML(models, method="kmeans")),
+        ("Agglo+ML", "agglo", EnhancedML(models, method="agglo")),
+        ("DBSCAN+ML", "dbscan", EnhancedML(models, method="dbscan", eps=EnhancedML.auto_eps(x))),
     ]
 
 
@@ -230,7 +292,7 @@ def _save_comparison_plots(methods: list, mixture: MixtureDistribution,
                            group_name: str, sample_size: int):
     """Save all comparison plots with metrics under titles"""
     fig, axes = plt.subplots(2, 2, figsize=(18, 14))
-    fig.suptitle(f"Comparison of methods for {group_name} group (n={sample_size})", fontsize=16)
+    # fig.suptitle(f"Comparison of methods for {group_name} group (n={sample_size})", fontsize=16)
     axes = axes.flatten()
 
     for idx, (name, method_type, e_step) in enumerate(methods):
@@ -244,13 +306,14 @@ def _save_comparison_plots(methods: list, mixture: MixtureDistribution,
         metrics = summary_metrics[name]
 
         title = (
-            f"{name}\n\n"
-            f"Silhouette: {metrics['silhouette']:.3f} ± {metrics['silhouette_std']:.3f}\n"
-            f"Calinski-Harabasz: {metrics['calinski']:.1f} ± {metrics['calinski_std']:.1f}\n"
-            f"Davies-Bouldin: {metrics['davies_bouldin']:.3f} ± {metrics['davies_bouldin_std']:.3f}\n"
-            f"Wasserstein: {metrics['wasserstein']:.3f} ± {metrics['wasserstein_std']:.3f}\n"
-            f"KL Divergence: {metrics['kl_divergence']:.3f} ± {metrics['kl_divergence_std']:.3f}\n"
-            f"Time: {metrics['execution_time']:.1f}s ± {metrics['execution_time_std']:.1f}"
+            f"{name}"
+            # f"{name}\n\n"
+            # f"Silhouette: {metrics['silhouette']:.3f} ± {metrics['silhouette_std']:.3f}\n"
+            # f"Calinski-Harabasz: {metrics['calinski']:.1f} ± {metrics['calinski_std']:.1f}\n"
+            # f"Davies-Bouldin: {metrics['davies_bouldin']:.3f} ± {metrics['davies_bouldin_std']:.3f}\n"
+            # f"Wasserstein: {metrics['wasserstein']:.3f} ± {metrics['wasserstein_std']:.3f}\n"
+            # f"KL Divergence: {metrics['kl_divergence']:.3f} ± {metrics['kl_divergence_std']:.3f}\n"
+            # f"Time: {metrics['execution_time']:.1f}s ± {metrics['execution_time_std']:.1f}"
         )
 
         plot_distributions(axes[idx], problem.samples, mixture, result.result, title)
@@ -316,8 +379,8 @@ def run_experiment_group(
     for exp_num in range(n_experiments):
         print(f"Running experiment {exp_num + 1}/{n_experiments} for {group_name} group")
         x = mixture.generate(sample_size)
-        problem = _setup_problem(x)
-        methods = _initialize_methods(x)
+        problem = Problem(x, mixture)
+        methods = _initialize_methods(x, mixture)
 
         for name, method_type, e_step in methods:
             metrics = _run_em_method(problem, e_step, mixture)
@@ -332,7 +395,7 @@ def run_experiment_group(
     )
 
     x = mixture.generate(sample_size)
-    problem = _setup_problem(x)
+    problem = Problem(x, mixture)
     _save_comparison_plots(methods, mixture, problem, summary_metrics, group_name, sample_size)
 
     return summary_metrics
@@ -363,7 +426,7 @@ weibull_mixture = MixtureDistribution.from_distributions(
 )
 
 results_data = {}
-sample_size = 10000
+sample_size = 1000
 
 # 1. Base experiment (Weibull + Gaussian)
 print("\nRunning experiments for based mixture (Weibull + Gaussian)")
