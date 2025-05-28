@@ -50,11 +50,17 @@ class EnhancedML(ML):
         return None
 
     @staticmethod
-    def auto_eps(X: np.ndarray, k: int = 5) -> float:
+    def auto_eps(X: np.ndarray, k: int = 5, percentile: float = 0.6) -> float:
+        if len(X) < k + 1:
+            raise ValueError(f"Need at least {k + 1} points to compute {k}-nearest neighbors")
+        X_2d = X.reshape(-1, 1)
         neigh = NearestNeighbors(n_neighbors=k)
-        nbrs = neigh.fit(X.reshape(-1, 1))
-        distances, _ = nbrs.kneighbors(X.reshape(-1, 1))
-        return np.percentile(distances[:, -1], 95)
+        nbrs = neigh.fit(X_2d)
+        distances, _ = nbrs.kneighbors(X_2d)
+        k_distances = distances[:, -1]
+        k_distances_sorted = np.sort(k_distances)
+        eps = np.percentile(k_distances_sorted, percentile)
+        return float(eps)
 
     @staticmethod
     def _handle_noise(labels: np.ndarray) -> np.ndarray:
@@ -396,7 +402,7 @@ def run_experiment_group(
 
     x = mixture.generate(sample_size)
     problem = Problem(x, mixture)
-    _save_comparison_plots(methods, mixture, problem, summary_metrics, group_name, sample_size)
+    _save_comparison_plots(_initialize_methods(x, mixture), mixture, problem, summary_metrics, group_name, sample_size)
 
     return summary_metrics
 

@@ -3,7 +3,7 @@
 from functools import partial
 
 import numpy as np
-from scipy.stats import FitError, weibull_min
+from scipy.stats import FitError, norm, weibull_min
 from sklearn.cluster import DBSCAN, AgglomerativeClustering, KMeans
 
 from mpest.core.distribution import Distribution
@@ -16,6 +16,8 @@ from mpest.optimizers import AOptimizerJacobian, TOptimizer
 from mpest.utils import ResultWithError
 
 EResult = tuple[list[float], np.ndarray, Problem] | ResultWithError[MixtureDistribution]
+MIN_PROB = 1e-100
+MIN_SAMPLES = 2
 
 
 class BayesEStep(AExpectation[EResult]):
@@ -63,26 +65,102 @@ class BayesEStep(AExpectation[EResult]):
 
 class ML(AExpectation[EResult]):
     """
-    Improved ML initialization with proper distribution parameterization
-    and tail handling to avoid divergence to -infinity
+    E step that uses clustering methods for recalculate mixture parameters
+    Supported methods: DBScan (dbscan), Agglomerative (agglo), KMeans (kmeans)
+    Use accurate_init for the best accuracy of the
+    parameter values for each individual component (recommended for mixtures from several different distributions)
     """
 
-    def __init__(self, models: list[AModel], method: str = "kmeans", eps: float = 0.3) -> None:
+    def __init__(self,models: list[AModel],method: str="kmeans",eps: float=0.3,accurate_init: bool=False) -> None:
         self._n_components = len(models)
         self._method = method
         self._models = models
         self._initialized = False
         self._current_mixture = MixtureDistribution([])
         self._eps = eps
+        self._accurate_init_flag = accurate_init
 
     @staticmethod
-    def estimate_weibull_params(data: np.ndarray) -> list[float]:
+    def _estimate_weibull_params(data: np.ndarray) -> list[float]:
         """Robust Weibull parameter estimation using MLE"""
         try:
             params = weibull_min.fit(data, floc=0)
             return [params[0], params[2]]
         except (ValueError, TypeError, FitError):
             return [0.5, np.mean(data)]
+
+    def _find_best_cluster_for_model(self, clusters, model):
+        best_k, best_params, best_score = None, None, -np.inf
+        for k, X_k in clusters.items():
+            if len(X_k) < MIN_SAMPLES:
+                continue
+            try:
+                if isinstance(model, WeibullModelExp):
+                    params = self._estimate_weibull_params(X_k)
+                    params = np.clip(params, [0.1, 0.1], [2.0, 1000.0])
+                    score = np.sum(np.log(weibull_min.pdf(X_k, *params)))
+                else:
+                    mean = np.mean(X_k)
+                    std = np.clip(np.std(X_k), 0.1, 100.0)
+                    params = [mean, std]
+                    score = np.sum(np.log(norm.pdf(X_k, mean, std)))
+                if score > best_score:
+                    best_score = score
+                    best_k = k
+                    best_params = params
+            except ValueError:
+                continue
+        return best_k, best_params, best_score
+
+    def _accurate_init(self, X, labels):
+        clusters = {k: X[labels == k] for k in range(self._n_components)}
+        distributions = []
+        weights = []
+        for model in self._models:
+            best_k, best_params, best_score = self._find_best_cluster_for_model(clusters, model)
+
+            if best_k is None:
+                X_k = np.random.choice(X, size=10, replace=True)
+                weight = 1.0 / self._n_components
+                if isinstance(model, WeibullModelExp):
+                    best_params = self._estimate_weibull_params(X_k)
+                else:
+                    best_params = [np.mean(X_k), np.std(X_k)]
+            else:
+                weight = len(clusters[best_k]) / len(X)
+                clusters.pop(best_k)
+
+            distributions.append(
+                [model, best_params]
+            )
+            weights.append(weight)
+
+        return distributions, weights
+
+    def _fast_init(self, X, labels):
+        distributions = []
+        weights = []
+        for k in range(self._n_components):
+            X_k = X[labels == k]
+            weight = len(X_k) / len(X)
+
+            if len(X_k) == 0:
+                X_k = np.random.choice(X, size=10, replace=True)
+                weight = 1.0 / self._n_components
+
+            model = self._models[k]
+            if isinstance(model, WeibullModelExp):
+                params = self._estimate_weibull_params(X_k)
+                params = list(np.clip(params, [0.1, 0.1], [2.0, 1000.0]))
+                params[0], params[1] = float(params[0]), float(params[1])
+            else:
+                mean = np.mean(X_k)
+                std = np.clip(np.std(X_k), 0.1, 100.0)
+                params = [mean, std]
+
+            distributions.append([model, params])
+            weights.append(float(weight))
+        return distributions, weights
 
     def _initialize_distributions(self, X: np.ndarray) -> MixtureDistribution:
         """Improved initialization with distribution-aware parameter estimation"""
@@ -100,38 +178,21 @@ class ML(AExpectation[EResult]):
         else:
             raise ValueError("Can't find this clustering method.")
 
-        params_for_init = []
-        weights: list[float | None]  = []
+        if self._accurate_init_flag:
+            distributions, weights = self._accurate_init(X, labels)
+        else:
+            distributions, weights = self._fast_init(X, labels)
 
-        for k in range(self._n_components):
-            X_k = X[labels == k]
-            weight = len(X_k) / len(X)
-
-            if len(X_k) == 0:
-                X_k = np.random.choice(X, size=10, replace=True)
-                weight = 1.0 / self._n_components
-
-            model = self._models[k]
-            if isinstance(model, WeibullModelExp):
-                params = self.estimate_weibull_params(X_k)
-                params = list(np.clip(params, [0.1, 0.1], [2.0, 1000.0]))
-                params[0], params[1] = float(params[0]), float(params[1])
-            else:
-                mean = np.mean(X_k)
-                std = np.clip(np.std(X_k), 0.1, 100.0)
-                params = [mean, std]
-
-            params_for_init.append(params)
-            weights.append(float(weight))
-
+        total_weight = sum(weights)
+        normalized_weights: list[float | None] | None = [w / total_weight for w in weights]
         self._current_mixture = MixtureDistribution.from_distributions(
             (
                 [
-                    Distribution.from_params(model.__class__, params)
-                    for model, params in zip(self._models, params_for_init)
+                    Distribution.from_params(dist[0].__class__, dist[1])
+                    for dist in distributions
                 ]
             ),
-            weights
+            normalized_weights
         )
         self._initialized = True
         return self._current_mixture
@@ -147,7 +208,7 @@ class ML(AExpectation[EResult]):
         p_xij = []
         active_samples = []
 
-        min_prob = 1e-100
+        min_prob = MIN_PROB
 
         for x in samples:
             p = np.zeros(len(mixture_dist.distributions))

@@ -38,7 +38,7 @@ class TestWeibullParamEstimation:
         ml = ML(models)
         count_of_params = 2
         data = weibull_min.rvs(1.5, scale=2.0, size=1000)
-        params = ml.estimate_weibull_params(data)
+        params = ml._estimate_weibull_params(data)
         assert len(params) == count_of_params
         assert params[0] > 0
         assert params[1] > 0
@@ -48,7 +48,7 @@ class TestWeibullParamEstimation:
         ml = ML(models)
 
         data = np.array([0, 0, 0])
-        params = ml.estimate_weibull_params(data)
+        params = ml._estimate_weibull_params(data)
         assert params[0] > 0
         assert isinstance(params[1], float)
 
