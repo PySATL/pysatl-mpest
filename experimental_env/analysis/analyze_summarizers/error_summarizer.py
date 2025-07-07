@@ -38,10 +38,11 @@ class ErrorSummarizer(AnalysisSummarizer):
 
             errors.append(error)
 
+        if not errors:
+            return 0, 0, 0
+
         mean = np.sum(errors) / len(errors)
         standart_deviation = np.sqrt(np.sum([(x - mean) ** 2 for x in errors]) / len(errors))
-
-        errors.sort()
         median = errors[len(errors) // 2]
 
         return float(mean), float(standart_deviation), float(median)

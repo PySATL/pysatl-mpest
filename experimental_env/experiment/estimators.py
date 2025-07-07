@@ -90,7 +90,7 @@ class LMomentsEstimator(AEstimator):
 
     @property
     def name(self):
-        return "LM-EM"
+        return "ELM"
 
     def _helper(self, problem: OrderedProblem):
         """
