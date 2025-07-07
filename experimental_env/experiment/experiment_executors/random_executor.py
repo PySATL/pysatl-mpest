@@ -19,7 +19,7 @@ class RandomExperimentExecutor(AExecutor):
         return [
             Problem(
                 descr.samples,
-                RandomMixtureGenerator(self._seed).create_mixture(models),
+                RandomMixtureGenerator().create_mixture(models),
             )
             for i, descr in enumerate(ds_descriptions)
         ]

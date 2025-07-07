@@ -19,7 +19,7 @@ class StandartExperimentExecutor(AExecutor):
         return [
             Problem(
                 descr.samples,
-                StandartMixtureGenerator(self._seed).create_mixture(models),
+                StandartMixtureGenerator().create_mixture(models),
             )
             for i, descr in enumerate(ds_descriptions)
         ]

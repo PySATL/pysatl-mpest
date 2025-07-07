@@ -26,8 +26,10 @@ class RandomDatasetGenerator:
         """
         Setting seed for determined result.
         """
-        random.seed(seed)
         self._seed = seed
+
+        random.seed(self._seed)
+        np.random.seed(self._seed)
 
     def generate(
         self,
@@ -59,7 +61,6 @@ class ConcreteDatasetGenerator:
     """
 
     def __init__(self, seed: int = 42):
-        np.random.seed(seed)
         self._dists: list[Distribution] = []
         self._priors: list[float | None] = []
 

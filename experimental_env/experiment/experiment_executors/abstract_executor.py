@@ -1,5 +1,6 @@
 """A module that provides an abstract class for performing the 2nd stage of the experiment"""
 
+import random
 import warnings
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -20,7 +21,7 @@ class AExecutor(ABC):
     as well as the implementation of the execute method, to implement the 2nd stage of the experiment.
     """
 
-    def __init__(self, path: Path, cpu_count: int, seed):
+    def __init__(self, path: Path, cpu_count: int, seed: int):
         """
         Class constructor
 
@@ -31,6 +32,8 @@ class AExecutor(ABC):
         self._out_dir = path
         self._cpu_count = cpu_count
         self._seed = seed
+
+        random.seed(self._seed)
         np.random.seed(self._seed)
 
     @abstractmethod
