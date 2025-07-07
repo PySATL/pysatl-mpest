@@ -48,16 +48,16 @@ class TestBeta:
 
     @given(valid_external_params())
     def test_roundtrip_external_to_internal(self, params):
-        pareto_model = Beta()
-        internal_params = pareto_model.params_convert_to_model(params)
-        recovered_params = pareto_model.params_convert_from_model(internal_params)
+        beta_model = Beta()
+        internal_params = beta_model.params_convert_to_model(params)
+        recovered_params = beta_model.params_convert_from_model(internal_params)
         assert np.allclose(recovered_params, params)
 
     @given(valid_internal_params())
     def test_roundtrip_internal_to_external(self, params):
-        pareto_model = Beta()
-        external_params = pareto_model.params_convert_from_model(params)
-        recovered_params = pareto_model.params_convert_to_model(external_params)
+        beta_model = Beta()
+        external_params = beta_model.params_convert_from_model(params)
+        recovered_params = beta_model.params_convert_to_model(external_params)
         assert np.allclose(recovered_params, params)
 
     @given(st.integers(min_value=1000, max_value=10000), valid_external_params())

@@ -4,8 +4,7 @@ version = "0.1.0"
 description = "Parameter estimation of mixture distribution problem solver, based on EM algorithm"
 authors = ["ToxaKaz <anton.a.kazancev@gmail.com>", "iraedeus <dtotjmyanin@mail.ru>"]
 keywords = ["EM algorithm", "mixture distribution", "parameter estimation"]
-
-license = "LICENSE"
+license = "MIT"
 readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
