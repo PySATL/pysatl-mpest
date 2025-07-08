@@ -88,7 +88,7 @@ $$
 
 Пример плотности смеси распределений с двумя Нормальными компонентами:
 
-<img src="/home/iraedeus/Загрузки/mixture.png" alt="My Diagram" width="500" />
+<img src="source/_static/mixture.png" alt="My Diagram" width="500" />
 
 ---
 
@@ -149,7 +149,7 @@ $$
 
 
 
-<img src="/home/iraedeus/Загрузки/EM algo.svg" alt="My Diagram" width="1400" />
+<img src="source/_static/EM algo.svg" alt="My Diagram" width="1400" />
 
 
 
@@ -488,7 +488,7 @@ n_samples = 1000
 samples = mixture1.generate(n_samples)
 ```
 
-![example_1](/home/iraedeus/example_1.png)
+![example_1](source/_static//example_1.png)
 
 
 
@@ -542,4 +542,4 @@ em = EM(breakpointer, checker, method)
 result = em.solve(problem)
 ```
 
-![example_2](/home/iraedeus/example_2.png)
+![example_2](source/_static//example_2.png)
