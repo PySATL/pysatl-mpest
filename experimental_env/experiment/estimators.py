@@ -118,8 +118,4 @@ class LMomentsEstimator(AEstimator):
                 pbar.update()
                 res = f.result()
                 output[res[1]] = res[0]
-
-        return [res for num, res in sorted(output.items())]
-
-
         return [res for num, res in sorted(output.items())]

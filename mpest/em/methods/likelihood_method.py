@@ -78,7 +78,6 @@ class BayesEStep(AExpectation[EResult]):
                               MixtureDistribution.from_distributions(mixture, new_priors))
         return new_problem, new_priors, h
 
-
 # class ML(AExpectation[EResult]):
 #     """
 #     Class which represents ML method for calculating matrix for M step in likelihood method
