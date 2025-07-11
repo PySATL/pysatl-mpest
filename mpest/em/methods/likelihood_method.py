@@ -8,7 +8,11 @@ from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem, Result
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
+<<<<<<< HEAD
 from mpest.exceptions import EStepError
+=======
+from mpest.exceptions import SampleError
+>>>>>>> upstream/main
 from mpest.models import AModel, AModelDifferentiable
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
 from mpest.utils import ResultWithError

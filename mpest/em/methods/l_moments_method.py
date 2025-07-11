@@ -9,11 +9,13 @@ from mpest import Samples
 from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem, Result
+<<<<<<< HEAD
 from mpest.em.methods.abstract_steps import AMaximization
 from mpest.exceptions import MStepError
 from mpest.utils import ResultWithError, find_file
 
 EResult = tuple[Problem, list[float | None], np.ndarray] | ResultWithError[MixtureDistribution]
+ 
 
 class LMomentsMStep(AMaximization[EResult]):
     """
