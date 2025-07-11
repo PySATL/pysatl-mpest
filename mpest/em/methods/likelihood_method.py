@@ -76,7 +76,6 @@ class BayesEStep(AExpectation[EResult]):
 
         new_problem = Problem(np.array(active_samples),
                               MixtureDistribution.from_distributions(mixture, new_priors))
-
         return new_problem, new_priors, h
 
 
