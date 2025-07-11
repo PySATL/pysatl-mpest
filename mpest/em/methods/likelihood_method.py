@@ -8,12 +8,12 @@ from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem, Result
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
-from mpest.exceptions import SampleError
+from mpest.exceptions import EStepError
 from mpest.models import AModel, AModelDifferentiable
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
 from mpest.utils import ResultWithError
 
-EResult = tuple[list[float], np.ndarray, Problem] | ResultWithError[MixtureDistribution]
+EResult = tuple[Problem, list[float], np.ndarray] | ResultWithError[MixtureDistribution]
 
 
 class BayesEStep(AExpectation[EResult]):
@@ -28,10 +28,19 @@ class BayesEStep(AExpectation[EResult]):
         :param problem: Object of class Problem, which contains samples and mixture.
         :return: Return active_samples, matrix with probabilities and problem.
         """
-        samples = problem.samples
+        is_sorted = False #checks if sample is sorted
+
+        if not is_sorted:
+            samples = np.sort(problem.samples)
+            is_sorted = True
+        else:
+            samples = problem.samples
+
         mixture = problem.distributions
+
         p_xij = []
         active_samples = []
+
         for x in samples:
             p = np.array([d.model.pdf(x, d.params) for d in mixture])
             if np.any(p):
@@ -39,24 +48,37 @@ class BayesEStep(AExpectation[EResult]):
                 active_samples.append(x)
 
         if not active_samples:
-            error = SampleError("None of the elements in the sample is correct for this mixture")
+            error = EStepError("None of the elements in the sample is correct for this mixture")
             return ResultWithError(mixture, error)
 
         # h[j, i] contains probability of X_i to be a part of distribution j
         m = len(p_xij)
         k = len(mixture)
-        h = np.zeros([k, m], dtype=float)
-        curr_w = np.array([d.prior_probability for d in mixture])
+        h = np.zeros([k, m], dtype=float) #matrix of hidden variables
+
+        curr_weight = np.array([d.prior_probability for d in mixture])
         for i, p in enumerate(p_xij):
-            wp = curr_w * p
+            wp = curr_weight * p
             swp = np.sum(wp)
 
             if not swp:
                 return ResultWithError(mixture, ZeroDivisionError())
 
-            h[:, i] = wp / swp
+            h[:,  i] = wp / swp
 
-        return active_samples, h, problem
+
+        if h.shape == ():
+            error = EStepError("The indicators could not be calculated")
+            return ResultWithError(problem.distributions, error)
+
+        if np.isnan(h).any():
+            return ResultWithError(problem.distributions, EStepError(""))
+        new_priors = np.sum(h, axis=1) / m
+
+        new_problem = Problem(np.array(active_samples),
+                              MixtureDistribution.from_distributions(mixture, new_priors))
+
+        return new_problem, new_priors, h
 
 
 # class ML(AExpectation[EResult]):
@@ -98,10 +120,11 @@ class LikelihoodMStep(AMaximization[EResult]):
         if isinstance(e_result, ResultWithError):
             return e_result
 
-        samples, h, problem = e_result
+        problem, new_priors, h = e_result
         optimizer = self.optimizer
 
         m = len(h[0])
+        samples = problem.samples
         mixture = problem.distributions
 
         new_w = np.sum(h, axis=1) / m
