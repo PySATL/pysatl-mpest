@@ -72,26 +72,17 @@ class WeibullModelExp(AModelDifferentiable, AModelWithGenerator):
     def ld_params(self, x: float, params: Params) -> np.ndarray:
         return np.array([self.ldk(x, params), self.ldl(x, params)])
 
-    def calc_k(self, moments: list[float]) -> float:
-        """
-        The function for calculating the parameter k for the Weibull distribution
-        """
-
-        m1, m2 = moments[0], moments[1]
-        return -np.log(2) / np.log(1 - (m2 / m1))
-
-    def calc_lambda(self, moments: list[float]) -> float:
-        """
-        The function for calculating the parameter lambda for the Weibull distribution
-        """
-
-        m1 = moments[0]
-        k = self.calc_k(moments)
-        return m1 / math.gamma(1 + 1 / k)
-
     def calc_params(self, moments: list[float]):
         """
         The function for calculating params using L moments
         """
 
-        return np.array([self.calc_k(moments), self.calc_lambda(moments)])
+        m1, m2 = moments[0], moments[1]
+
+        # Calculate k parameter
+        k = -np.log(2) / np.log(1 - (m2 / m1))
+
+        # Calculate lambda parameter
+        lm = m1 / math.gamma(1 + 1 / k)
+
+        return np.array([k, lm])

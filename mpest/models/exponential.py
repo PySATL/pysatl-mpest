@@ -56,15 +56,12 @@ class ExponentialModel(AModelDifferentiable, AModelWithGenerator):
     def ld_params(self, x: float, params: Params) -> np.ndarray:
         return np.array([self.ldl(x, params)])
 
-    def calc_lambda(self, moments: list[float]):
-        """
-        The function for calculating the parameter lambda for the Exponential distribution
-        """
-
-        return 1 / moments[0]
-
     def calc_params(self, moments: list[float]):
         """
         The function for calculating params using L moments
         """
-        return np.array([self.calc_lambda(moments)])
+
+        # Calculate lambda parameter
+        lm = 1 / moments[0]
+
+        return np.array([lm])
