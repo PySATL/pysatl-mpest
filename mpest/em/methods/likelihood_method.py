@@ -4,19 +4,17 @@ from functools import partial
 
 import numpy as np
 from scipy.stats import FitError, norm, weibull_min
-from sklearn.cluster import DBSCAN, AgglomerativeClustering, KMeans
 
 from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem, Result
 from mpest.em.methods.abstract_steps import AExpectation, AMaximization
-from mpest.exceptions import SampleError
+from mpest.exceptions import EStepError, SampleError
 from mpest.models import AModel, AModelDifferentiable, WeibullModelExp
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
 from mpest.utils import ResultWithError
+
 EResult = tuple[list[float], np.ndarray, Problem] | ResultWithError[MixtureDistribution]
-MIN_PROB = 1e-100
-MIN_SAMPLES = 2
 
 
 class BayesEStep(AExpectation[EResult]):
@@ -79,15 +77,15 @@ class ML(AExpectation[EResult]):
     Use accurate_init for the best accuracy of the
     parameter values for each individual component (recommended for mixtures from several different distributions)
     """
-
-    def __init__(self,models: list[AModel],method: str="kmeans",eps: float=0.3,accurate_init: bool=False) -> None:
+    def __init__(self,models: list[AModel],labels ,eps: float=0.3,accurate_init: bool=False) -> None:
         self._n_components = len(models)
-        self._method = method
         self._models = models
         self._initialized = False
         self._current_mixture = MixtureDistribution([])
         self._eps = eps
         self._accurate_init_flag = accurate_init
+        self._labels = labels
+
 
     @staticmethod
     def _estimate_weibull_params(data: np.ndarray) -> list[float]:
@@ -98,10 +96,10 @@ class ML(AExpectation[EResult]):
         except (ValueError, TypeError, FitError):
             return [0.5, np.mean(data)]
 
-    def _find_best_cluster_for_model(self, clusters, model):
+    def _find_best_cluster_for_model(self, clusters, model, min_samples=2):
         best_k, best_params, best_score = None, None, -np.inf
         for k, X_k in clusters.items():
-            if len(X_k) < MIN_SAMPLES:
+            if len(X_k) < min_samples:
                 continue
             try:
                 if isinstance(model, WeibullModelExp):
@@ -146,7 +144,7 @@ class ML(AExpectation[EResult]):
 
         return distributions, weights
 
-    def _fast_init(self, X, labels):
+    def _fast_init(self, X, labels, min_component_size=10):
         distributions = []
         weights = []
         for k in range(self._n_components):
@@ -154,7 +152,7 @@ class ML(AExpectation[EResult]):
             weight = len(X_k) / len(X)
 
             if len(X_k) == 0:
-                X_k = np.random.choice(X, size=10, replace=True)
+                X_k = np.random.choice(X, size=min_component_size, replace=True)
                 weight = 1.0 / self._n_components
 
             model = self._models[k]
@@ -171,22 +169,8 @@ class ML(AExpectation[EResult]):
             weights.append(float(weight))
         return distributions, weights
 
-    def _initialize_distributions(self, X: np.ndarray) -> MixtureDistribution:
+    def _initialize_distributions(self, X: np.ndarray, labels) -> MixtureDistribution:
         """Improved initialization with distribution-aware parameter estimation"""
-        if self._method == "kmeans":
-            kmeans = KMeans(n_clusters=self._n_components)
-            labels = kmeans.fit_predict(X.reshape(-1, 1))
-        elif self._method == "dbscan":
-            dbscan = DBSCAN(eps=self._eps, min_samples=5)
-            labels = dbscan.fit_predict(X.reshape(-1, 1))
-            if -1 in labels:
-                labels[labels == -1] = np.random.choice(range(self._n_components), np.sum(labels == -1))
-        elif self._method == "agglo":
-            agglo = AgglomerativeClustering(n_clusters=self._n_components)
-            labels = agglo.fit_predict(X.reshape(-1, 1))
-        else:
-            raise ValueError("Can't find this clustering method.")
-
         if self._accurate_init_flag:
             distributions, weights = self._accurate_init(X, labels)
         else:
@@ -206,10 +190,10 @@ class ML(AExpectation[EResult]):
         self._initialized = True
         return self._current_mixture
 
-    def step(self, problem: Problem) -> EResult:
+    def step(self, problem: Problem, min_prob_const=1e-100) -> EResult:
         """E-step with improved numerical stability"""
         if not self._initialized:
-            mixture_dist = self._initialize_distributions(problem.samples)
+            mixture_dist = self._initialize_distributions(problem.samples, self._labels)
         else:
             mixture_dist = problem.distributions
         samples = problem.samples
@@ -217,7 +201,7 @@ class ML(AExpectation[EResult]):
         p_xij = []
         active_samples = []
 
-        min_prob = MIN_PROB
+        min_prob = min_prob_const
 
         for x in samples:
             p = np.zeros(len(mixture_dist.distributions))
@@ -251,7 +235,9 @@ class ML(AExpectation[EResult]):
             else:
                 h[:, i] = wp / swp
 
-        return active_samples, h, Problem(samples, mixture_dist)
+        new_problem = Problem(np.array(active_samples),
+                              MixtureDistribution.from_distributions(mixture_dist.distributions))
+        return new_problem, h
 
 
 class LikelihoodMStep(AMaximization[EResult]):
