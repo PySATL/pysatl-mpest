@@ -121,7 +121,9 @@ class LikelihoodMStep(AMaximization[EResult]):
             d = mixture[j]
 
             def log_likelihood(params, ch, model: AModel):
-                return -np.sum(ch * [model.lpdf(x, params) for x in samples])
+                array_ldpf = np.array([model.lpdf(x, params) for x in samples])
+                finite_mask = np.isfinite(array_ldpf)
+                return -np.sum(ch[finite_mask] * array_ldpf[finite_mask])
 
             def jacobian(params, ch, model: AModelDifferentiable):
                 return -np.sum(
