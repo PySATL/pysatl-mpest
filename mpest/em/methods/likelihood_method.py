@@ -14,8 +14,7 @@ from mpest.models import AModel, AModelDifferentiable, WeibullModelExp
 from mpest.optimizers import AOptimizerJacobian, TOptimizer
 from mpest.utils import ResultWithError
 
-EResult = tuple[list[float], np.ndarray, Problem] | ResultWithError[MixtureDistribution]
-
+EResult = tuple[Problem, np.ndarray] | ResultWithError[MixtureDistribution]
 
 class BayesEStep(AExpectation[EResult]):
     """
@@ -70,21 +69,24 @@ class BayesEStep(AExpectation[EResult]):
         return new_problem, h
 
 
-class ML(AExpectation[EResult]):
+class ClusteringEStep(AExpectation[EResult]):
     """
     E step that uses clustering methods for recalculate mixture parameters
     Supported methods: DBScan (dbscan), Agglomerative (agglo), KMeans (kmeans)
     Use accurate_init for the best accuracy of the
     parameter values for each individual component (recommended for mixtures from several different distributions)
     """
-    def __init__(self,models: list[AModel],labels ,eps: float=0.3,accurate_init: bool=False) -> None:
+    MIN_SAMPLES = 2
+    MIN_PROB = 1e-100
+    MIN_COMPONENT_SIZE = 10
+    def __init__(self,models: list[AModel], clusterizer,eps: float=0.3,accurate_init: bool=False) -> None:
         self._n_components = len(models)
         self._models = models
         self._initialized = False
         self._current_mixture = MixtureDistribution([])
         self._eps = eps
         self._accurate_init_flag = accurate_init
-        self._labels = labels
+        self._clusterizer = clusterizer
 
 
     @staticmethod
@@ -92,19 +94,21 @@ class ML(AExpectation[EResult]):
         """Robust Weibull parameter estimation using MLE"""
         try:
             params = weibull_min.fit(data, floc=0)
-            return [params[0], params[2]]
+            return [float(params[0]), float(params[2])]
         except (ValueError, TypeError, FitError):
-            return [0.5, np.mean(data)]
+            return [0.5, float(np.mean(data))]
 
-    def _find_best_cluster_for_model(self, clusters, model, min_samples=2):
+    def _find_best_cluster_for_model(self, clusters: dict[int, np.ndarray],
+                                     model: AModel) -> tuple[int | None, list[float] | None, float]:
         best_k, best_params, best_score = None, None, -np.inf
         for k, X_k in clusters.items():
-            if len(X_k) < min_samples:
+            if len(X_k) < self.MIN_SAMPLES:
                 continue
             try:
                 if isinstance(model, WeibullModelExp):
                     params = self._estimate_weibull_params(X_k)
-                    params = np.clip(params, [0.1, 0.1], [2.0, 1000.0])
+                    params_arr = np.clip(params, [0.1, 0.1], [2.0, 1000.0])
+                    params = [float(params_arr[0]), float(params_arr[1])]
                     score = np.sum(np.log(weibull_min.pdf(X_k, *params)))
                 else:
                     mean = np.mean(X_k)
@@ -119,14 +123,14 @@ class ML(AExpectation[EResult]):
                 continue
         return best_k, best_params, best_score
 
-    def _accurate_init(self, X, labels):
+    def _accurate_init(self, X: np.ndarray, labels: np.ndarray) -> tuple[list[tuple[AModel, list[float]]], list[float]]:
         clusters = {k: X[labels == k] for k in range(self._n_components)}
-        distributions = []
-        weights = []
+        distributions: list[tuple[AModel, list[float]]] = []
+        weights: list[float] = []
         for model in self._models:
             best_k, best_params, best_score = self._find_best_cluster_for_model(clusters, model)
 
-            if best_k is None:
+            if best_k is None or best_params is None:
                 X_k = np.random.choice(X, size=10, replace=True)
                 weight = 1.0 / self._n_components
                 if isinstance(model, WeibullModelExp):
@@ -138,21 +142,21 @@ class ML(AExpectation[EResult]):
                 clusters.pop(best_k)
 
             distributions.append(
-                [model, best_params]
+                (model, best_params)
             )
-            weights.append(weight)
+            weights.append(float(weight))
 
         return distributions, weights
 
-    def _fast_init(self, X, labels, min_component_size=10):
-        distributions = []
-        weights = []
+    def _fast_init(self, X: np.ndarray, labels: np.ndarray) -> tuple[list[tuple[AModel, list[float]]], list[float]]:
+        distributions: list[tuple[AModel, list[float]]] = []
+        weights: list[float] = []
         for k in range(self._n_components):
             X_k = X[labels == k]
             weight = len(X_k) / len(X)
 
             if len(X_k) == 0:
-                X_k = np.random.choice(X, size=min_component_size, replace=True)
+                X_k = np.random.choice(X, size=self.MIN_COMPONENT_SIZE, replace=True)
                 weight = 1.0 / self._n_components
 
             model = self._models[k]
@@ -165,11 +169,11 @@ class ML(AExpectation[EResult]):
                 std = np.clip(np.std(X_k), 0.1, 100.0)
                 params = [mean, std]
 
-            distributions.append([model, params])
+            distributions.append((model, params))
             weights.append(float(weight))
         return distributions, weights
 
-    def _initialize_distributions(self, X: np.ndarray, labels) -> MixtureDistribution:
+    def _initialize_distributions(self, X: np.ndarray, labels: np.ndarray) -> MixtureDistribution:
         """Improved initialization with distribution-aware parameter estimation"""
         if self._accurate_init_flag:
             distributions, weights = self._accurate_init(X, labels)
@@ -190,29 +194,41 @@ class ML(AExpectation[EResult]):
         self._initialized = True
         return self._current_mixture
 
-    def step(self, problem: Problem, min_prob_const=1e-100) -> EResult:
+    def _clusterize(self, X: np.ndarray, clusterizer) -> np.ndarray:
+        if hasattr(clusterizer, 'n_clusters') and self._n_components != clusterizer.n_clusters:
+            raise EStepError("Count of components and clusters doesn't match.")
+        X = X.reshape(-1, 1)
+        labels = clusterizer.fit_predict(X)
+        if -1 in labels:
+            labels[labels == -1] = np.random.choice(range(self._n_components), np.sum(labels == -1))
+        return labels
+
+
+    def step(self, problem: Problem) -> EResult:
         """E-step with improved numerical stability"""
+        samples = problem.samples
         if not self._initialized:
-            mixture_dist = self._initialize_distributions(problem.samples, self._labels)
+            try:
+                labels = self._clusterize(samples, self._clusterizer)
+                mixture_dist = self._initialize_distributions(samples, labels)
+            except EStepError as e:
+                return ResultWithError(problem.distributions, e)
         else:
             mixture_dist = problem.distributions
-        samples = problem.samples
 
         p_xij = []
         active_samples = []
-
-        min_prob = min_prob_const
 
         for x in samples:
             p = np.zeros(len(mixture_dist.distributions))
             for i, d in enumerate(mixture_dist.distributions):
                 try:
                     pdf_val = d.model.pdf(x, d.params)
-                    p[i] = max(pdf_val, min_prob)
+                    p[i] = max(pdf_val, self.MIN_PROB)
                 except ValueError:
-                    p[i] = min_prob
+                    p[i] = self.MIN_PROB
 
-            if np.any(p > min_prob):
+            if np.any(p > self.MIN_PROB):
                 p_xij.append(p)
                 active_samples.append(x)
 
@@ -230,13 +246,12 @@ class ML(AExpectation[EResult]):
             wp = curr_w * p
             swp = np.sum(wp)
 
-            if swp < min_prob:
+            if swp < self.MIN_PROB:
                 h[:, i] = curr_w / np.sum(curr_w)
             else:
                 h[:, i] = wp / swp
 
-        new_problem = Problem(np.array(active_samples),
-                              MixtureDistribution.from_distributions(mixture_dist.distributions))
+        new_problem = Problem(np.array(active_samples), mixture_dist)
         return new_problem, h
 
 

@@ -16,7 +16,7 @@ from mpest import Distribution, MixtureDistribution, Problem
 from mpest.em import EM
 from mpest.em.breakpointers import StepCountBreakpointer
 from mpest.em.distribution_checkers import FiniteChecker
-from mpest.em.methods.likelihood_method import ML, BayesEStep, LikelihoodMStep
+from mpest.em.methods.likelihood_method import BayesEStep, ClusteringEStep, LikelihoodMStep
 from mpest.em.methods.method import Method
 from mpest.models import GaussianModel, WeibullModelExp
 from mpest.optimizers import ScipyCG
@@ -28,9 +28,9 @@ os.makedirs("results/plots/comparison", exist_ok=True)
 os.makedirs("results/plots/pairs", exist_ok=True)
 
 
-class EnhancedML(ML):
-    def __init__(self, models, labels, method="kmeans", eps=None):
-        super().__init__(models, labels)
+class EnhancedClusteringEStep(ClusteringEStep):
+    def __init__(self, models, clusterizer, method="kmeans", eps=None):
+        super().__init__(models, clusterizer)
         self._method = method
         self.eps = eps
 
@@ -231,22 +231,7 @@ def save_metrics_table(metrics_data: dict[str, dict[str, float]], filename: str,
     df.to_csv(f"results/tables/{filename}.csv")
 
 
-def _clusterize(x: np.ndarray, n_components, eps):
-    x = x.reshape(-1,1)
-    kmeans = KMeans(n_clusters=n_components)
-    labels_kmeans = kmeans.fit_predict(x)
-    dbscan = DBSCAN(eps=eps, min_samples=5)
-    labels_dbscan = dbscan.fit_predict(x)
-    if -1 in labels_dbscan:
-        labels_dbscan[labels_dbscan == -1] = np.random.choice(range(n_components), np.sum(labels_dbscan == -1))
-    agglo = AgglomerativeClustering(n_clusters=n_components)
-    labels_agglo = agglo.fit_predict(x)
-    labels = {"kmeans": labels_kmeans, "dbscan": labels_dbscan, "agglo": labels_agglo}
-    return labels
-
-
-
-def _initialize_methods(mixture: MixtureDistribution, labels, eps) -> list[tuple]:
+def _initialize_methods(mixture: MixtureDistribution, eps) -> list[tuple]:
     """Initialize all methods to be tested"""
     models = []
     for dist in mixture.distributions:
@@ -257,12 +242,12 @@ def _initialize_methods(mixture: MixtureDistribution, labels, eps) -> list[tuple
             models.append(GaussianModel())
         else:
             raise ValueError(f"Unsupported model type: {model_type}")
-
+    n_clusters = len(models)
     return [
-        ("BayesEStep", None, BayesEStep()),
-        ("KMeans+ML", "kmeans", EnhancedML(models, labels=labels["kmeans"])),
-        ("Agglo+ML", "agglo", EnhancedML(models, labels=labels["agglo"])),
-        ("DBSCAN+ML", "dbscan", EnhancedML(models, labels=labels["dbscan"], eps=eps)),
+        ("BayesEStep",None,BayesEStep()),
+        ("KMeans+ML","kmeans",EnhancedClusteringEStep(models,clusterizer=KMeans(n_clusters=n_clusters))),
+        ("Agglo+ML","agglo",EnhancedClusteringEStep(models,clusterizer=AgglomerativeClustering(n_clusters=n_clusters))),
+        ("DBSCAN+ML","dbscan",EnhancedClusteringEStep(models,eps=eps,clusterizer=DBSCAN())),
     ]
 
 
@@ -399,10 +384,9 @@ def run_experiment_group(
     for exp_num in range(n_experiments):
         print(f"Running experiment {exp_num + 1}/{n_experiments} for {group_name} group")
         x = mixture.generate(sample_size)
-        eps = EnhancedML.auto_eps(x)
-        labels = _clusterize(x, len(mixture.distributions), eps)
+        eps = EnhancedClusteringEStep.auto_eps(x)
         problem = Problem(x, mixture)
-        methods = _initialize_methods(mixture, labels, eps)
+        methods = _initialize_methods(mixture, eps)
 
         for name, method_type, e_step in methods:
             metrics = _run_em_method(problem, e_step, mixture)
@@ -417,10 +401,9 @@ def run_experiment_group(
     )
 
     x = mixture.generate(sample_size)
-    eps = EnhancedML.auto_eps(x)
-    labels = _clusterize(x, len(mixture.distributions), eps)
+    eps = EnhancedClusteringEStep.auto_eps(x)
     problem = Problem(x, mixture)
-    _save_comparison_plots(_initialize_methods(mixture, labels, eps), mixture,
+    _save_comparison_plots(_initialize_methods(mixture, eps), mixture,
                            problem, summary_metrics, group_name, sample_size)
 
     return summary_metrics
