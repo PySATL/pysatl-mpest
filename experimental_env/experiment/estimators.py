@@ -10,7 +10,7 @@ from tqdm import tqdm
 from experimental_env.utils import OrderedProblem, choose_best_mle
 from mpest import Problem
 from mpest.em import EM
-from mpest.em.methods.l_moments_method import IndicatorEStep, LMomentsMStep
+from mpest.em.methods.l_moments_method import LMomentsMStep
 from mpest.em.methods.likelihood_method import BayesEStep, LikelihoodMStep
 from mpest.em.methods.method import Method
 from mpest.optimizers import ALL_OPTIMIZERS
@@ -18,7 +18,7 @@ from mpest.utils import ANamed, Factory, ResultWithLog
 
 METHODS: dict = {
     "Likelihood": [[Factory(BayesEStep), Factory(LikelihoodMStep, optimizer)] for optimizer in ALL_OPTIMIZERS],
-    "L-moments": [Factory(IndicatorEStep), Factory(LMomentsMStep)],
+    "L-moments": [Factory(BayesEStep), Factory(LMomentsMStep)],
 }
 
 

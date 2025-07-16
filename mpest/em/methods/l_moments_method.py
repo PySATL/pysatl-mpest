@@ -9,103 +9,11 @@ from mpest import Samples
 from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem, Result
-from mpest.em.methods.abstract_steps import AExpectation, AMaximization
-from mpest.exceptions import EStepError, MStepError
+from mpest.em.methods.abstract_steps import AMaximization
+from mpest.exceptions import MStepError
 from mpest.utils import ResultWithError, find_file
 
-EResult = tuple[Problem, list[float | None], np.ndarray] | ResultWithError[MixtureDistribution]
-
-
-class IndicatorEStep(AExpectation[EResult]):
-    """
-    Class which represents method for performing E step in L moments method.
-    """
-
-    def __init__(self):
-        """
-        Object constructor
-        """
-
-        self.indicators: np.ndarray
-
-    def calc_indicators(self, problem: Problem) -> None:
-        """
-        A function that recalculates the matrix with indicators.
-
-        :param problem: Object of class Problem, which contains samples and mixture.
-        """
-
-        samples, mixture = np.sort(problem.samples), problem.distributions
-        priors = np.array([dist.prior_probability for dist in mixture])
-        k, m = len(mixture), len(samples)
-
-        z = np.zeros((k, m), dtype=float)
-
-        pdf_values = np.zeros((k, m), dtype=float)
-        for j, d_j in enumerate(mixture):
-            pdf_values[j] = [d_j.model.pdf(samples[i], d_j.params) for i in range(m)]
-
-        denominators = np.sum(priors[:, np.newaxis] * pdf_values, axis=0)
-        if 0.0 in denominators:
-            self.indicators = np.ndarray([])
-            return None
-
-        for j in range(k):
-            numerators = priors[j] * pdf_values[j]
-            z[j] = numerators / denominators
-
-        self.indicators = z
-        return None
-
-    def update_priors(self, problem: Problem) -> list[float | None]:
-        """
-        A function that recalculates the list with prior probabilities.
-
-        :param problem: Object of class Problem, which contains samples and mixture.
-        :return: List with prior probabilities
-        """
-
-        k, m = len(problem.distributions), len(problem.samples)
-
-        new_priors = []
-        for j in range(k):
-            p_j = np.sum([self.indicators[j][i] for i in range(m)])
-            new_priors.append(p_j / m)
-
-        return new_priors
-
-    def step(self, problem: Problem) -> EResult:
-        """
-        A function that performs E step
-
-        :param problem: Object of class Problem, which contains samples and mixture.
-        :return: Tuple with problem, new_priors and indicators.
-        """
-        sorted_problem = Problem(np.sort(problem.samples), problem.distributions)
-
-        if (
-            any(d.model.name == "Gaussian" for d in sorted_problem.distributions)
-            and sorted_problem.samples[0] < 0
-            and not hasattr(self, "indicators")
-        ):
-            self.indicators = distribute_numbers_transposed(sorted_problem.samples, sorted_problem.distributions)
-        else:
-            self.calc_indicators(sorted_problem)
-
-        if self.indicators.shape == ():
-            error = EStepError("The indicators could not be calculated")
-            return ResultWithError(sorted_problem.distributions, error)
-
-        if np.isnan(self.indicators).any():
-            return ResultWithError(sorted_problem.distributions, EStepError(""))
-
-        new_priors = self.update_priors(sorted_problem)
-        new_problem = Problem(
-            sorted_problem.samples,
-            MixtureDistribution.from_distributions(sorted_problem.distributions, new_priors),
-        )
-        return new_problem, new_priors, self.indicators
-
+EResult = tuple[Problem, np.ndarray] | ResultWithError[MixtureDistribution]
 
 class LMomentsMStep(AMaximization[EResult]):
     """
@@ -147,6 +55,7 @@ class LMomentsMStep(AMaximization[EResult]):
             mr_j += p_rk * b_k
         return mr_j
 
+
     def step(self, e_result: EResult) -> Result:
         """
         A function that performs E step
@@ -157,8 +66,13 @@ class LMomentsMStep(AMaximization[EResult]):
         if isinstance(e_result, ResultWithError):
             return e_result
 
-        problem, new_priors, indicators = e_result
-        samples, mixture = problem.samples, problem.distributions
+        problem, indicators = e_result
+
+        samples = problem.samples
+
+        mixture = problem.distributions
+
+        new_priors = np.sum(indicators, axis=1) / len(samples)
 
         max_params_count = max(len(d.params) for d in mixture)
         l_moments = np.zeros(shape=[len(mixture), max_params_count])
@@ -180,29 +94,3 @@ class LMomentsMStep(AMaximization[EResult]):
 
         new_mixture = MixtureDistribution.from_distributions(new_distributions, new_priors)
         return ResultWithError(new_mixture)
-
-
-def distribute_numbers_transposed(numbers, mixture: MixtureDistribution):
-    """
-    A function that implements a heuristic for negative elements
-    """
-
-    # TODO: To complete the heuristic approach
-
-    n = len(numbers)
-    m = len(mixture)
-
-    gaussian_indices = [i for i, dist in enumerate(mixture) if dist.model.name == "Gaussian"]
-    gaussian_index = gaussian_indices[0]
-
-    result = np.zeros((m, n))
-
-    for i, num in enumerate(numbers):
-        if num < 0:
-            result[gaussian_index, i] = 1
-        else:
-            uniform_probability = 1 / len(mixture)
-            for j in range(len(mixture)):
-                result[j, i] = uniform_probability
-
-    return result

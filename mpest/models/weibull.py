@@ -9,30 +9,7 @@ from mpest.annotations import Params, Samples
 from mpest.models.abstract_model import AModelDifferentiable, AModelWithGenerator
 
 
-class LMomentsParameterMixin:
-    """
-    A class representing functions for calculating distribution parameters for the first two L moments
-    """
-
-    def calc_k(self, moments: list[float]) -> float:
-        """
-        The function for calculating the parameter k for the Weibull distribution
-        """
-
-        m1, m2 = moments[0], moments[1]
-        return -np.log(2) / np.log(1 - (m2 / m1))
-
-    def calc_lambda(self, moments: list[float]) -> float:
-        """
-        The function for calculating the parameter lambda for the Weibull distribution
-        """
-
-        m1 = moments[0]
-        k = self.calc_k(moments)
-        return m1 / math.gamma(1 + 1 / k)
-
-
-class WeibullModelExp(AModelDifferentiable, AModelWithGenerator, LMomentsParameterMixin):
+class WeibullModelExp(AModelDifferentiable, AModelWithGenerator):
     """
     f(x) = (k / lm) * (x / lm)^(k - 1) / e^((x / lm)^k)
 
@@ -100,4 +77,12 @@ class WeibullModelExp(AModelDifferentiable, AModelWithGenerator, LMomentsParamet
         The function for calculating params using L moments
         """
 
-        return np.array([self.calc_k(moments), self.calc_lambda(moments)])
+        m1, m2 = moments[0], moments[1]
+
+        # Calculate k parameter
+        k = -np.log(2) / np.log(1 - (m2 / m1))
+
+        # Calculate lambda parameter
+        lm = m1 / math.gamma(1 + 1 / k)
+
+        return np.array([k, lm])
