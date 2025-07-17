@@ -35,7 +35,27 @@ git checkout -b <type>/<what-this-branch-solves>
 
 
 
-### 3. Make and Commit Changes
+### 3. Set Up Your Development Environment
+
+To start working on the code, you need to install the project dependencies and set up the pre-commit hooks. These hooks automatically check your code for quality and style before each commit.
+
+1. **Install dependencies:**
+
+   Follow steps in [README.md](README.md)
+
+2. **Install pre-commit hooks (Mandatory):**
+
+   ```bash
+   pre-commit install
+   ```
+
+   This command sets up the hooks in your local Git repository. **This is a required step for all contributors.**
+
+Now your environment is ready. The hooks will run automatically every time you run `git commit`.
+
+
+
+### 4. Make and Commit Changes
 
 Work on the code in your new branch. When you're ready to save your changes, create a commit. We use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) to standardize commit messages.
 
@@ -48,7 +68,7 @@ Use the following types:
 - `struct`: for changes related to the project structure (NOT CODE), for example, changing folder locations.
 - `ci`: for various CI/CD tasks.
 - `docs`: for changes in documentation.
-- `chore`: for other changes that do not affect the code or tests (e.g., updating .gitignore, README.md).
+- `chore`: for other changes that do not affect the code or tests (e.g., updating `.gitignore`, `README.md`).
 
 
 
@@ -64,7 +84,7 @@ Try to divide commits into atomic and independent parts. That is, do not add unr
 
 
 
-### 4. Push Changes to Your Fork
+### 5. Push Changes to Your Fork
 
 After you have made one or more commits, push your branch to your remote fork on GitHub:
 
@@ -74,13 +94,13 @@ git push
 
 
 
-### 5. Create a Pull Request (PR)
+### 6. Create a Pull Request (PR)
 
 Once your branch with the changes is in your fork, you can create a Pull Request to propose your changes to the main repository.
 
 1. Go to your fork's page on GitHub (https://github.com/YOUR-USERNAME/pysatl-mpest).
 2. You will see a notification prompting you to create a Pull Request for your recently pushed branch. Click the **"Compare & pull request"** button.
-3. Ensure the base repository is PySATL/pysatl-mpest with the main branch, and the head repository is your fork and your working branch.
+3. Ensure the base repository is `PySATL/pysatl-mpest` with the main branch, and the head repository is your fork and your working branch.
 4. Give your Pull Request a meaningful title (following the [Conventional Commits](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.conventionalcommits.org%2F) standard) and add a detailed description of the changes you've made.
 
 #### Rules for Your PR to be Merged
