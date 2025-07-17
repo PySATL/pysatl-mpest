@@ -15,15 +15,13 @@ MIN_COMPONENT_SIZE = 10
 
 def valid_weibull_data():
     return st.lists(
-        st.floats(min_value=0.1, max_value=100, allow_nan=False, allow_infinity=False),
-        min_size=10, max_size=1000
+        st.floats(min_value=0.1, max_value=100, allow_nan=False, allow_infinity=False), min_size=10, max_size=1000
     ).map(np.array)
 
 
 def valid_gaussian_data():
     return st.lists(
-        st.floats(min_value=-100, max_value=100, allow_nan=False, allow_infinity=False),
-        min_size=10, max_size=1000
+        st.floats(min_value=-100, max_value=100, allow_nan=False, allow_infinity=False), min_size=10, max_size=1000
     ).map(np.array)
 
 
@@ -35,18 +33,20 @@ def mixture_problems():
     return st.builds(
         lambda samples: Problem(
             samples,
-            MixtureDistribution.from_distributions([
-                Distribution.from_params(WeibullModelExp, [1.0, 1.0]),
-                Distribution.from_params(GaussianModel, [0.0, 1.0]),
-            ], [0.5, 0.5])
+            MixtureDistribution.from_distributions(
+                [
+                    Distribution.from_params(WeibullModelExp, [1.0, 1.0]),
+                    Distribution.from_params(GaussianModel, [0.0, 1.0]),
+                ],
+                [0.5, 0.5],
+            ),
         ),
-        mixed_data()
+        mixed_data(),
     )
 
 
 class TestClusteringEStepInitialization:
-    @given(st.lists(st.sampled_from([WeibullModelExp(), GaussianModel()])),
-                    st.integers(min_value=0, max_value=1000))
+    @given(st.lists(st.sampled_from([WeibullModelExp(), GaussianModel()])), st.integers(min_value=0, max_value=1000))
     def test_initialization(self, models, labels_seed):
         assume(len(models) > 0)
         np.random.seed(labels_seed)
@@ -59,7 +59,6 @@ class TestClusteringEStepInitialization:
 
 
 class TestWeibullParamEstimation:
-
     @given(valid_weibull_data())
     def test_weibull_param_estimation(self, data):
         models = [WeibullModelExp(), GaussianModel()]
@@ -115,8 +114,7 @@ class TestEStep:
                 for col in h.T:
                     assert pytest.approx(1.0, abs=1e-6) == sum(col)
 
-    @given(st.lists(st.floats(min_value=0, max_value=1, allow_nan=False)),
-                    st.integers(min_value=1, max_value=10))
+    @given(st.lists(st.floats(min_value=0, max_value=1, allow_nan=False)), st.integers(min_value=1, max_value=10))
     def test_e_step_with_empty_cluster(self, data, n_components):
         data = np.array(data)
         assume(len(data) >= n_components)

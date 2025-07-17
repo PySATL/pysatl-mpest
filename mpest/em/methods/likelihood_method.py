@@ -16,11 +16,11 @@ from mpest.utils import ResultWithError
 
 EResult = tuple[Problem, np.ndarray] | ResultWithError[MixtureDistribution]
 
+
 class BayesEStep(AExpectation[EResult]):
     """
     Class which represents Bayesian method for calculating matrix for M step in likelihood method
     """
-
 
     def step(self, problem: Problem) -> EResult:
         """
@@ -49,7 +49,7 @@ class BayesEStep(AExpectation[EResult]):
         # h[j, i] contains probability of X_i to be a part of distribution j
         m = len(p_xij)
         k = len(mixture)
-        h = np.zeros([k, m], dtype=float) #matrix of hidden variables
+        h = np.zeros([k, m], dtype=float)  # matrix of hidden variables
 
         curr_weight = np.array([d.prior_probability for d in mixture])
         for i, p in enumerate(p_xij):
@@ -58,13 +58,12 @@ class BayesEStep(AExpectation[EResult]):
 
             if not swp:
                 return ResultWithError(mixture, ZeroDivisionError())
-            h[:,  i] = wp / swp
+            h[:, i] = wp / swp
 
         if np.isnan(h).any():
             return ResultWithError(problem.distributions, EStepError(""))
 
-        new_problem = Problem(np.array(active_samples),
-                              MixtureDistribution.from_distributions(mixture))
+        new_problem = Problem(np.array(active_samples), MixtureDistribution.from_distributions(mixture))
 
         return new_problem, h
 
@@ -76,10 +75,12 @@ class ClusteringEStep(AExpectation[EResult]):
     Use accurate_init for the best accuracy of the
     parameter values for each individual component (recommended for mixtures from several different distributions)
     """
+
     MIN_SAMPLES = 2
     MIN_PROB = 1e-100
     MIN_COMPONENT_SIZE = 10
-    def __init__(self,models: list[AModel], clusterizer,eps: float=0.3,accurate_init: bool=False) -> None:
+
+    def __init__(self, models: list[AModel], clusterizer, eps: float = 0.3, accurate_init: bool = False) -> None:
         self._n_components = len(models)
         self._models = models
         self._initialized = False
@@ -87,7 +88,6 @@ class ClusteringEStep(AExpectation[EResult]):
         self._eps = eps
         self._accurate_init_flag = accurate_init
         self._clusterizer = clusterizer
-
 
     @staticmethod
     def _estimate_weibull_params(data: np.ndarray) -> list[float]:
@@ -98,8 +98,9 @@ class ClusteringEStep(AExpectation[EResult]):
         except (ValueError, TypeError, FitError):
             return [0.5, float(np.mean(data))]
 
-    def _find_best_cluster_for_model(self, clusters: dict[int, np.ndarray],
-                                     model: AModel) -> tuple[int | None, list[float] | None, float]:
+    def _find_best_cluster_for_model(
+        self, clusters: dict[int, np.ndarray], model: AModel
+    ) -> tuple[int | None, list[float] | None, float]:
         best_k, best_params, best_score = None, None, -np.inf
         for k, X_k in clusters.items():
             if len(X_k) < self.MIN_SAMPLES:
@@ -141,9 +142,7 @@ class ClusteringEStep(AExpectation[EResult]):
                 weight = len(clusters[best_k]) / len(X)
                 clusters.pop(best_k)
 
-            distributions.append(
-                (model, best_params)
-            )
+            distributions.append((model, best_params))
             weights.append(float(weight))
 
         return distributions, weights
@@ -183,26 +182,19 @@ class ClusteringEStep(AExpectation[EResult]):
         total_weight = sum(weights)
         normalized_weights: list[float | None] | None = [w / total_weight for w in weights]
         self._current_mixture = MixtureDistribution.from_distributions(
-            (
-                [
-                    Distribution.from_params(dist[0].__class__, dist[1])
-                    for dist in distributions
-                ]
-            ),
-            normalized_weights
+            ([Distribution.from_params(dist[0].__class__, dist[1]) for dist in distributions]), normalized_weights
         )
         self._initialized = True
         return self._current_mixture
 
     def _clusterize(self, X: np.ndarray, clusterizer) -> np.ndarray:
-        if hasattr(clusterizer, 'n_clusters') and self._n_components != clusterizer.n_clusters:
+        if hasattr(clusterizer, "n_clusters") and self._n_components != clusterizer.n_clusters:
             raise EStepError("Count of components and clusters doesn't match.")
         X = X.reshape(-1, 1)
         labels = clusterizer.fit_predict(X)
         if -1 in labels:
             labels[labels == -1] = np.random.choice(range(self._n_components), np.sum(labels == -1))
         return labels
-
 
     def step(self, problem: Problem) -> EResult:
         """E-step with improved numerical stability"""

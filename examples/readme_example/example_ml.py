@@ -111,79 +111,90 @@ def plot_distributions(ax, x, true_mixture, fitted_mixture, title):
     legend_fontsize = 14
     tick_fontsize = 14
 
-    sns.histplot(x, color="royalblue", ax=ax, stat="density", alpha=0.8,
-                 binwidth=0.5, edgecolor='white', linewidth=1)
+    sns.histplot(x, color="royalblue", ax=ax, stat="density", alpha=0.8, binwidth=0.5, edgecolor="white", linewidth=1)
 
-    ax.set_xlabel("Значение x", fontsize=label_fontsize, fontweight='bold', labelpad=10)
-    ax.set_ylabel("Плотность (density)", fontsize=label_fontsize, fontweight='bold', labelpad=10)
-    ax.set_title(title, fontsize=title_fontsize, fontweight='bold', pad=15)
-    ax.grid(True, linestyle='--', alpha=0.5, linewidth=1)
+    ax.set_xlabel("Значение x", fontsize=label_fontsize, fontweight="bold", labelpad=10)
+    ax.set_ylabel("Плотность (density)", fontsize=label_fontsize, fontweight="bold", labelpad=10)
+    ax.set_title(title, fontsize=title_fontsize, fontweight="bold", pad=15)
+    ax.grid(True, linestyle="--", alpha=0.5, linewidth=1)
     ax.set_xlim(0, 20)
 
     ax.set_xticks(np.arange(0, 21, 2))
     ax.set_yticks(np.linspace(0, ax.get_yticks().max(), len(ax.get_yticks())))
 
-    ax.tick_params(axis='both', which='both',
-                   labelsize=tick_fontsize,
-                   width=3, length=8,
-                   pad=8,
-                   colors='black',
-                   grid_color='black',
-                   grid_alpha=0.5)
+    ax.tick_params(
+        axis="both",
+        which="both",
+        labelsize=tick_fontsize,
+        width=3,
+        length=8,
+        pad=8,
+        colors="black",
+        grid_color="black",
+        grid_alpha=0.5,
+    )
 
     for label in ax.get_xticklabels() + ax.get_yticklabels():
-        label.set_fontweight('bold')
+        label.set_fontweight("bold")
 
     for spine in ax.spines.values():
         spine.set_linewidth(3)
-        spine.set_color('black')
+        spine.set_color("black")
 
     ax_ = ax.twinx()
-    ax_.set_ylabel("p(x)", fontsize=label_fontsize, fontweight='bold', labelpad=15)
+    ax_.set_ylabel("p(x)", fontsize=label_fontsize, fontweight="bold", labelpad=15)
     ax_.set_yscale("log")
 
     y_ticks = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0]
     ax_.set_yticks(y_ticks)
-    ax_.set_yticklabels([f"{tick:.2f}" for tick in y_ticks],
-                        fontsize=tick_fontsize,
-                        fontweight='bold',
-                        color='black')
+    ax_.set_yticklabels([f"{tick:.2f}" for tick in y_ticks], fontsize=tick_fontsize, fontweight="bold", color="black")
 
-    ax_.tick_params(axis='y', which='both',
-                    width=3, length=8,
-                    pad=10,
-                    colors='black')
+    ax_.tick_params(axis="y", which="both", width=3, length=8, pad=10, colors="black")
 
     ax_.set_ylim(bottom=y_ticks[0], top=y_ticks[-1])
 
     for spine in ax_.spines.values():
         spine.set_linewidth(3)
-        spine.set_color('black')
+        spine.set_color("black")
 
     X_plot = np.linspace(0.001, 20, 1000)
-    ax_.plot(X_plot, [true_mixture.pdf(xi) for xi in X_plot],
-             color="darkgreen", label="Истинное распределение",
-             linewidth=4, linestyle='-', alpha=0.9)
-    ax_.plot(X_plot, [fitted_mixture.pdf(xi) for xi in X_plot],
-             color="crimson", label="Подобранное распределение",
-             linewidth=4, linestyle='--', alpha=0.9)
+    ax_.plot(
+        X_plot,
+        [true_mixture.pdf(xi) for xi in X_plot],
+        color="darkgreen",
+        label="Истинное распределение",
+        linewidth=4,
+        linestyle="-",
+        alpha=0.9,
+    )
+    ax_.plot(
+        X_plot,
+        [fitted_mixture.pdf(xi) for xi in X_plot],
+        color="crimson",
+        label="Подобранное распределение",
+        linewidth=4,
+        linestyle="--",
+        alpha=0.9,
+    )
 
-    legend = ax_.legend(loc='upper right',
-                        fontsize=legend_fontsize,
-                        framealpha=1,
-                        edgecolor='black',
-                        facecolor='white',
-                        frameon=True,
-                        borderpad=1)
+    legend = ax_.legend(
+        loc="upper right",
+        fontsize=legend_fontsize,
+        framealpha=1,
+        edgecolor="black",
+        facecolor="white",
+        frameon=True,
+        borderpad=1,
+    )
     legend.get_frame().set_linewidth(2)
 
     ax.minorticks_on()
     ax_.minorticks_on()
-    ax.tick_params(axis='both', which='minor', width=2, length=5)
-    ax_.tick_params(axis='both', which='minor', width=2, length=5)
+    ax.tick_params(axis="both", which="minor", width=2, length=5)
+    ax_.tick_params(axis="both", which="minor", width=2, length=5)
 
     for y in y_ticks:
-        ax_.axhline(y=y, color='gray', linestyle=':', alpha=0.3, linewidth=1)
+        ax_.axhline(y=y, color="gray", linestyle=":", alpha=0.3, linewidth=1)
 
 
 def save_metrics_table(metrics_data: dict[str, dict[str, float]], filename: str, title: str):
@@ -244,10 +255,14 @@ def _initialize_methods(mixture: MixtureDistribution, eps) -> list[tuple]:
             raise ValueError(f"Unsupported model type: {model_type}")
     n_clusters = len(models)
     return [
-        ("BayesEStep",None,BayesEStep()),
-        ("KMeans+ML","kmeans",EnhancedClusteringEStep(models,clusterizer=KMeans(n_clusters=n_clusters))),
-        ("Agglo+ML","agglo",EnhancedClusteringEStep(models,clusterizer=AgglomerativeClustering(n_clusters=n_clusters))),
-        ("DBSCAN+ML","dbscan",EnhancedClusteringEStep(models,eps=eps,clusterizer=DBSCAN())),
+        ("BayesEStep", None, BayesEStep()),
+        ("KMeans+ML", "kmeans", EnhancedClusteringEStep(models, clusterizer=KMeans(n_clusters=n_clusters))),
+        (
+            "Agglo+ML",
+            "agglo",
+            EnhancedClusteringEStep(models, clusterizer=AgglomerativeClustering(n_clusters=n_clusters)),
+        ),
+        ("DBSCAN+ML", "dbscan", EnhancedClusteringEStep(models, eps=eps, clusterizer=DBSCAN())),
     ]
 
 
@@ -292,9 +307,14 @@ def _calculate_summary_metrics(all_results: dict) -> dict:
     return summary_metrics
 
 
-def _save_comparison_plots(methods: list, mixture: MixtureDistribution,
-                           problem: Problem, summary_metrics: dict,
-                           group_name: str, sample_size: int):
+def _save_comparison_plots(
+    methods: list,
+    mixture: MixtureDistribution,
+    problem: Problem,
+    summary_metrics: dict,
+    group_name: str,
+    sample_size: int,
+):
     """Save all comparison plots with metrics under titles"""
     fig, axes = plt.subplots(2, 2, figsize=(18, 14))
     # fig.suptitle(f"Comparison of methods for {group_name} group (n={sample_size})", fontsize=16)
@@ -330,8 +350,7 @@ def _save_comparison_plots(methods: list, mixture: MixtureDistribution,
     _save_pair_plots(methods, mixture, problem, group_name)
 
 
-def _save_pair_plots(methods: list, mixture: MixtureDistribution,
-                     problem: Problem, group_name: str):
+def _save_pair_plots(methods: list, mixture: MixtureDistribution, problem: Problem, group_name: str):
     """Save pair comparison plots with metrics"""
     # Bayes vs KMeans
     fig, axes = plt.subplots(1, 2, figsize=(18, 8))
@@ -345,9 +364,7 @@ def _save_pair_plots(methods: list, mixture: MixtureDistribution,
             em = EM(StepCountBreakpointer(max_step=128), FiniteChecker(), method=method)
             result = em.solve(problem)
 
-        title = (
-            f"{name}"
-        )
+        title = f"{name}"
         plot_distributions(ax, problem.samples, mixture, result.result, title)
 
     plt.tight_layout()
@@ -365,9 +382,7 @@ def _save_pair_plots(methods: list, mixture: MixtureDistribution,
             method = Method(e_step, m_step)
             em = EM(StepCountBreakpointer(max_step=128), FiniteChecker(), method=method)
             result = em.solve(problem)
-        title = (
-            f"{name}"
-        )
+        title = f"{name}"
         plot_distributions(ax, problem.samples, mixture, result.result, title)
 
     plt.tight_layout()
@@ -376,7 +391,7 @@ def _save_pair_plots(methods: list, mixture: MixtureDistribution,
 
 
 def run_experiment_group(
-        mixture: MixtureDistribution, sample_size: int, n_experiments: int = 5, group_name: str = "default"
+    mixture: MixtureDistribution, sample_size: int, n_experiments: int = 5, group_name: str = "default"
 ) -> dict[str, dict[str, float]]:
     """Run multiple experiments for a given mixture model"""
     all_results = {method: [] for method in ["BayesEStep", "KMeans+ML", "Agglo+ML", "DBSCAN+ML"]}
@@ -403,8 +418,9 @@ def run_experiment_group(
     x = mixture.generate(sample_size)
     eps = EnhancedClusteringEStep.auto_eps(x)
     problem = Problem(x, mixture)
-    _save_comparison_plots(_initialize_methods(mixture, eps), mixture,
-                           problem, summary_metrics, group_name, sample_size)
+    _save_comparison_plots(
+        _initialize_methods(mixture, eps), mixture, problem, summary_metrics, group_name, sample_size
+    )
 
     return summary_metrics
 

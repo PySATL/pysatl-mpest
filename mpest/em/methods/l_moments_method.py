@@ -15,6 +15,7 @@ from mpest.utils import ResultWithError, find_file
 
 EResult = tuple[Problem, np.ndarray] | ResultWithError[MixtureDistribution]
 
+
 class LMomentsMStep(AMaximization[EResult]):
     """
     Class which calculate new params using matrix with indicator from E step.
@@ -54,7 +55,6 @@ class LMomentsMStep(AMaximization[EResult]):
 
             mr_j += p_rk * b_k
         return mr_j
-
 
     def step(self, e_result: EResult) -> Result:
         """
