@@ -2,12 +2,11 @@ import numpy as np
 import pytest
 from hypothesis import assume, given
 from hypothesis import strategies as st
-from sklearn.cluster import KMeans
-
 from mpest import Distribution, MixtureDistribution, Problem
 from mpest.em.methods.likelihood_method import ClusteringEStep
 from mpest.models import GaussianModel, WeibullModelExp
 from mpest.utils import ResultWithError
+from sklearn.cluster import KMeans
 
 WEIBULL_PARAMS_COUNT = 2
 MIN_COMPONENT_SIZE = 10

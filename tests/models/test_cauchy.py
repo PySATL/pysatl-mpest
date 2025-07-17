@@ -4,10 +4,9 @@ import numpy as np
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
+from mpest.models.cauchy import Cauchy
 from scipy import stats
 from scipy.stats import cauchy
-
-from mpest.models.cauchy import Cauchy
 
 
 @st.composite

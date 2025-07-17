@@ -1,10 +1,11 @@
 """A module that provides a class for generating initial mixtures with standart parameters"""
 
+from mpest import Problem
+
 from experimental_env.experiment.experiment_executors.abstract_executor import AExecutor
 from experimental_env.mixture_generators.standart_mixture_generator import (
     StandartMixtureGenerator,
 )
-from mpest import Problem
 
 
 class StandartExperimentExecutor(AExecutor):

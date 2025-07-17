@@ -6,7 +6,6 @@
 
 import numpy as np
 import pytest
-
 from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem
@@ -17,6 +16,7 @@ from mpest.models import (
     WeibullModelExp,
 )
 from mpest.utils import Factory
+
 from tests.tests_likelihood.likelihood_utils import run_test
 from tests.utils import (
     check_for_params_error_tolerance,

@@ -6,13 +6,13 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 import numpy as np
+from mpest import Problem
+from mpest.models import ALL_MODELS, AModel
 
 from experimental_env.experiment.estimators import AEstimator
 from experimental_env.experiment.experiment_description import ExperimentDescription
 from experimental_env.experiment.experiment_saver import ExperimentSaver
 from experimental_env.preparation.dataset_description import DatasetDescrciption
-from mpest import Problem
-from mpest.models import ALL_MODELS, AModel
 
 
 class AExecutor(ABC):

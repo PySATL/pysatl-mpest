@@ -98,6 +98,3 @@ For your Pull Request to be merged, it must meet the following requirements conf
 Each pull request must be reviewed by one of the maintainers:
 
 * Danil Totmyanin ([iraedeus](https://github.com/iraedeus))
-
-
-

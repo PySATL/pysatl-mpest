@@ -3,7 +3,6 @@ from unittest.mock import Mock
 import numpy as np
 from hypothesis import given
 from hypothesis import strategies as st
-
 from mpest.core.problem import Problem
 
 

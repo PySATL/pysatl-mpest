@@ -4,9 +4,8 @@ import numpy as np
 import pytest
 from hypothesis import assume, given
 from hypothesis import strategies as st
-from scipy import stats
-
 from mpest.models.pareto import Pareto
+from scipy import stats
 
 
 @st.composite

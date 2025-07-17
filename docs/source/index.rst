@@ -21,4 +21,3 @@ documentation for details.
    :caption: API:
 
    api/modules
-

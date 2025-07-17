@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
-
 from mpest.core.distribution import Distribution
 from mpest.models import AModel, AModelWithGenerator
 

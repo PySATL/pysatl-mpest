@@ -4,9 +4,8 @@ import numpy as np
 import pytest
 from hypothesis import assume, given
 from hypothesis import strategies as st
-from scipy import stats
-
 from mpest.models.uniform import Uniform
+from scipy import stats
 
 
 @st.composite

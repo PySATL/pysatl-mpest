@@ -3,10 +3,10 @@
 from collections.abc import Iterable, Iterator
 
 import numpy as np
-
-from experimental_env.preparation.dataset_description import DatasetDescrciption
 from mpest import MixtureDistribution
 from mpest.utils import ResultWithLog
+
+from experimental_env.preparation.dataset_description import DatasetDescrciption
 
 
 class StepDescription:
