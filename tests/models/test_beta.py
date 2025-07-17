@@ -110,12 +110,12 @@ class TestBeta:
         assert samples.dtype == np.float64
 
     @given(valid_x(), valid_internal_params())
-    def test_pdf(self, x, param):
+    def test_pdf(self, x, params):
         beta_model = Beta()
-        external_params = beta_model.params_convert_from_model(param)
+        external_params = beta_model.params_convert_from_model(params)
         alpha, beta = external_params
 
-        model_pdf = beta_model.pdf(x, param)
+        model_pdf = beta_model.pdf(x, params)
         scipy_pdf = stats.beta.pdf(x, a=alpha, b=beta)
 
         assert np.isclose(model_pdf, scipy_pdf, rtol=1e-5)
@@ -146,7 +146,7 @@ class TestBeta:
         beta_model = Beta()
 
         eps = 1e-6
-        params_plus = list(params).copy()
+        params_plus = params.copy()
         params_plus[0] += eps
         params_minus = params.copy()
         params_minus[0] -= eps

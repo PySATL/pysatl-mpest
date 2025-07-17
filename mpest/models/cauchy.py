@@ -59,7 +59,7 @@ class Cauchy(AModelWithGenerator, AModelDifferentiable):
         r"""Converts internal model parameters to external parameters.
 
         Transforms the internal model parameters [:math:`x_0, \sigma`] to external
-        parameterization [:math:`x_0$, \gamma`] where :math:`\gamma = e^{\sigma}`.
+        parameterization [:math:`x_0, \gamma`] where :math:`\gamma = e^{\sigma}`.
 
         Args:
             params (Params): Internal model parameters [:math:`x_0, \sigma`] where :math:`x_0` is the location
