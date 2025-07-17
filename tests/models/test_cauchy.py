@@ -1,6 +1,7 @@
+import random
+
 import numpy as np
 import pytest
-import random
 from hypothesis import given
 from hypothesis import strategies as st
 from scipy import stats
