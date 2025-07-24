@@ -65,3 +65,13 @@ class ExponentialModel(AModelDifferentiable, AModelWithGenerator):
         lm = 1 / moments[0]
 
         return np.array([lm])
+
+    def calc_moments_params(self, moments: list[float]):
+        """
+        The function for calculating params using moments
+        """
+
+        # Calculate lambda parameter
+        lm = 1 / moments[0]
+
+        return np.array([lm])

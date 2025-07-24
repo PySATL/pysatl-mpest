@@ -74,3 +74,21 @@ class GaussianModel(AModelDifferentiable, AModelWithGenerator):
         variance = m2 * np.sqrt(np.pi)
 
         return np.array([mean, variance])
+
+    def calc_moments_params(self, moments: list[float]) -> np.ndarray:
+        """
+        The function for calculating params using moments
+        """
+
+        m1 = moments[0]
+        m2 = moments[1]
+
+        # Calculate mean parameter
+        mu = m1
+
+        # Calculate variance parameter
+        variance = m2 - m1**2
+
+        sigma = np.sqrt(variance)
+
+        return np.array([mu, sigma])
