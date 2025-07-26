@@ -3,12 +3,12 @@
 import random
 
 import numpy as np
+from mpest import Distribution, MixtureDistribution, Problem
+from mpest.models import GaussianModel, WeibullModelExp
 
 from examples.config import MAX_WORKERS, TESTS_OPTIMIZERS
 from examples.mono_test_generator import Clicker
 from examples.utils import Test, init_solver, run_tests, save_results
-from mpest import Distribution, MixtureDistribution, Problem
-from mpest.models import GaussianModel, WeibullModelExp
 
 # Gaussian
 

@@ -16,7 +16,6 @@ from mpest.models import (
     WeibullModelExp,
 )
 from mpest.utils import Factory
-
 from tests.tests_l_moments.l_moments_utils import run_test
 from tests.utils import (
     check_for_params_error_tolerance,

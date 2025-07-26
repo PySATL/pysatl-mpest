@@ -7,11 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from scipy.stats import entropy, wasserstein_distance
-from sklearn.cluster import DBSCAN, AgglomerativeClustering, KMeans
-from sklearn.metrics import calinski_harabasz_score, davies_bouldin_score, silhouette_score
-from sklearn.neighbors import NearestNeighbors
-
 from mpest import Distribution, MixtureDistribution, Problem
 from mpest.em import EM
 from mpest.em.breakpointers import StepCountBreakpointer
@@ -20,6 +15,10 @@ from mpest.em.methods.likelihood_method import BayesEStep, ClusteringEStep, Like
 from mpest.em.methods.method import Method
 from mpest.models import GaussianModel, WeibullModelExp
 from mpest.optimizers import ScipyCG
+from scipy.stats import entropy, wasserstein_distance
+from sklearn.cluster import DBSCAN, AgglomerativeClustering, KMeans
+from sklearn.metrics import calinski_harabasz_score, davies_bouldin_score, silhouette_score
+from sklearn.neighbors import NearestNeighbors
 
 os.makedirs("results", exist_ok=True)
 os.makedirs("results/plots", exist_ok=True)

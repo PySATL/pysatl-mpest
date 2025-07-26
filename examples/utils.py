@@ -7,9 +7,6 @@ from functools import partial
 from typing import ClassVar, NamedTuple
 
 import numpy as np
-from tqdm.contrib.concurrent import process_map
-
-from examples.config import RESULTS_FOLDER
 from mpest.annotations import Samples
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem, Result
@@ -21,6 +18,9 @@ from mpest.em.distribution_checkers import (
 )
 from mpest.em.methods.likelihood_method import LikelihoodMethod
 from mpest.optimizers import TOptimizer
+from tqdm.contrib.concurrent import process_map
+
+from examples.config import RESULTS_FOLDER
 
 np.seterr(all="ignore")
 

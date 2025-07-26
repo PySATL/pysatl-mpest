@@ -3,16 +3,16 @@
 import random
 
 import numpy as np
-
-from examples.config import MAX_WORKERS, TESTS_OPTIMIZERS
-from examples.mono_test_generator import generate_mono_test
-from examples.utils import Clicker, Test, init_solver, run_tests, save_results
 from mpest.models import (
     AModelWithGenerator,
     ExponentialModel,
     GaussianModel,
     WeibullModelExp,
 )
+
+from examples.config import MAX_WORKERS, TESTS_OPTIMIZERS
+from examples.mono_test_generator import generate_mono_test
+from examples.utils import Clicker, Test, init_solver, run_tests, save_results
 
 if __name__ == "__main__":
     random.seed(42)

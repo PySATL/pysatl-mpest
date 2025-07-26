@@ -3,7 +3,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
 from mpest import Distribution, MixtureDistribution, Problem
 from mpest.em import EM
 from mpest.em.breakpointers import StepCountBreakpointer

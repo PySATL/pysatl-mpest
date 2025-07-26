@@ -14,7 +14,6 @@ from mpest.models import (
     GaussianModel,
     WeibullModelExp,
 )
-
 from tests.tests_l_moments.l_moments_utils import run_test
 from tests.utils import check_for_params_error_tolerance
 

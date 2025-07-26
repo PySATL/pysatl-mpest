@@ -18,26 +18,26 @@ class MomentsMStep(AMaximization[EResult]):
     Class which calculate new params using matrix with indicator from E step.
     """
 
-    def calculate_order_degree_moment_of_index_element(self, order: int, index: int, samples: Samples, indicators: np.ndarray) -> float:
+    def calc_order_moment_of_index_element(self, order: int, i: int, samples: Samples, indicators: np.ndarray) -> float:
         """
         A function that calculates the list of n-th moments of each distribution.
 
         :param order: Order of Moment.
-        :param index: The number of the distribution for which we count the moment.
+        :param i: The number of the distribution for which we count the moment.
         :param samples: Ndarray with samples.
         :param indicators: Matrix with indicators
 
         :return:  order-Moment of index element.
         """
 
-        sum_j_row_probabilities = np.sum(indicators[index])
+        sum_j_row_probabilities = np.sum(indicators[i])
 
         if sum_j_row_probabilities == 0:
             return 0
 
-        moment_values = samples ** order
+        moment_values = samples**order
 
-        numerator = np.sum(moment_values * indicators[index])
+        numerator = np.sum(moment_values * indicators[i])
 
         return numerator / sum_j_row_probabilities
 
@@ -64,7 +64,7 @@ class MomentsMStep(AMaximization[EResult]):
 
         for j, d in enumerate(mixture):
             for r in range(len(d.params)):
-                moments[j][r] = self.calculate_order_degree_moment_of_index_element(r + 1, j, samples, indicators)
+                moments[j][r] = self.calc_order_moment_of_index_element(r + 1, j, samples, indicators)
 
         for i, d in enumerate(mixture):
             if d.model.name == "WeibullExp" and (moments[i][0] * moments[i][1] < 0):

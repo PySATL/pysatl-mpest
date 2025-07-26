@@ -4,13 +4,13 @@ import itertools
 
 import numpy as np
 import pandas as pd
+from mpest.annotations import Samples
+from mpest.core.mixture_distribution import DistributionInMixture, MixtureDistribution
 from tqdm.contrib.concurrent import process_map
 
 from examples.config import MAX_WORKERS
 from examples.mono_test_generator import Clicker
 from examples.utils import SingleSolverResult, TestResult
-from mpest.annotations import Samples
-from mpest.core.mixture_distribution import DistributionInMixture, MixtureDistribution
 
 
 def nll(samples: Samples, mixture: MixtureDistribution) -> float:
