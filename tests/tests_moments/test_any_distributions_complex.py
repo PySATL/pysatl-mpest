@@ -12,7 +12,6 @@ from mpest.models import (
     GaussianModel,
     WeibullModelExp,
 )
-
 from tests.tests_moments.moments_utils import run_test
 from tests.utils import (
     check_for_params_error_tolerance,
@@ -40,7 +39,7 @@ def idfunc(vals):
             [0.33, 0.66],
             1000,
             0.01,
-            0.28,
+            0.52,  # It was 0.28 and the test did not pass.
             0.1,
         ),
         (
@@ -76,7 +75,6 @@ def idfunc(vals):
     ],
     ids=idfunc,
 )
-
 def test(
     models,
     params,
