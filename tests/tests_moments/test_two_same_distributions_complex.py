@@ -100,7 +100,7 @@ def idfunc(vals):
     ],
     ids=idfunc,
 )
-def test_two_same_distributions_simple(
+def test_two_same_distributions_complex(
     model_factory: Factory[AModelWithGenerator],
     params,
     start_params,
