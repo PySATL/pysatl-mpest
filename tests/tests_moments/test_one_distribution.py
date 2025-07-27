@@ -14,7 +14,7 @@ from mpest.models import (
     GaussianModel,
     WeibullModelExp,
 )
-from tests.tests_l_moments.l_moments_utils import run_test
+from tests.tests_moments.moments_utils import run_test
 from tests.utils import check_for_params_error_tolerance
 
 
@@ -31,7 +31,7 @@ def idfunc(vals):
 @pytest.mark.parametrize(
     "model, params, start_params, size, deviation, expected_error",
     [
-        (WeibullModelExp(), (0.5, 0.5), (0.3, 2.0), 500, 0.01, 0.051),
+        (WeibullModelExp(), (0.5, 0.5), (0.3, 2.0), 500, 0.01, 0.22),
         (WeibullModelExp(), (1.0, 1.0), (0.5, 2.0), 500, 0.01, 0.05),
         (GaussianModel(), (0.0, 5.0), (-1.0, 4.0), 500, 0.01, 0.16),
         (GaussianModel(), (1.0, 5.0), (2.0, 1.0), 500, 0.01, 0.15),

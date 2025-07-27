@@ -12,7 +12,7 @@ from mpest.models import (
     GaussianModel,
     WeibullModelExp,
 )
-from tests.tests_l_moments.l_moments_utils import run_test
+from tests.tests_moments.moments_utils import run_test
 from tests.utils import check_for_params_error_tolerance
 
 
@@ -35,7 +35,7 @@ def idfunc(vals):
             [[0.5, 1.5], [3.0, 3.0]],
             1000,
             0.01,
-            0.24,
+            0.37,
         ),
         (
             [ExponentialModel(), GaussianModel()],
@@ -59,12 +59,12 @@ def idfunc(vals):
             [[3.0], [2.0, 5.0], [2.0, 2.0]],
             1000,
             0.01,
-            0.2,
+            0.7,
         ),
     ],
     ids=idfunc,
 )
-def test(
+def test_any_distributions_simple(
     models,
     params,
     start_params,

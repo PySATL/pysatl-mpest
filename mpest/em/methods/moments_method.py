@@ -68,7 +68,7 @@ class MomentsMStep(AMaximization[EResult]):
 
         for i, d in enumerate(mixture):
             if d.model.name == "WeibullExp" and (moments[i][0] * moments[i][1] < 0):
-                error = MStepError("The weibul distribution degenerated in the first step.")
+                error = MStepError("The Weibull distribution degenerated in the first step.")
                 return ResultWithError(mixture.distributions, error)
 
         new_distributions = []

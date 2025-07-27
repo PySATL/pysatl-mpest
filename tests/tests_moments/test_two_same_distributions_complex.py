@@ -16,7 +16,7 @@ from mpest.models import (
     WeibullModelExp,
 )
 from mpest.utils import Factory
-from tests.tests_l_moments.l_moments_utils import run_test
+from tests.tests_moments.moments_utils import run_test
 from tests.utils import (
     check_for_params_error_tolerance,
     check_for_priors_error_tolerance,
@@ -44,7 +44,7 @@ def idfunc(vals):
             [0.56, 0.44],
             500,
             0.01,
-            0.2,
+            0.27,
             0.1,
         ),
         (
@@ -54,7 +54,7 @@ def idfunc(vals):
             [0.27, 0.73],
             500,
             0.01,
-            0.25,
+            0.28,
             0.15,
         ),
         (

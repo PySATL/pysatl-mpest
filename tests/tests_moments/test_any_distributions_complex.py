@@ -75,7 +75,7 @@ def idfunc(vals):
     ],
     ids=idfunc,
 )
-def test(
+def test_any_distributions_complex(
     models,
     params,
     start_params,

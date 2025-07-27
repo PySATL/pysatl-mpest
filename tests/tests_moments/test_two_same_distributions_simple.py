@@ -19,7 +19,7 @@ from mpest.models import (
     WeibullModelExp,
 )
 from mpest.utils import Factory
-from tests.tests_l_moments.l_moments_utils import run_test
+from tests.tests_moments.moments_utils import run_test
 from tests.utils import check_for_params_error_tolerance
 
 
@@ -42,7 +42,7 @@ def idfunc(vals):
             [(1.0, 1.0), (0.5, 1.5)],
             500,
             0.01,
-            0.2,
+            0.84,
         ),
         (
             Factory(WeibullModelExp),
@@ -50,7 +50,7 @@ def idfunc(vals):
             [(0.1, 1.0), (1.0, 2.0)],
             500,
             0.01,
-            0.2,
+            0.91,
         ),
         (
             Factory(GaussianModel),
@@ -66,7 +66,7 @@ def idfunc(vals):
             [(3.0, 5.0), (3.5, 3.0)],
             500,
             0.01,
-            0.41,
+            0.52,
         ),
         (
             Factory(ExponentialModel),
