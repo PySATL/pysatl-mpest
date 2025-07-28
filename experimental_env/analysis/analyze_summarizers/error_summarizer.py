@@ -44,16 +44,20 @@ class ErrorSummarizer(AnalysisSummarizer):
         mean = np.mean(errors)
         std = np.std(errors)
         median = np.median(errors)
+        percentile_90 = np.percentile(errors, 90)
+        percentile_95 = np.percentile(errors, 95)
 
-        return float(mean), float(std), float(median)
+        return float(mean), float(std), float(median), float(percentile_90), float(percentile_95)
 
     def analyze_method(self, results: list[ExperimentDescription], method: str):
-        mean, deviation, median = self.calculate(results)
+        mean, deviation, median, percentile_90, percentile_95 = self.calculate(results)
 
         info_dict = {
             "mean": round_sig(mean, 3),
             "standart_deviation": round_sig(deviation, 3),
             "median": round_sig(median, 3),
+            "percentile_90": round_sig(percentile_90, 3),
+            "percentile_95": round_sig(percentile_95, 3),
         }
         yaml_path: Path = self._out_dir.joinpath("metric_info.yaml")
 
@@ -67,16 +71,20 @@ class ErrorSummarizer(AnalysisSummarizer):
         method_1: str,
         method_2: str,
     ):
-        mean_1, deviation_1, median_1 = self.calculate(results_1)
-        mean_2, deviation_2, median_2 = self.calculate(results_2)
+        mean_1, deviation_1, median_1, percentile_90_1, percentile_95_1 = self.calculate(results_1)
+        mean_2, deviation_2, median_2, percentile_90_2, percentile_95_2 = self.calculate(results_2)
 
         info_dict = {
             f"{method_1}_mean": round_sig(mean_1, 3),
             f"{method_1}_standart_deviation": round_sig(deviation_1, 3),
             f"{method_1}_median": round_sig(median_1, 3),
+            f"{method_1}_percentile_90": round_sig(percentile_90_1, 3),
+            f"{method_1}_percentile_95": round_sig(percentile_95_1, 3),
             f"{method_2}_mean": round_sig(mean_2, 3),
             f"{method_2}_standart_deviation": round_sig(deviation_2, 3),
             f"{method_2}_median": round_sig(median_2, 3),
+            f"{method_2}_percentile_90": round_sig(percentile_90_2, 3),
+            f"{method_2}_percentile_95": round_sig(percentile_95_2, 3),
         }
         yaml_path: Path = self._out_dir.joinpath("metric_info.yaml")
 
