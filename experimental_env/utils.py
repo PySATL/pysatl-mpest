@@ -3,10 +3,11 @@
 import math
 import re
 
-from experimental_env.analysis.metrics import Parametric
 from mpest import Distribution, MixtureDistribution, Problem
 from mpest.models import ALL_MODELS
 from mpest.utils import ResultWithLog
+
+from experimental_env.analysis.metrics import Parametric
 
 
 def create_mixture_by_key(config: dict, key: str) -> MixtureDistribution:

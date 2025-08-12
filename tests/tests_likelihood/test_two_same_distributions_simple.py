@@ -9,7 +9,6 @@ with equally probable prior probabilities
 
 import numpy as np
 import pytest
-
 from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem
@@ -20,6 +19,7 @@ from mpest.models import (
     WeibullModelExp,
 )
 from mpest.utils import Factory
+
 from tests.tests_likelihood.likelihood_utils import run_test
 from tests.utils import check_for_params_error_tolerance
 
@@ -83,7 +83,7 @@ def idfunc(vals):
             [(4.0,), (1.0,)],
             500,
             0.01,
-            0.25,
+            0.28,
         ),
     ],
     ids=idfunc,

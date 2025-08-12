@@ -3,10 +3,6 @@
 import random
 
 import numpy as np
-
-from examples.config import MAX_WORKERS
-from examples.mono_test_generator import generate_mono_test
-from examples.utils import Clicker, Test, init_solver, run_tests, save_results
 from mpest.models import (
     AModelWithGenerator,
     ExponentialModel,
@@ -14,6 +10,10 @@ from mpest.models import (
     WeibullModelExp,
 )
 from mpest.optimizers import ALL_OPTIMIZERS
+
+from examples.config import MAX_WORKERS
+from examples.mono_test_generator import generate_mono_test
+from examples.utils import Clicker, Test, init_solver, run_tests, save_results
 
 
 def run_test():

@@ -4,13 +4,13 @@ import random
 from collections.abc import Iterable
 
 import numpy as np
-
-from examples.utils import Clicker, Test
 from mpest.core.distribution import Distribution
 from mpest.core.mixture_distribution import MixtureDistribution
 from mpest.core.problem import Problem
 from mpest.em import EM
 from mpest.models import AModel, AModelWithGenerator
+
+from examples.utils import Clicker, Test
 
 
 def generate_mono_test(

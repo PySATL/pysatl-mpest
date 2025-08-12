@@ -1,0 +1,33 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+    -   id: check-merge-conflict
+    -   id: check-ast
+
+-   repo: local
+    hooks:
+    -   id: ruff-check
+        name: ruff check
+        entry: poetry run ruff check --fix --exit-non-zero-on-fix
+        language: system
+        types: [python]
+        files: ^(mpest/|experimental_env/|tests/).*
+
+    -   id: ruff-format
+        name: ruff format
+        entry: poetry run ruff format
+        language: system
+        types: [python]
+        files: ^(mpest/|experimental_env/|tests/).*
+
+    -   id: mypy
+        name: mypy check
+        entry: poetry run mypy
+        language: system
+        types: [python]
+        pass_filenames: false

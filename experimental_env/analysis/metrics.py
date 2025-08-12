@@ -4,10 +4,9 @@ from abc import ABC, abstractmethod
 from itertools import permutations
 
 import numpy as np
-from scipy.integrate import quad
-
 from mpest import MixtureDistribution
 from mpest.utils import ANamed
+from scipy.integrate import quad
 
 
 class AMetric(ANamed, ABC):

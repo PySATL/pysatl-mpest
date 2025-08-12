@@ -1,17 +1,18 @@
 """A module that provides an abstract class for performing the 2nd stage of the experiment"""
 
+import random
 import warnings
 from abc import ABC, abstractmethod
 from pathlib import Path
 
 import numpy as np
+from mpest import Problem
+from mpest.models import ALL_MODELS, AModel
 
 from experimental_env.experiment.estimators import AEstimator
 from experimental_env.experiment.experiment_description import ExperimentDescription
 from experimental_env.experiment.experiment_saver import ExperimentSaver
 from experimental_env.preparation.dataset_description import DatasetDescrciption
-from mpest import Problem
-from mpest.models import ALL_MODELS, AModel
 
 
 class AExecutor(ABC):
@@ -20,7 +21,7 @@ class AExecutor(ABC):
     as well as the implementation of the execute method, to implement the 2nd stage of the experiment.
     """
 
-    def __init__(self, path: Path, cpu_count: int, seed):
+    def __init__(self, path: Path, cpu_count: int, seed: int):
         """
         Class constructor
 
@@ -31,6 +32,8 @@ class AExecutor(ABC):
         self._out_dir = path
         self._cpu_count = cpu_count
         self._seed = seed
+
+        random.seed(self._seed)
         np.random.seed(self._seed)
 
     @abstractmethod

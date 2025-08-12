@@ -1,10 +1,11 @@
 """A module that provides a class for generating initial mixtures with uniform distribution."""
 
+from mpest import Problem
+
 from experimental_env.experiment.experiment_executors.abstract_executor import AExecutor
 from experimental_env.mixture_generators.random_mixture_generator import (
     RandomMixtureGenerator,
 )
-from mpest import Problem
 
 
 class RandomExperimentExecutor(AExecutor):
@@ -19,7 +20,7 @@ class RandomExperimentExecutor(AExecutor):
         return [
             Problem(
                 descr.samples,
-                RandomMixtureGenerator(self._seed).create_mixture(models),
+                RandomMixtureGenerator().create_mixture(models),
             )
             for i, descr in enumerate(ds_descriptions)
         ]
