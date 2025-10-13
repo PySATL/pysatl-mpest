@@ -13,7 +13,7 @@ import pytest
 from rework_pysatl_mpest.core import MixtureModel
 from rework_pysatl_mpest.distributions import Exponential
 from rework_pysatl_mpest.estimators.iterative import Breakpointer, Pipeline, PipelineState, PipelineStep, Pruner
-from rework_pysatl_mpest.estimators.iterative._logger import IterationRecord, PipelineLogger
+from rework_pysatl_mpest.estimators.iterative._logger import IterationRecord, IterationsHistory
 
 # --- Mock objects for isolated testing ---
 
@@ -185,7 +185,7 @@ class TestPipelineInitialization:
         assert isinstance(pipeline.steps, list)
         assert isinstance(pipeline.breakpointers, list)
         assert isinstance(pipeline.pruners, list)
-        assert isinstance(pipeline.logger, PipelineLogger)
+        assert isinstance(pipeline.logger, IterationsHistory)
 
     def test_init_with_none_pruners_creates_empty_list(self):
         """Tests that an empty list is created if pruners=None."""
