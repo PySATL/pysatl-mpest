@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 from rework_pysatl_mpest.core import MixtureModel
 from rework_pysatl_mpest.distributions import Exponential
-from rework_pysatl_mpest.estimators.iterative._logger import IterationRecord, PipelineLogger
+from rework_pysatl_mpest.estimators.iterative._logger import IterationRecord, IterationsHistory
 
 # objects - 2-3  init(once_in =_iteration) (1,2,3)
 # record = IterationRecord(logger._counter, state.curr_mixture, state.X, state.H, self.pruners, state.error)
@@ -46,8 +46,8 @@ def sample_record_1(exponential_components, responsibility_matrix) -> IterationR
 
 
 @pytest.fixture
-def setup_logger_for_index(sample_record_0, sample_record_1) -> PipelineLogger:
-    logger = PipelineLogger()
+def setup_logger_for_index(sample_record_0, sample_record_1) -> IterationsHistory:
+    logger = IterationsHistory()
     logger.log(sample_record_0)
     logger.log(sample_record_1)
     return logger
@@ -56,7 +56,7 @@ def setup_logger_for_index(sample_record_0, sample_record_1) -> PipelineLogger:
 @pytest.fixture(params=[(1, 5), (2, 8), (3, 10)])
 def setup_for_logs(request, exponential_components, responsibility_matrix):
     once_in_iter, n = request.param
-    logger = PipelineLogger(once_in_iter)
+    logger = IterationsHistory(once_in_iter)
 
     for i in range(n):
         record = IterationRecord(
@@ -103,7 +103,7 @@ class TestIndex:
 class TestLoggingAndLen:
     @pytest.mark.parametrize(("once_in_iter", "n", "expected"), [(1, 5, 5), (2, 8, 4), (3, 10, 4)])
     def test_len(self, once_in_iter: int, n: int, expected: int, exponential_components, responsibility_matrix):
-        logger = PipelineLogger(once_in_iter)
+        logger = IterationsHistory(once_in_iter)
 
         for i in range(n):
             record = IterationRecord(
@@ -132,13 +132,13 @@ class TestLoggingAndLen:
                 None,
             )
             assert logger[i].iteration == expected_logs.iteration
-            assert np.array_equal(logger[i].sample, expected_logs.sample)
+            assert np.array_equal(logger[i].sample, expected_logs.X)
 
 
 class TestClear:
     @pytest.fixture
     def populated_logger(self, sample_record_0, sample_record_1):
-        logger = PipelineLogger()
+        logger = IterationsHistory()
         logger.log(sample_record_0)
         logger.log(sample_record_1)
         logger.log(sample_record_0)

@@ -20,7 +20,7 @@ from numpy.typing import ArrayLike
 
 from ...core import MixtureModel
 from ..base_estimator import BaseEstimator
-from ._logger import IterationRecord, PipelineLogger
+from ._logger import IterationRecord, IterationsHistory
 from .breakpointer import Breakpointer
 from .pipeline_state import PipelineState
 from .pipeline_step import PipelineStep
@@ -85,6 +85,8 @@ class Pipeline(BaseEstimator):
         fit
     """
 
+    logger: IterationsHistory
+
     def __init__(
         self,
         steps: Sequence[PipelineStep],
@@ -103,7 +105,7 @@ class Pipeline(BaseEstimator):
         self.breakpointers = list(breakpointers)
         self.pruners = list(pruners) if pruners else []  # self.pruners will always be list
         self.steps = list(steps)
-        self.logger = PipelineLogger(once_in_iterations)
+        self.logger = IterationsHistory(once_in_iterations)
 
     def _validate_steps(self, steps: list[PipelineStep]):
         """Validates the sequence of pipeline steps.

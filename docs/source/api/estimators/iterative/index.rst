@@ -66,7 +66,7 @@ Logging Implementations
    :nosignatures:
    :template: class.rst
 
-   ~PipelineLogger
+   ~IterationsHistory
    ~IterationRecord
 
 Usage Example
