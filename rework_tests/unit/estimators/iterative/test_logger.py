@@ -132,7 +132,7 @@ class TestLoggingAndLen:
                 None,
             )
             assert logger[i].iteration == expected_logs.iteration
-            assert np.array_equal(logger[i].sample, expected_logs.X)
+            assert np.array_equal(logger[i].X, expected_logs.X)
 
 
 class TestClear:
