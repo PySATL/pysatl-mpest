@@ -1,0 +1,7 @@
+
+without\_component
+==================
+
+.. currentmodule:: pysatl_mpest.core
+
+.. automethod:: pysatl_mpest.core.MixtureModel.without_component

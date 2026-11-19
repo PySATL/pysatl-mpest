@@ -1,0 +1,1343 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pysatl_mpest.core.mixture &#8212; Mpest 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs'
+
+const make_config = () => {
+  let prefersDark = localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  return({
+    startOnLoad:false,
+    darkMode: prefersDark,
+    theme: prefersDark ? "dark" : "default"
+  })
+}
+
+const init_mermaid = () => {
+    let graphs = document.querySelectorAll(".mermaid");
+    [...graphs].forEach((element) => {
+        if (!element.hasAttribute("data-source")) {
+            element.setAttribute("data-source", element.innerText);
+        }
+        if (element.hasAttribute("data-processed")) {
+            let new_elt = document.createElement("pre");
+            let graph_source = element.getAttribute("data-source");
+            new_elt.appendChild(document.createTextNode(graph_source));
+            new_elt.classList.add("mermaid");
+            new_elt.setAttribute("data-source", graph_source);
+            element.replaceWith(new_elt);
+        }
+    });
+
+    let config = make_config()
+    mermaid.initialize(config);
+    mermaid.run();
+}
+
+init_mermaid();
+
+let theme_observer = new MutationObserver(init_mermaid);
+let body = document.getElementsByTagName("body")[0];
+theme_observer.observe(body, {attributes: true});
+window.theme_observer = theme_observer;
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pysatl_mpest/core/mixture';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Mpest 1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pysatl_mpest.core.mixture</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pysatl_mpest.core.mixture</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Finite mixture of continuous probability distributions."""</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Danil Totmyanin, Aleksandra Ri"</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright (c) 2026 PySATL project"</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">"SPDX-License-Identifier: MIT"</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pysatl_core.families</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParametricFamilyDistribution</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pysatl_core.transformations.operations.distributions.mixture</span><span class="w"> </span><span class="kn">import</span> <span class="n">FiniteMixtureDistribution</span><span class="p">,</span> <span class="n">finite_mixture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_softmax</span><span class="p">,</span> <span class="n">logsumexp</span><span class="p">,</span> <span class="n">softmax</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..typings</span><span class="w"> </span><span class="kn">import</span> <span class="n">FloatArray</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">,</span> <span class="n">UnivariateFloatArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">_components</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeterministicSampling</span>
+
+<span class="c1"># Sampling does not depend on the sampling strategy of a component: pysatl-core's default one ignores ``random_state``.</span>
+<span class="n">_SAMPLING</span> <span class="o">=</span> <span class="n">DeterministicSampling</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_normalize_log_weights</span><span class="p">(</span><span class="n">log_weights</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">n_components</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnivariateFloatArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Copy log-weights and normalize them via log-softmax.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_weights : ArrayLike</span>
+<span class="sd">        Logarithmic component weights; they are normalized, so they need not sum to one in log space.</span>
+<span class="sd">    n_components : int</span>
+<span class="sd">        Expected number of weights.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    UnivariateFloatArray</span>
+<span class="sd">        A read-only normalized log-weights array of length ``n_components``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the length differs from ``n_components`` or the values cannot be normalized</span>
+<span class="sd">        (all ``-inf``, ``NaN`` or ``+inf``).</span>
+<span class="sd">    """</span>
+
+    <span class="n">new_log_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">log_weights</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_log_weights</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n_components</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"The length of the new log-weights vector (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_log_weights</span><span class="p">)</span><span class="si">}</span><span class="s2">) "</span>
+            <span class="sa">f</span><span class="s2">"does not match the number of components (</span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)."</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">new_log_weights</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The log-weights must be normalizable: at least one finite value and no NaN or +inf."</span><span class="p">)</span>
+
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">log_softmax</span><span class="p">(</span><span class="n">new_log_weights</span><span class="p">)</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">normalized</span>
+
+
+<div class="viewcode-block" id="MixtureModel">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.html#pysatl_mpest.core.MixtureModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MixtureModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Represents a finite mixture of continuous probability distributions.</span>
+
+<span class="sd">    This class encapsulates a collection of distribution components and their</span>
+<span class="sd">    corresponding weights.</span>
+
+<span class="sd">    Instances of this class can be compared for equality (``==``) and</span>
+<span class="sd">    inequality (``!=``). Two models are considered equal if they have the</span>
+<span class="sd">    same set of components and weights, regardless of the order in which</span>
+<span class="sd">    components were added.</span>
+
+<span class="sd">    The model is immutable: its components and weights cannot be changed after</span>
+<span class="sd">    creation. Every modification returns a new ``MixtureModel`` via one of the</span>
+<span class="sd">    ``with_*`` methods or :meth:`without_component`. Because the contents never</span>
+<span class="sd">    change in place, instances are hashable and can safely be used as</span>
+<span class="sd">    dictionary keys.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    components : Sequence[ParametricFamilyDistribution]</span>
+<span class="sd">        A sequence of distribution objects that will form the mixture.</span>
+<span class="sd">    weights : ArrayLike | None, optional</span>
+<span class="sd">        An array of initial weights for the components. The weights must be</span>
+<span class="sd">        non-negative and sum to 1. If None, components are assigned equal</span>
+<span class="sd">        weights. Defaults to None.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    components : tuple[ParametricFamilyDistribution, ...]</span>
+<span class="sd">        A tuple of the distribution objects that form the mixture.</span>
+<span class="sd">    n_components : int</span>
+<span class="sd">        The number of components in the mixture.</span>
+<span class="sd">    weights : UnivariateFloatArray</span>
+<span class="sd">        A NumPy array of the normalized weights for each component. The sum</span>
+<span class="sd">        of weights is always 1.</span>
+<span class="sd">    log_weights : UnivariateFloatArray</span>
+<span class="sd">        A read-only NumPy array of normalized logarithmic component weights. New weights are set</span>
+<span class="sd">        via :meth:`with_log_weights`.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the list of components is empty, or if the provided weights are</span>
+<span class="sd">        invalid (e.g., negative, wrong number of elements, or do not sum to 1).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    .. autosummary::</span>
+<span class="sd">        :toctree: generated/</span>
+
+<span class="sd">        with_component</span>
+<span class="sd">        with_components</span>
+<span class="sd">        with_log_weights</span>
+<span class="sd">        with_added_component</span>
+<span class="sd">        without_component</span>
+<span class="sd">        to_core_mixture</span>
+<span class="sd">        pdf</span>
+<span class="sd">        lpdf</span>
+<span class="sd">        component_lpdf_matrix</span>
+<span class="sd">        loglikelihood</span>
+<span class="sd">        generate</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">components</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ParametricFamilyDistribution</span><span class="p">],</span>
+        <span class="n">weights</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">n_components</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_components</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"List of components cannot be empty"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_components</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_components</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_weights</span><span class="p">(</span><span class="n">n_components</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_weights</span><span class="p">:</span> <span class="n">UnivariateFloatArray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_pairs_cache</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">_components</span><span class="o">.</span><span class="n">ComponentKey</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_weights</span> <span class="o">=</span> <span class="n">_normalize_log_weights</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">weights</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">tiny</span><span class="p">),</span> <span class="n">n_components</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""int: Number of components in the mixture model."""</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">components</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ParametricFamilyDistribution</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""tuple[ParametricFamilyDistribution, ...]: Components of the mixture."""</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_components</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnivariateFloatArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""UnivariateFloatArray: Normalized component weights cached from log-weights; treated as read-only."""</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cached_weights</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_weights</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_weights</span>  <span class="c1"># type: ignore</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnivariateFloatArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""UnivariateFloatArray: Read-only normalized logarithmic component weights."""</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_weights</span>
+
+<div class="viewcode-block" id="MixtureModel.with_component">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.with_component.html#pysatl_mpest.core.MixtureModel.with_component">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">with_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">ParametricFamilyDistribution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MixtureModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a new mixture with the component at ``index`` replaced.</span>
+
+<span class="sd">        The log-weights are unchanged and shared with this mixture.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        index : int</span>
+<span class="sd">            Index of the component to replace; negative indices are not supported.</span>
+<span class="sd">        component : ParametricFamilyDistribution</span>
+<span class="sd">            The replacement component.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MixtureModel</span>
+<span class="sd">            A new mixture; this mixture is left unchanged.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IndexError</span>
+<span class="sd">            If ``index`` is outside ``[0, n_components - 1]``.</span>
+<span class="sd">        """</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Index of component must be between 0 and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="p">)</span>
+        <span class="n">components</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">component</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_normalized</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_weights</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.with_components">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.with_components.html#pysatl_mpest.core.MixtureModel.with_components">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">with_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">components</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ParametricFamilyDistribution</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">"MixtureModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a new mixture with all components replaced.</span>
+
+<span class="sd">        The already normalized log-weights are kept as is and shared with this</span>
+<span class="sd">        mixture; only the length is checked.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        components : Sequence[ParametricFamilyDistribution]</span>
+<span class="sd">            The new components; must be as many as in this mixture.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MixtureModel</span>
+<span class="sd">            A new mixture; this mixture is left unchanged.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the number of components differs from ``n_components``.</span>
+<span class="sd">        """</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="si">}</span><span class="s2"> components, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_normalized</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_weights</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.with_log_weights">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.with_log_weights.html#pysatl_mpest.core.MixtureModel.with_log_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">with_log_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_weights</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MixtureModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a new mixture with the given log-weights.</span>
+
+<span class="sd">        The input is copied and normalized via log-softmax, exactly as the</span>
+<span class="sd">        weights passed to the constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        log_weights : ArrayLike</span>
+<span class="sd">            New logarithmic component weights; they are normalized, so they need</span>
+<span class="sd">            not sum to one in log space.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MixtureModel</span>
+<span class="sd">            A new mixture; this mixture is left unchanged.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the length differs from ``n_components`` or the values cannot be</span>
+<span class="sd">            normalized (all ``-inf``, ``NaN`` or ``+inf``).</span>
+<span class="sd">        """</span>
+
+        <span class="n">normalized</span> <span class="o">=</span> <span class="n">_normalize_log_weights</span><span class="p">(</span><span class="n">log_weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_normalized</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="p">,</span> <span class="n">normalized</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.with_added_component">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.with_added_component.html#pysatl_mpest.core.MixtureModel.with_added_component">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">with_added_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">ParametricFamilyDistribution</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="n">Scalar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MixtureModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a new mixture with an appended component.</span>
+
+<span class="sd">        The existing component weights are multiplied by ``1 - weight`` so that</span>
+<span class="sd">        their proportions are preserved.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        component : ParametricFamilyDistribution</span>
+<span class="sd">            The distribution component to add.</span>
+<span class="sd">        weight : Scalar</span>
+<span class="sd">            The weight for the new component, a number in the range (0, 1).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MixtureModel</span>
+<span class="sd">            A new mixture; this mixture is left unchanged.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``weight`` is outside the range (0, 1).</span>
+<span class="sd">        """</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">weight</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The weight of the new component must be in the range (0, 1)."</span><span class="p">)</span>
+
+        <span class="n">d_weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">new_log_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_weights</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">d_weight</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">d_weight</span><span class="p">))</span>
+        <span class="n">normalized</span> <span class="o">=</span> <span class="n">_normalize_log_weights</span><span class="p">(</span><span class="n">new_log_weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_normalized</span><span class="p">([</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="p">,</span> <span class="n">component</span><span class="p">],</span> <span class="n">normalized</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.without_component">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.without_component.html#pysatl_mpest.core.MixtureModel.without_component">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">without_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MixtureModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a new mixture without the component at ``index``.</span>
+
+<span class="sd">        The weights of the remaining components are renormalized to sum to 1.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        index : int</span>
+<span class="sd">            The index of the component to remove; negative indices are not supported.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MixtureModel</span>
+<span class="sd">            A new mixture; this mixture is left unchanged.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IndexError</span>
+<span class="sd">            If the component index is out of range.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If an attempt is made to remove the last component or the only</span>
+<span class="sd">            component with positive weight.</span>
+<span class="sd">        """</span>
+
+        <span class="n">n_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">n_components</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Index </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> out of range [0, </span><span class="si">{</span><span class="n">n_components</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">]"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_components</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The last component cannot be removed from the model."</span><span class="p">)</span>
+
+        <span class="n">new_log_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_weights</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">new_log_weights</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot remove the only component with positive weight."</span><span class="p">)</span>
+
+        <span class="n">normalized</span> <span class="o">=</span> <span class="n">_normalize_log_weights</span><span class="p">(</span><span class="n">new_log_weights</span><span class="p">,</span> <span class="n">n_components</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">comp</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_normalized</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">normalized</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.to_core_mixture">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.to_core_mixture.html#pysatl_mpest.core.MixtureModel.to_core_mixture">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_core_mixture</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FiniteMixtureDistribution</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Convert to a pysatl-core FiniteMixtureDistribution.</span>
+
+<span class="sd">        The result is an independent pysatl-core mixture built from the current components and weights.</span>
+<span class="sd">        """</span>
+
+        <span class="n">weighted_components</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">comp</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">finite_mixture</span><span class="p">(</span><span class="n">weighted_components</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.pdf">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.pdf.html#pysatl_mpest.core.MixtureModel.pdf">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span> <span class="o">|</span> <span class="n">FloatArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Probability Density Function of the mixture: ``exp(lpdf(X))``.</span>
+
+<span class="sd">        The shape of the result and the handling of scalar input follow :meth:`lpdf`.</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lpdf</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.lpdf">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.lpdf.html#pysatl_mpest.core.MixtureModel.lpdf">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lpdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span> <span class="o">|</span> <span class="n">FloatArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Logarithm of the Probability Density Function of the mixture.</span>
+
+<span class="sd">        The result has the shape of ``X``; a scalar ``X`` gives a ``np.float64``. Points outside the</span>
+<span class="sd">        support of every component evaluate to ``-inf``.</span>
+<span class="sd">        """</span>
+
+        <span class="n">is_scalar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">logsumexp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_lpdf_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_scalar</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">result</span><span class="p">[()])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.component_lpdf_matrix">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.component_lpdf_matrix.html#pysatl_mpest.core.MixtureModel.component_lpdf_matrix">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">component_lpdf_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Log-densities of every component, without the mixture weights.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : ArrayLike</span>
+<span class="sd">            The input data points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FloatArray</span>
+<span class="sd">            An array of shape ``(*X.shape, n_components)`` whose last axis indexes</span>
+<span class="sd">            the components. For a sample of ``n`` points this is an ``(n, n_components)`` matrix.</span>
+<span class="sd">            The log-densities of one component are contiguous in memory (the matrix is a view of a</span>
+<span class="sd">            ``(n_components, *X.shape)`` array), which makes reductions over the component axis,</span>
+<span class="sd">            such as ``logsumexp`` in the E-step, several times faster than on a row-major matrix.</span>
+<span class="sd">        """</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">stacked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">_components</span><span class="o">.</span><span class="n">lpdf</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">stacked</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.loglikelihood">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.loglikelihood.html#pysatl_mpest.core.MixtureModel.loglikelihood">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loglikelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Sum of log-densities for all points in ``X``.</span>
+
+<span class="sd">        The sum is ``-inf`` if any point is outside the support of every component.</span>
+<span class="sd">        """</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lpdf</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MixtureModel.generate">
+<a class="viewcode-back" href="../../../api/core/generated/pysatl_mpest.core.MixtureModel.generate.html#pysatl_mpest.core.MixtureModel.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">NBitBase</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span> <span class="o">|</span> <span class="n">FloatArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Sample random variates from the mixture distribution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        size : int | np.integer[np.typing.NBitBase] | tuple[int, ...] | None, optional</span>
+<span class="sd">            Number or shape of random variates to generate. If None, returns a scalar.</span>
+<span class="sd">        random_state : int | np.random.Generator | None, optional</span>
+<span class="sd">            Seed or random number generator for reproducible sampling.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.float64 | FloatArray</span>
+<span class="sd">            Generated samples of requested shape, or empty array if sample size is zero.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If size contains a negative dimension.</span>
+<span class="sd">        """</span>
+
+        <span class="n">target_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">target_shape</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target_shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">),)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">target_shape</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"size must not contain negative dimensions, got </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+            <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">target_shape</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">n_samples</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">target_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">component_choices</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">component_choices</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)</span>
+
+        <span class="n">samples_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">_SAMPLING</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">]</span>
+
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">samples_list</span><span class="p">)</span>
+        <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">samples</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">target_shape</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParametricFamilyDistribution</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Retrieve component by index."""</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ParametricFamilyDistribution</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Iterate over mixture components."""</span>
+
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MixtureModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return ``self``: the mixture is immutable, so a copy would be identical."""</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Check equality against another mixture, invariant to component ordering."""</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">MixtureModel</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">n_components</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">self_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sorted_pairs</span><span class="p">()</span>
+        <span class="n">other_pairs</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">_get_sorted_pairs</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">self_key</span><span class="p">,</span> <span class="n">self_weight</span><span class="p">),</span> <span class="p">(</span><span class="n">other_key</span><span class="p">,</span> <span class="n">other_weight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">self_pairs</span><span class="p">,</span> <span class="n">other_pairs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">self_key</span> <span class="o">!=</span> <span class="n">other_key</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">self_weight</span><span class="p">,</span> <span class="n">other_weight</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute a hash from components only, ensuring consistency with tolerance-based equality."""</span>
+
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sorted_pairs</span><span class="p">()))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_from_normalized</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">components</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ParametricFamilyDistribution</span><span class="p">],</span>
+        <span class="n">log_weights</span><span class="p">:</span> <span class="n">UnivariateFloatArray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MixtureModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Build a mixture from components and already normalized, read-only log-weights.</span>
+
+<span class="sd">        Skips the checks and normalization of ``__init__``: both inputs must come</span>
+<span class="sd">        from validated sources. The caches start empty.</span>
+<span class="sd">        """</span>
+
+        <span class="n">mixture</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">mixture</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+        <span class="n">mixture</span><span class="o">.</span><span class="n">_cached_weights</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mixture</span><span class="o">.</span><span class="n">_sorted_pairs_cache</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mixture</span><span class="o">.</span><span class="n">_log_weights</span> <span class="o">=</span> <span class="n">log_weights</span>
+        <span class="k">return</span> <span class="n">mixture</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_components</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">UnivariateFloatArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n_components</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Components number (</span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">) must be equal to weights number (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="si">}</span><span class="s2">)."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">weights</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Weights must be positive."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sum of the weights must be equal 1, but it equal </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_sorted_pairs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">_components</span><span class="o">.</span><span class="n">ComponentKey</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""(Component key, weight) pairs sorted so that component order does not matter."""</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_pairs_cache</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">_components</span><span class="o">.</span><span class="n">component_key</span><span class="p">(</span><span class="n">comp</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">))</span> <span class="k">for</span> <span class="n">comp</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_pairs_cache</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_pairs_cache</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Danil Totmyanin, Anton Kazancev.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

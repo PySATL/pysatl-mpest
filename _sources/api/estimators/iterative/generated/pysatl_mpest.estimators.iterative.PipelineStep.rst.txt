@@ -1,0 +1,42 @@
+﻿
+PipelineStep
+============
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.PipelineStep
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~PipelineStep.clear_after_prune
+
+   ~PipelineStep.reset
+
+   ~PipelineStep.run
+
+
+

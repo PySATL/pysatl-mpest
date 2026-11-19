@@ -1,0 +1,30 @@
+﻿
+ScipyNelderMead
+===============
+
+.. currentmodule:: pysatl_mpest.optimizers
+
+.. autoclass:: pysatl_mpest.optimizers.ScipyNelderMead
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~ScipyNelderMead.minimize
+
+
+

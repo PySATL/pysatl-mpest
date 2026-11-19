@@ -1,0 +1,1069 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Core &#8212; Mpest 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs'
+
+const make_config = () => {
+  let prefersDark = localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  return({
+    startOnLoad:false,
+    darkMode: prefersDark,
+    theme: prefersDark ? "dark" : "default"
+  })
+}
+
+const init_mermaid = () => {
+    let graphs = document.querySelectorAll(".mermaid");
+    [...graphs].forEach((element) => {
+        if (!element.hasAttribute("data-source")) {
+            element.setAttribute("data-source", element.innerText);
+        }
+        if (element.hasAttribute("data-processed")) {
+            let new_elt = document.createElement("pre");
+            let graph_source = element.getAttribute("data-source");
+            new_elt.appendChild(document.createTextNode(graph_source));
+            new_elt.classList.add("mermaid");
+            new_elt.setAttribute("data-source", graph_source);
+            element.replaceWith(new_elt);
+        }
+    });
+
+    let config = make_config()
+    mermaid.initialize(config);
+    mermaid.run();
+}
+
+init_mermaid();
+
+let theme_observer = new MutationObserver(init_mermaid);
+let body = document.getElementsByTagName("body")[0];
+theme_observer.observe(body, {attributes: true});
+window.theme_observer = theme_observer;
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'design/modules/core';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Distributions" href="distributions.html" />
+    <link rel="prev" title="Модули архитектуры pysatl-mpest" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Mpest 1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Design:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tree.html">Дерево алгоритмов</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usecase.html">Use-case диаграмма</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Модули архитектуры pysatl-mpest</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributions.html">Distributions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="estimators/index.html">Estimators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="estimators/direct.html">Direct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="estimators/iterative.html">Iterative</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="components_number/index.html">Components number</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="initializers.html">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimizers.html">Optimizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strategies.html">Strategies</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Design</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Модули архитектуры pysatl-mpest</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Core</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="core">
+<h1>Core<a class="headerlink" href="#core" title="Link to this heading">#</a></h1>
+<p>Предоставляет класс смеси распределений, а так же дескриптор, позволяющий реализовывать свои распределения. (Решил его вынести сюда а не в Distributions)</p>
+<a class="reference internal image-reference" href="../../_images/core.png"><img alt="Select Parameters" class="align-center" src="../../_images/core.png" style="width: 800px;" />
+</a>
+<section id="id1">
+<h2>Классы<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<section id="parameter">
+<h3>Parameter<a class="headerlink" href="#parameter" title="Link to this heading">#</a></h3>
+<p>Класс, реализующий протокол дескриптора Python для управления атрибутами-параметрами в классах распределений.</p>
+<p>Этот класс решает две ключевые задачи:</p>
+<ol class="arabic simple">
+<li><p><strong>Валидация:</strong> Гарантирует, что параметр всегда имеет корректное значение (например, <code class="docutils literal notranslate"><span class="pre">scale</span></code> для нормального распределения должен быть больше нуля).</p></li>
+<li><p><strong>Фиксация:</strong> Позволяет “замораживать” параметры, чтобы они не менялись в процессе оптимизации.</p></li>
+</ol>
+<ul>
+<li><p><strong>Атрибуты</strong></p>
+<ul>
+<li><p><strong>- invariant: Callable[[float], bool]</strong></p>
+<p>Функция-предикат, которая проверяет корректность присваиваемого значения. Должна возвращать <code class="docutils literal notranslate"><span class="pre">True</span></code>, если значение допустимо, и <code class="docutils literal notranslate"><span class="pre">False</span></code> в противном случае. По умолчанию принимает любое значение (<code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">x:</span> <span class="pre">True</span></code>).</p>
+</li>
+<li><p><strong>- error_message: str</strong></p>
+<p>Текст ошибки, которая будет вызвана, если значение не прошло проверку инварианта.</p>
+</li>
+<li><p><strong>- public_name: str</strong></p>
+<p>Публичное имя атрибута, как оно задано в классе-владельце (например, <code class="docutils literal notranslate"><span class="pre">loc</span></code> или <code class="docutils literal notranslate"><span class="pre">scale</span></code>). Это имя устанавливается автоматически при создании класса через метод <code class="docutils literal notranslate"><span class="pre">__set_name__</span></code>.</p>
+</li>
+<li><p><strong>- private_name: str</strong></p>
+<p>Приватное имя, используемое для хранения значения внутри экземпляра класса-владельца (например, _loc или _scale). Использование отдельного приватного имени необходимо, чтобы избежать бесконечной рекурсии при вызове getattr и setattr внутри дескриптора.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Методы</strong></p>
+<ul>
+<li><p><strong>- __set_name__(self, owner, name)</strong></p>
+<p>Магический метод, который автоматически вызывается интерпретатором Python при  создании класса-владельца. Он “сообщает” дескриптору имя, под которым он был присвоен атрибуту класса (например, <code class="docutils literal notranslate"><span class="pre">name</span></code> будет равно <code class="docutils literal notranslate"><span class="pre">&quot;scale&quot;</span></code>).</p>
+</li>
+<li><p><strong>- __get__(self, instance, owner) -&gt; float</strong></p>
+<p>Метод для получения значения атрибута. Когда мы обращаемся к <code class="docutils literal notranslate"><span class="pre">distribution.scale</span></code>, вызывается этот метод, который возвращает значение из <code class="docutils literal notranslate"><span class="pre">distribution._scale</span></code>.</p>
+</li>
+<li><p><strong>- __set__self, instance, value)</strong></p>
+<p>Метод для установки нового значения. Это ключевой метод, где происходит вся логика:</p>
+<ol class="arabic simple">
+<li><p>Проверяет, не является ли этот параметр “зафиксированным” (не входит ли его <code class="docutils literal notranslate"><span class="pre">public_name</span></code> в множество <code class="docutils literal notranslate"><span class="pre">instance._fixed_params</span></code>).</p></li>
+<li><p>Если не зафиксирован, проверяет новое <code class="docutils literal notranslate"><span class="pre">value</span></code> с помощью функции <code class="docutils literal notranslate"><span class="pre">self.invariant</span></code>.</p></li>
+<li><p>Если обе проверки пройдены, сохраняет <code class="docutils literal notranslate"><span class="pre">value</span></code> в <code class="docutils literal notranslate"><span class="pre">instance</span></code> под приватным именем (<code class="docutils literal notranslate"><span class="pre">self.private_name</span></code>).</p></li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p><strong>Альтернативы</strong></p>
+<p>В прошлой версии архитектуры параметры хранились в объекте распределения в виде списка и без имён. Такой подход приводил ко многим проблемам:</p>
+<ul class="simple">
+<li><p>Внешний пользователь работал с параметрами как со списком, поэтому не мог знать о том, какой параметр закодирован в массиве под индексом 0 или под индексом 1, об этом знал только разработчик.</p></li>
+<li><p>Логика преобразования параметров к внутреннему и внешнему виду лежала в самом объекте распределения, и проводилась с помощью специальных методов. Дескриптор решает эту проблему, инкапсулируя эту логику внутри себя.</p></li>
+<li><p>Если хранить параметры в таком виде, то неудобно поддерживать заморозку и разморозку параметров, т.к. это происходит по индексам, а не по именам, и для конечного пользователя все так же является непонятным.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="mixturemodel">
+<h3>MixtureModel<a class="headerlink" href="#mixturemodel" title="Link to this heading">#</a></h3>
+<p>Класс смеси распределений.</p>
+<p>Смесь неизменяема: после создания её компоненты и веса не меняются. Любое изменение
+возвращает новую смесь через методы <code class="docutils literal notranslate"><span class="pre">with_*</span></code> или <code class="docutils literal notranslate"><span class="pre">without_component</span></code>, исходная остаётся
+прежней. Поэтому хеш по содержимому стабилен и смесь можно использовать ключом словаря,
+а <code class="docutils literal notranslate"><span class="pre">copy(mixture)</span></code> возвращает тот же объект.</p>
+<p>Логарифмические веса нормализуются при создании смеси и в <code class="docutils literal notranslate"><span class="pre">with_log_weights</span></code> через
+<code class="docutils literal notranslate"><span class="pre">scipy.special.log_softmax</span></code>: сумма <code class="docutils literal notranslate"><span class="pre">exp(log_weights)</span></code> равна единице, в том числе при больших
+общих сдвигах входного вектора. Входной массив копируется; NaN, положительная бесконечность
+и вектор только из отрицательных бесконечностей отклоняются. Отдельные нулевые веса
+(<code class="docutils literal notranslate"><span class="pre">log_weights</span> <span class="pre">=</span> <span class="pre">-inf</span></code>) допустимы. Методы, не меняющие веса (<code class="docutils literal notranslate"><span class="pre">with_component</span></code>,
+<code class="docutils literal notranslate"><span class="pre">with_components</span></code>), переиспользуют уже нормализованный массив без повторной нормировки.</p>
+<p>Плотность вычисляется как <code class="docutils literal notranslate"><span class="pre">pdf(X)</span> <span class="pre">=</span> <span class="pre">exp(lpdf(X))</span></code>, чтобы оба метода использовали одни
+нормализованные веса. Для вычисления <code class="docutils literal notranslate"><span class="pre">pdf</span></code> объект смеси ядра не создаётся и не кэшируется.
+<code class="docutils literal notranslate"><span class="pre">to_core_mixture()</span></code> остаётся явным экспортом в <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> для работы с его характеристиками.</p>
+<ul>
+<li><p><strong>Атрибуты</strong></p>
+<ul>
+<li><p><strong>+ n_components: int</strong></p>
+<p>Количество компонент в смеси.</p>
+</li>
+<li><p><strong>+ components: tuple[Distribution, …]</strong></p>
+<p>Компоненты смеси.</p>
+</li>
+<li><p><strong>+ weights: ndarray</strong></p>
+<p>Нормализованные веса компонент, вычисленные через <code class="docutils literal notranslate"><span class="pre">softmax(log_weights)</span></code>.</p>
+</li>
+<li><p><strong>+ log_weights: ndarray</strong></p>
+<p>Нормализованные логарифмические веса. Массив доступен только для чтения; новые веса
+задаются через <code class="docutils literal notranslate"><span class="pre">with_log_weights</span></code>.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Методы</strong></p>
+<p>Каждый метод <code class="docutils literal notranslate"><span class="pre">with_*</span></code> и <code class="docutils literal notranslate"><span class="pre">without_component</span></code> возвращает новую смесь и не меняет исходную.</p>
+<ul>
+<li><p><strong>+ with_component(index: int, component: Distribution): MixtureModel</strong></p>
+<p>Заменяет компоненту с индексом <code class="docutils literal notranslate"><span class="pre">index</span></code>, веса не меняются. Отрицательные индексы не
+поддерживаются; индекс вне <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">n_components</span> <span class="pre">-</span> <span class="pre">1]</span></code> вызывает <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+</li>
+<li><p><strong>+ with_components(components: Sequence[Distribution]): MixtureModel</strong></p>
+<p>Заменяет все компоненты, сохраняя веса без повторной нормировки. Другое число компонент
+вызывает <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+</li>
+<li><p><strong>+ with_log_weights(log_weights: ArrayLike): MixtureModel</strong></p>
+<p>Задаёт новые логарифмические веса и нормализует их. Неверная длина или вектор, который
+нельзя нормализовать, вызывают <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+</li>
+<li><p><strong>+ with_added_component(component: Distribution, weight: float): MixtureModel</strong></p>
+<p>Добавляет компоненту с весом <code class="docutils literal notranslate"><span class="pre">weight</span></code> из интервала (0, 1); остальные веса умножаются на
+<code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">-</span> <span class="pre">weight</span></code> и сохраняют пропорции. Вес вне интервала вызывает <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+</li>
+<li><p><strong>+ without_component(index: int): MixtureModel</strong></p>
+<p>Удаляет компоненту по индексу, остальные веса нормируются заново. Индекс вне диапазона
+вызывает <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>, удаление последней компоненты или единственной компоненты
+с положительным весом — <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+</li>
+<li><p><strong>+ pdf(X: ArrayLike): ndarray</strong></p>
+<p>Функция плотности, вычисляемая как <code class="docutils literal notranslate"><span class="pre">exp(lpdf(X))</span></code>.</p>
+</li>
+<li><p><strong>+ lpdf(X: ArrayLike): ndarray</strong></p>
+<p>Логарифм функции плотности.</p>
+</li>
+<li><p><strong>+ to_core_mixture(): FiniteMixtureDistribution</strong></p>
+<p>Явно создаёт смесь <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> с текущими компонентами и нормализованными весами.</p>
+</li>
+<li><p><strong>+ loglikelihood(X: ArrayLike): ndarray</strong></p>
+<p>Логарифм правдоподобия.</p>
+</li>
+<li><p><strong>+ generate(size: int): ndarray</strong></p>
+<p>Сэмплирование выборки размера <code class="docutils literal notranslate"><span class="pre">size</span></code>.</p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="id2">
+<h2>Различные диаграммы<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="continuousdistribution-parameter">
+<h3>Пример взаимодействия ContinuousDistribution и дескриптора Parameter<a class="headerlink" href="#continuousdistribution-parameter" title="Link to this heading">#</a></h3>
+<pre  class="mermaid">
+        sequenceDiagram
+    participant User
+    participant Distribution as &quot;экземпляр&lt;br&gt;Exponential&quot;
+    participant Parameter as &quot;дескриптор&lt;br&gt;Parameter ('rate')&quot;
+    participant Invariant as &quot;lambda s: s &gt; 0&quot;
+
+    User-&gt;&gt;Distribution: dist.rate = 2.0
+    activate Distribution
+
+    Distribution-&gt;&gt;Parameter: __set__(dist, 2.0)
+    activate Parameter
+
+    Parameter--&gt;&gt;Distribution: является ли 'rate' в dist._fixed_params?
+    Distribution--&gt;&gt;Parameter: Нет
+
+    Parameter-&gt;&gt;Invariant: invariant(2.0)
+    activate Invariant
+    Invariant--&gt;&gt;Parameter: True
+    deactivate Invariant
+
+    Parameter-&gt;&gt;Distribution: setattr(dist, &quot;_rate&quot;, 2.0)
+    note right of Parameter: Значение корректно и&lt;br&gt;параметр не зафиксирован.&lt;br&gt;Обновляем приватное поле.
+
+    deactivate Parameter
+    deactivate Distribution
+
+    User-&gt;&gt;Distribution: dist.rate = -1.0
+    activate Distribution
+
+    Distribution-&gt;&gt;Parameter: __set__(dist, -1.0)
+    activate Parameter
+
+    Parameter--&gt;&gt;Distribution: является ли 'rate' в dist._fixed_params?
+    Distribution--&gt;&gt;Parameter: Нет
+
+    Parameter-&gt;&gt;Invariant: invariant(-1.0)
+    activate Invariant
+    Invariant--&gt;&gt;Parameter: False
+    deactivate Invariant
+
+    Parameter--&gt;&gt;User: raise ValueError
+    deactivate Parameter
+    deactivate Distribution
+    </pre></section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Модули архитектуры pysatl-mpest</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="distributions.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Distributions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Классы</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter">Parameter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mixturemodel">MixtureModel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Различные диаграммы</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuousdistribution-parameter">Пример взаимодействия ContinuousDistribution и дескриптора Parameter</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/modules/core.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Danil Totmyanin, Anton Kazancev.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

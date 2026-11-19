@@ -1,0 +1,7 @@
+
+fit
+===
+
+.. currentmodule:: pysatl_mpest.estimators
+
+.. automethod:: pysatl_mpest.estimators.BaseEstimator.fit

@@ -1,0 +1,14 @@
+﻿
+EM
+==
+
+.. currentmodule:: pysatl_mpest.estimators
+
+.. autoclass:: pysatl_mpest.estimators.EM
+   :show-inheritance:
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+
+   ~EM.fit

@@ -1,0 +1,30 @@
+﻿
+Pruner
+======
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.Pruner
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~Pruner.prune
+
+
+

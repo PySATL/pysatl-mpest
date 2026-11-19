@@ -1,0 +1,42 @@
+﻿
+WeightsStep
+===========
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.WeightsStep
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~WeightsStep.clear_after_prune
+
+   ~WeightsStep.reset
+
+   ~WeightsStep.run
+
+
+

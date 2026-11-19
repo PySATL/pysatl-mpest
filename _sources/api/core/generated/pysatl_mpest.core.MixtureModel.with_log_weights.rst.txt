@@ -1,0 +1,7 @@
+
+with\_log\_weights
+==================
+
+.. currentmodule:: pysatl_mpest.core
+
+.. automethod:: pysatl_mpest.core.MixtureModel.with_log_weights

@@ -1,0 +1,42 @@
+﻿
+MaximizationStep
+================
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.MaximizationStep
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~MaximizationStep.clear_after_prune
+
+   ~MaximizationStep.reset
+
+   ~MaximizationStep.run
+
+
+

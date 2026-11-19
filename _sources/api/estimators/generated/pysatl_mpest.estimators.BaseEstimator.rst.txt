@@ -1,0 +1,30 @@
+﻿
+BaseEstimator
+=============
+
+.. currentmodule:: pysatl_mpest.estimators
+
+.. autoclass:: pysatl_mpest.estimators.BaseEstimator
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~BaseEstimator.fit
+
+
+

@@ -1,0 +1,7 @@
+
+clear\_after\_prune
+===================
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. automethod:: pysatl_mpest.estimators.iterative.MaximizationStep.clear_after_prune

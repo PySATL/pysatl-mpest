@@ -1,0 +1,7 @@
+
+to\_core\_mixture
+=================
+
+.. currentmodule:: pysatl_mpest.core
+
+.. automethod:: pysatl_mpest.core.MixtureModel.to_core_mixture

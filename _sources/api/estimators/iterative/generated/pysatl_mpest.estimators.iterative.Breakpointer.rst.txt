@@ -1,0 +1,36 @@
+﻿
+Breakpointer
+============
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.Breakpointer
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~Breakpointer.check
+
+   ~Breakpointer.reset
+
+
+

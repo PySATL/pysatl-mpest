@@ -1,0 +1,7 @@
+
+prune
+=====
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. automethod:: pysatl_mpest.estimators.iterative.PriorThresholdPruner.prune

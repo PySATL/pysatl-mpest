@@ -1,0 +1,30 @@
+﻿
+PriorThresholdPruner
+====================
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.PriorThresholdPruner
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~PriorThresholdPruner.prune
+
+
+

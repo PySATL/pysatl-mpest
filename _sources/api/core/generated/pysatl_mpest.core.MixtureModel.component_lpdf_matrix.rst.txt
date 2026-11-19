@@ -1,0 +1,7 @@
+
+component\_lpdf\_matrix
+=======================
+
+.. currentmodule:: pysatl_mpest.core
+
+.. automethod:: pysatl_mpest.core.MixtureModel.component_lpdf_matrix

@@ -1,0 +1,7 @@
+
+minimize
+========
+
+.. currentmodule:: pysatl_mpest.optimizers
+
+.. automethod:: pysatl_mpest.optimizers.ScipyPowell.minimize

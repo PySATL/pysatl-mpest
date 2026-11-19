@@ -1,0 +1,30 @@
+﻿
+ECME
+====
+
+.. currentmodule:: pysatl_mpest.estimators
+
+.. autoclass:: pysatl_mpest.estimators.ECME
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~ECME.fit
+
+
+

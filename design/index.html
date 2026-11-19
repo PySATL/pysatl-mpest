@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Design &#8212; Mpest 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'design/index';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Дерево алгоритмов" href="tree.html" />
+    <link rel="prev" title="User Guide" href="../user_guide/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Mpest 1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Design:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tree.html">Дерево алгоритмов</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">Use-case диаграмма</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules/index.html">Модули архитектуры pysatl-mpest</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/distributions.html">Distributions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="modules/estimators/index.html">Estimators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules/estimators/direct.html">Direct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules/estimators/iterative.html">Iterative</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="modules/components_number/index.html">Components number</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/initializers.html">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/optimizers.html">Optimizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/strategies.html">Strategies</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Design</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="design">
+<h1>Design<a class="headerlink" href="#design" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pysatl-mpest</span></code> — это Python-библиотека, предназначенная для оценки параметров смесей вероятностных распределений.</p>
+<p>Ключевой особенностью библиотеки является гибкая и расширяемая архитектура, позволяющая пользователям конструировать итеративные алгоритмы оценки путем комбинирования различных шагов (например, шагов максимизации, вычисления моментов и т.д.).</p>
+<br>
+<p>На данный момент система позволяет:</p>
+<ol class="arabic simple">
+<li><p>Описывать непрерывные распределения и их смеси, а так же работать с ними как с объектами теории вероятностей <em>(Готово)</em></p></li>
+<li><p>Выполнять предобработку данных:</p>
+<ul class="simple">
+<li><p>Оценивать количество компонент <em>(В разработке)</em></p></li>
+<li><p>Проводить инициализацию начального приближения путем кластеризации <em>(В разработке)</em></p></li>
+</ul>
+</li>
+<li><p>Конфигурировать и запускать сложные итеративные алгоритмы оценки параметров смеси:</p>
+<ul class="simple">
+<li><p>Комбинировать различные шаги алгоритма, например E шаг + LMoments шаг или E шаг + ВашЭкзотическийШаг <em>(Готово)</em></p></li>
+<li><p>Настраивать условие остановки алгоритма <em>(Готово)</em></p></li>
+<li><p>Настраивать удаление лишних компонент <em>(Готово)</em></p></li>
+</ul>
+</li>
+<li><p>Для удобства API система предоставляет “Фасады”, с помощью которых можно легко сконфигурировать типовые алгоритмы, например EM или ELM алгоритмы. <em>(В разработке)</em></p></li>
+<li><p>Запускать “прямые” неитеративные алгоритмы оценки параметров смеси. <em>(В разработке)</em></p></li>
+</ol>
+<br>
+<p>В дальнейшем планируется поддержка:</p>
+<ol class="arabic simple">
+<li><p>Дискретных и многомерных распределения</p></li>
+<li><p>Поддержка большего числа алгоритмов.</p></li>
+<li><p>Реализация бенчмаркинга и его внедрение в <code class="docutils literal notranslate"><span class="pre">pysatl-experiment</span></code>.</p></li>
+</ol>
+<br>
+<section id="id1">
+<h2>Глоссарий<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<section id="id2">
+<h3>Плотность распределения<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>Представьте, что вы стреляете в мишень. Плотность вероятности в данном случае — это функция, которая описывает, в какие области мишени вы попадаете чаще всего. Там, где плотность выше, — там больше попаданий. Аналогично, для любой случайной величины, будь то рост человека или время ожидания автобуса, плотность вероятности показывает, какие значения являются более вероятными. Геометрически, вероятность того, что случайная величина примет значение из некоторого интервала, равна площади под графиком плотности на этом интервале.</p>
+<p>Введём формальное определение:</p>
+<p>Пусть <span class="math notranslate nohighlight">\((\mathcal{X}, \mathcal{A},P)\)</span> <span class="math notranslate nohighlight">\(-\)</span> вероятностное пространство, <span class="math notranslate nohighlight">\(\mathcal{X} \subseteq \mathbb{R}\)</span>. Случайная величина <span class="math notranslate nohighlight">\(X\)</span> называется абсолютно непрерывной, если существует такая неотрицательная интегрируемая по Лебегу функция <span class="math notranslate nohighlight">\(f: \mathcal{X} \to \mathbb{R}_{\ge 0}\)</span> называемая плотностью вероятности, если для любого борелевского множества <span class="math notranslate nohighlight">\(A \in \mathcal{A}\)</span> выполняется:</p>
+<div class="math notranslate nohighlight">
+\[P(X \in A) = \int_A f(x)dx\]</div>
+<p>Функция плотности <span class="math notranslate nohighlight">\(f(x)\)</span> должна удовлетворять следующим свойствам:</p>
+<ol class="arabic simple">
+<li><p><strong>Неотрицательность</strong>: <span class="math notranslate nohighlight">\(f(x) \ge 0, ~ \forall x \in \mathcal{X}\)</span></p></li>
+<li><p><strong>Нормировка</strong>: <span class="math notranslate nohighlight">\(\int_{\mathcal{X}} f(x)dx = 1\)</span></p></li>
+</ol>
+<blockquote>
+<div><p>Под борелевским множеством мы подразумеваем “хорошие множества”, например интервал <span class="math notranslate nohighlight">\([-1, 1]\)</span></p>
+</div></blockquote>
+<br>
+</section>
+<section id="id3">
+<h3>Смесь распределений<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>Часто данные, с которыми мы работаем, неоднородны. Они могут происходить из нескольких скрытых, или <em>латентных</em>, подгрупп. Представьте, что вы анализируете данные о росте взрослых людей в городе. Скорее всего, вы заметите, что распределение роста имеет не один пик, а два: один соответствует среднему росту женщин, а другой — мужчин. Описать такие данные одной простой функцией плотности (например, одним нормальным распределением) будет некорректно. Гораздо естественнее смоделировать их как <em>смесь</em> двух нормальных распределений, где каждое распределение описывает свою подгруппу, а их веса в смеси отражают долю каждой подгруппы в общей популяции.</p>
+<p>Формально, <strong>смесь вероятностных распределений</strong> — это вероятностное распределение, плотность которого является взвешенной суммой плотностей других распределений (компонент). Плотность смеси задается следующим образом:</p>
+<div class="math notranslate nohighlight">
+\[f(x ~ | ~ F, \Theta, \Omega) = \sum_{k=1}^n \omega_k \cdot f_k(x ~ | ~ \theta_k)\]</div>
+<p>где:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n\)</span> <span class="math notranslate nohighlight">\(-\)</span> количество компонент смеси.</p></li>
+<li><p><span class="math notranslate nohighlight">\(F = \{f_1, \dots, f_n \}\)</span> <span class="math notranslate nohighlight">\(-\)</span> множество плотностей компонент. Каждая компонента принадлежит определенному параметрическому семейству распределений (например, семейству нормальных или экспоненциальных распределений).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Theta = \{\Theta_1, \dots, \Theta_n\}\)</span> <span class="math notranslate nohighlight">\(-\)</span> множество допустимых параметров компонент, то есть <span class="math notranslate nohighlight">\(\Theta_k\)</span> означает, что для <span class="math notranslate nohighlight">\(k\)</span>-ой компоненты параметр <span class="math notranslate nohighlight">\(\theta_k \in \Theta_k\)</span>​.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Omega = \{\omega_1, \dots, \omega_n \}\)</span> <span class="math notranslate nohighlight">\(-\)</span> множество весов компонент, удовлетворяющих условиям:</p>
+<ul>
+<li><p><strong>Неотрицательность</strong>: <span class="math notranslate nohighlight">\(\omega_k \ge 0 ~~~\forall k\)</span></p></li>
+<li><p><strong>Нормировка</strong>: <span class="math notranslate nohighlight">\(\sum_{k=1}^n \omega_k = 1\)</span>, для того, чтобы итоговая функция плотности <span class="math notranslate nohighlight">\(f(x ~|~ F, \Theta, \Omega)\)</span> была корректной.</p></li>
+</ul>
+</li>
+</ul>
+<p>Пример плотности смеси распределений с двумя нормальными компонентами:</p>
+<a class="reference internal image-reference" href="../_images/mixture.png"><img alt="Select Parameters" class="align-center" src="../_images/mixture.png" style="width: 600px;" />
+</a>
+<br>
+</section>
+<section id="id4">
+<h3>Выборка<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>Представьте, что вы хотите узнать средний рост всех жителей города. Эта гипотетическая полная совокупность всех жителей называется <strong>генеральной совокупностью</strong>. Опросить абсолютно каждого человека практически невозможно. Вместо этого вы измеряете рост, скажем, 1000 случайно выбранных людей. Этот набор из 1000 измерений и есть <strong>выборка</strong>. Основная идея статистики заключается в том, чтобы по свойствам этой выборки (например, по среднему росту в ней) сделать обоснованные выводы о свойствах всей генеральной совокупности.</p>
+<p>В контексте анализа данных, выборка — это тот набор данных, который у вас есть на руках (например, файл с измерениями), и на основе которого вы будете строить и оценивать модель.</p>
+<p>Формально, <strong>случайная выборка</strong> объема <span class="math notranslate nohighlight">\(n\)</span> из распределения с плотностью <span class="math notranslate nohighlight">\(f(x~|~\theta)\)</span> <span class="math notranslate nohighlight">\(-\)</span> это набор из <span class="math notranslate nohighlight">\(n\)</span> случайных величин <span class="math notranslate nohighlight">\(\{X_1, \dots, X_n\}\)</span> удовлетворяющий следующим условиям:</p>
+<ul class="simple">
+<li><p><strong>Независимость</strong>: Результат одного наблюдения не влияет на результаты других. (Значение роста одного случайно выбранного человека не зависит от роста другого).</p></li>
+<li><p><strong>Одинаковая распределённость</strong>: Все наблюдения <span class="math notranslate nohighlight">\(X_i\)</span> подчиняются одному и тому же закону распределения с
+плотностью <span class="math notranslate nohighlight">\(f(x ~|~ \theta)\)</span>.</p></li>
+</ul>
+<p>Такое предположение часто называют <span class="math notranslate nohighlight">\(i.i.d\)</span>, будем писать что данные <span class="math notranslate nohighlight">\(X\)</span> подчиняются закону распределения (например нормальному с параметрами <span class="math notranslate nohighlight">\(\mu, \sigma^2\)</span>) так:</p>
+<div class="math notranslate nohighlight">
+\[X \overset{i.i.d}{\sim} \mathcal{N}(\mu, \sigma^2)\]</div>
+<p>На практике под выборкой чаще всего понимают <strong>реализацию</strong> этих случайных величин — то есть конкретный набор наблюдаемых числовых данных <span class="math notranslate nohighlight">\(\{x_1, \dots, x_n\}\)</span>​, который используется для оценки неизвестных параметров модели. Именно такая выборка передаётся в оценщики библиотеки <code class="docutils literal notranslate"><span class="pre">pysatl-mpest</span></code>.</p>
+<br>
+</section>
+<section id="id5">
+<h3>Функция правдоподобия<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>Представьте, что вы нашли на земле монету и хотите понять, является ли она “честной”. Вы подбрасываете ее 100 раз и получаете результат: 70 орлов и 30 решек. Возникает вопрос: какая степень “нечестности” монеты лучше всего объясняет такой исход?</p>
+<p><strong>Функция правдоподобия</strong> как раз и отвечает на этот вопрос. Она переворачивает стандартную логику вероятности. Вместо того чтобы, зная параметры модели (например, вероятность выпадения орла <span class="math notranslate nohighlight">\(p = 0.5\)</span>) предсказывать исход, мы, наоборот, используем уже наблюдаемый исход (70 орлов, 30 решек), чтобы оценить, какие параметры модели (<span class="math notranslate nohighlight">\(p\)</span>) являются наиболее “правдоподобными”.</p>
+<p>Формально, пусть <span class="math notranslate nohighlight">\(X \overset{i.i.d}{\sim} f(x~|~\theta)\)</span>. Тогда функцией правдоподобия называется функция от параметра <span class="math notranslate nohighlight">\(\theta\)</span>, рассматриваемая при фиксированных данных <span class="math notranslate nohighlight">\(X\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta ~|~ x_1, \dots,x_n) = \prod_{i=1}^n f(x_i ~|~\theta)\]</div>
+<p>На практике мы будем работать с логарифмом функции правдоподобия: <span class="math notranslate nohighlight">\(\log \mathcal{L}(\theta ~|~ x_1, \dots,x_n)\ \)</span>, поскольку тогда мы будем работать не с произведением, а с суммой.</p>
+<br>
+</section>
+<section id="q">
+<h3>Q-функция<a class="headerlink" href="#q" title="Link to this heading">#</a></h3>
+<p>Представим нашу задачу с ростом людей, который мы моделируем как смесь двух нормальных распределений (мужчин и женщин). Если бы для каждого человека в выборке мы бы точно знали, к какой группе он относится (мужчина или женщина), задача оценки была бы простой: мы бы разделили данные на две группы и оценили параметры для каждой отдельно.</p>
+<p>Но у нас нет этой информации — принадлежность к группе является <strong>скрытой (латентной) переменной</strong>. Алгоритм EM (Expectation-Maximization), центральной частью которого является Q-функция, элегантно решает эту проблему.</p>
+<p>Идея EM-алгоритма в следующем:</p>
+<ol class="arabic simple">
+<li><p><strong>E-шаг (Expectation):</strong> Имея текущие оценки параметров (например, средний рост и дисперсию для мужчин и женщин), мы вычисляем <em>вероятностную</em> принадлежность каждого наблюдения к каждой компоненте. Например, для человека ростом 175 см мы можем вычислить, что он с вероятностью 70% относится к группе мужчин и с 30% — к группе женщин.</p></li>
+<li><p><strong>M-шаг (Maximization):</strong> Мы хотим обновить параметры модели. Но как это сделать, если принадлежность нечеткая? Здесь и появляется <strong>Q-функция</strong>. Она представляет собой “ожидаемое” значение логарифма правдоподобия, если бы мы знали скрытые переменные. Это ожидание вычисляется с использованием тех самых вероятностей, которые мы получили на E-шаге.</p></li>
+</ol>
+<p>Проще говоря, Q-функция — это суррогатная, более простая функция, которую мы максимизируем на M-шаге вместо истинного, но слишком сложного логарифма правдоподобия.</p>
+<p>Более формально, пусть:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X\)</span> <span class="math notranslate nohighlight">\(-\)</span> наблюдаемые данные.</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z\)</span> <span class="math notranslate nohighlight">\(-\)</span> скрытые переменные.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Omega^{(t)}, \Theta^{(t)}\)</span> <span class="math notranslate nohighlight">\(-\)</span> параметры смеси на шаге <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+<p>Тогда Q-функция определяется как условное математическое ожидание логарифма правдоподобия <em>полных данных</em>:</p>
+<div class="math notranslate nohighlight">
+\[Q(\theta, \theta^{(t)}) = \mathbb{E}_{Z~|~X, \theta^{(t)}}[\log \mathcal{L}(\theta ~|~ X, Z)]\]</div>
+<br>
+</section>
+</section>
+<section id="id6">
+<h2>Технологический стек<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Язык:</strong> Python 3.11+</p></li>
+<li><p><strong>Основные библиотеки:</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code>: для всех численных вычислений и работы с многомерными массивами (<code class="docutils literal notranslate"><span class="pre">ndarray</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code>: для численных методов (оптимизация, решение систем уравнений, нахождение нулей функции).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sklearn</span></code>: для кластеризации.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">+</span> <span class="pre">pytest-mock</span> <span class="pre">+</span> <span class="pre">hypothesis</span></code>: фреймворки для тестирования.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sphinx</span></code>: для генерации документации.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../user_guide/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">User Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tree.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Дерево алгоритмов</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Глоссарий</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Плотность распределения</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Смесь распределений</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Выборка</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Функция правдоподобия</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q">Q-функция</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Технологический стек</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/index.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Danil Totmyanin, Anton Kazancev.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

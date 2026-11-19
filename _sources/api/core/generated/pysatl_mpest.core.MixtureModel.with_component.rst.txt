@@ -1,0 +1,7 @@
+
+with\_component
+===============
+
+.. currentmodule:: pysatl_mpest.core
+
+.. automethod:: pysatl_mpest.core.MixtureModel.with_component
