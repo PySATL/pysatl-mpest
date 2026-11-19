@@ -1,0 +1,1239 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[a4paper,margin=1.8cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+\setmainfont{CMU Serif}
+\setsansfont{CMU Sans Serif}
+\setmonofont{CMU Typewriter Text}
+\usepackage{amsmath}
+\usepackage[table]{xcolor}
+\usepackage{booktabs,longtable,array,graphicx,pdflscape,hyperref,enumitem,fancyhdr,titlesec,needspace}
+\definecolor{hm}{RGB}{31,111,235}
+\definecolor{yes}{RGB}{26,127,55}
+\definecolor{part}{RGB}{210,153,34}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black}
+\urlstyle{tt}
+\setlist{itemsep=1pt,topsep=3pt}
+\setlength{\parindent}{1.0cm}
+\setlength{\parskip}{0pt}
+\renewcommand{\arraystretch}{1.12}
+\sloppy\emergencystretch=3em
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{0.6em}{}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small Обзор инструментов и сценариев}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\newcommand{\lab}[1]{\par\noindent\textbf{#1.}\ }
+\title{Подробный обзор инструментов оценивания конечных смесей\\и прикладных сценариев}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}\noindent
+В документе подробно разобрана эмпирическая база обзора: 27 инструментов оценивания конечных смесей, 86 требований к библиотеке
+и 10 прикладных сценариев. Документ не повторяет основной текст работы, а дополняет его: содержит матрицы покрытия по каждой категории требований, сопоставление разнородных средств,
+анализ чувствительности оценок, сходство инструментов по профилю возможностей, расчёт приоритетов развития \texttt{pysatl-mpest}. Описания отдельных инструментов, требований и сценариев,
+обоснование и ссылка для каждой из 2322 оценок, а также связанные публикации приведены в дашбордах и здесь не дублируются. Все числа вычислены из таблиц базы, на которой построены два дашборда.
+Интерактивные версии базы: дашборд инструментов и требований (\texttt{dashboard.html}) и дашборд сценариев (\texttt{usecases\_dashboard.html}).
+\end{abstract}
+\tableofcontents
+\clearpage
+
+\section*{Краткие выводы}
+\addcontentsline{toc}{section}{Краткие выводы}
+\begin{enumerate}
+\item \textbf{Нет инструмента, закрывающего потребности сценариев целиком.} Для каждого из 10 сценариев определены критические требования
+(31 различных требований); ни один из 27 инструментов не выполняет полностью критические требования ни одного сценария.
+Лучший инструмент для сценария в среднем закрывает 78\,\% его критических требований.
+\item \textbf{Разнородные смеси полностью поддерживают 6 средств из 27:}
+\texttt{pomegranate}, \texttt{mixem}, \texttt{FlexMix}, \texttt{brms}, \texttt{Distributions.jl}, \texttt{PySATL mpest}; ещё 3 --- частично (\texttt{StepMix}, \texttt{Rmixmod (mixmod)}, \texttt{mixdist}).
+Схему ECME среди них реализует только \texttt{PySATL mpest}; блочная схема ECM есть у \texttt{FlexMix}, \texttt{PySATL mpest}.
+\item \textbf{12 из 86 требований не выполнено полностью ни одним инструментом}, ещё 17 выполнены не более чем двумя;
+базовый слой (EM, нормальное семейство, логарифмическая устойчивость, сборка и тесты) есть почти у всех.
+\item \textbf{Положение \texttt{pysatl-mpest}.} Обязательные требования выполнены на 81\,\% (лучший из остальных --- \texttt{FlexMix}, 72\,\%);
+по всем требованиям 6-е место из 27. В разнородных сценариях UC-07, UC-08 он лидирует; в однородных гауссовых уступает зрелым пакетам.
+\item \textbf{Приоритеты развития} следуют из двух списков: обязательные требования, не выполненные библиотекой
+(кластеризация данных; рандомизированный мультистарт; декомпозиция плотности смеси; явные параметрические границы; параметрический бутстреп отношения правдоподобий (LRT)), и расчёт выигрыша по сценариям (раздел~\ref{sec:roadmap}).
+\item \textbf{Ограничения:} оценки получены по документации и коду без запуска программ и характеризуют заявленные возможности, а не качество; сценарии --- классы задач, а не полная выборка.
+\end{enumerate}
+
+\part{Данные и методика}
+\section{Эмпирическая база}
+\subsection{Состав}
+База состоит из связанных таблиц; ссылочная целостность между ними поддерживается.
+\begin{center}\small
+\begin{tabular}{@{}l p{9.2cm} r@{}}
+\toprule
+Таблица базы & Содержание & Записей \\
+\midrule
+Инструменты & язык, репозиторий, лицензия, публикация, описание & 27 \\
+Требования & категория, название, описание, источник, приоритет & 86 \\
+Оценки & статус, обоснование и ссылка для каждой пары <<инструмент --- требование>> & 2322 \\
+Связи требований с публикациями & роли публикаций: основа, метод, эталонные данные & 576 \\
+Публикации & авторы, год, цитирования, ссылки, воспроизводимость & 445 \\
+Сценарии & описание и характеристики данных и смеси & 10 \\
+Требования сценариев & критические и желательные требования с обоснованием & 214 \\
+Публикации и наборы данных сценариев & публикации и наборы данных, на которых основан сценарий & 48 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Матрица оценок полна: 27 $\times$ 86 $=$ 2322 строк. Распределение статусов: выполнено --- 624 (27\,\%),
+частично --- 289 (12\,\%), не выполнено --- 1409 (61\,\%).
+К 2104 из 2322 оценок приложена ссылка на документацию или код.
+
+\subsection{Как собиралась база}
+Каталог требований составлен по инструментам: сначала разобраны 27 инструментов и их возможности оформлены как атомарные требования; затем из статей
+добавлены специфичные методы, которых в инструментах нет. Приоритеты: обязательные --- базовые архитектурные и математические требования ядра (34),
+желательные --- важные конкурентные возможности (32), факультативные --- исследовательские и специализированные методы из статей (20).
+Сценарии выбирались по публикациям; затем проверялось, какие требования нужны сценарию и какие инструменты их выполняют.
+Из 445 публикаций реестра 325 связаны с требованиями или сценариями (324 --- с требованиями, 45 --- со сценариями).
+
+\subsection{Границы предметной области}
+В область работы входят только конечные смеси одномерных непрерывных распределений, однородные и разнородные. Вне области: многомерные смеси,
+дискретные смеси и смеси с точечной массой, регрессионные смеси с ковариатами, модели латентных классов, скрытые марковские модели, модели дискретного выбора,
+многоуровневые модели. Оценки инструментов выставлены по одним и тем же требованиям независимо от этих границ, поэтому инструменты, рассчитанные прежде всего
+на многомерные данные (\texttt{scikit-learn (sklearn.mixture)}, \texttt{mixem}, \texttt{student-mixture}, \texttt{EMCluster}, \texttt{teigen}, \texttt{sn (Skew-Normal/t)}, \texttt{GaussianMixtures.jl}), оцениваются по тому, что они дают в одномерном случае.
+
+\section{Правила подсчёта}
+\subsection{Покрытие}
+Покрытие группы требований инструментом --- среднее значение весов: выполнено $=1$, частично $=\tfrac12$, не выполнено $=0$. Показатель отражает заявленные возможности по
+документации и коду; программы не запускались, поэтому он не измеряет качество оценивания. В разделах про сценарии покрытие считается по критическим требованиям сценария.
+
+\subsection{Чувствительность к весу частичных оценок}
+Вес $\tfrac12$ для частично выполненных требований --- условность. В таблице показано, как меняется место инструмента при весах $0$ (частично не засчитывается),
+$\tfrac12$ и $1$ (частично приравнивается к выполненному), а также при взвешивании по приоритетам (обязательные $\times 3$, желательные $\times 2$, факультативные $\times 1$).
+{\footnotesize
+\begin{longtable}{@{}l r r r r r r r r@{}}
+\toprule
+Инструмент & $w{=}0$ & $w{=}\tfrac12$ & $w{=}1$ & По приоритетам & Обяз. & Жел. & Факульт. & Разброс \\
+\midrule
+\endhead
+brms & 1 & 1 & 1 & 1 & 3 & 1 & 1 & 0 \\
+FlexMix & 2 & 2 & 2 & 2 & 2 & 7 & 4 & 0 \\
+mclust (v5+) & 7 & 3 & 4 & 6 & 10 & 2 & 5 & 4 \\
+bnpy & 9 & 4 & 3 & 11 & 12 & 8 & 2 & 8 \\
+mixR & 4 & 5 & 6 & 4 & 6 & 6 & 9 & 2 \\
+PySATL mpest & 3 & 6 & 11 & 3 & 1 & 21 & 27 & 8 \\
+StepMix & 6 & 7 & 8 & 5 & 4 & 10 & 12 & 3 \\
+Rmixmod (mixmod) & 5 & 8 & 9 & 7 & 9 & 5 & 6 & 4 \\
+mixtools & 11 & 9 & 5 & 8 & 8 & 12 & 3 & 6 \\
+rebmix & 8 & 10 & 13 & 12 & 13 & 3 & 20 & 5 \\
+pomegranate & 13 & 11 & 7 & 9 & 7 & 19 & 10 & 6 \\
+Distributions.jl & 10 & 12 & 12 & 10 & 5 & 14 & 19 & 2 \\
+distfit & 19 & 13 & 10 & 14 & 18 & 4 & 21 & 9 \\
+mixdist & 12 & 14 & 14 & 15 & 14 & 11 & 13 & 3 \\
+scikit-learn (sklearn.mixture) & 14 & 15 & 15 & 13 & 11 & 20 & 11 & 2 \\
+sn (Skew-Normal/t) & 15 & 16 & 18 & 16 & 15 & 9 & 22 & 3 \\
+EMCluster & 16 & 17 & 17 & 17 & 16 & 15 & 8 & 1 \\
+teigen & 20 & 18 & 16 & 18 & 23 & 16 & 7 & 4 \\
+CAMAN & 17 & 19 & 19 & 19 & 17 & 13 & 18 & 2 \\
+GaussianMixtures.jl & 21 & 20 & 21 & 20 & 21 & 18 & 23 & 1 \\
+fpc & 24 & 21 & 20 & 21 & 24 & 22 & 16 & 4 \\
+ClusterR & 18 & 22 & 24 & 23 & 27 & 17 & 15 & 6 \\
+mlpack (mlpack::gmm) & 22 & 23 & 22 & 22 & 20 & 25 & 17 & 1 \\
+student-mixture & 26 & 24 & 23 & 25 & 22 & 26 & 14 & 3 \\
+kasakh Mixture-Models & 23 & 25 & 25 & 24 & 25 & 23 & 25 & 2 \\
+Armadillo C++ & 25 & 26 & 26 & 26 & 26 & 24 & 24 & 1 \\
+mixem & 27 & 27 & 27 & 27 & 19 & 27 & 26 & 0 \\
+\bottomrule
+\end{longtable}}
+Места определяются по убыванию покрытия; у равных значений порядок произвольный. Наиболее устойчивые лидеры по всем схемам:
+\texttt{brms}, \texttt{FlexMix}.
+Положение \texttt{pysatl-mpest}: 3-е при $w{=}0$, 6-е при $w{=}\tfrac12$, 11-е при $w{=}1$, 3-е с весами приоритетов;
+по обязательным требованиям 1-е, по желательным 21-е, по факультативным 27-е.
+
+\subsection{Ограничения методики}
+\begin{itemize}
+\item Оценки выставлены по документации и коду; поведение программ не измерялось. Вывод об отсутствии возможности относится к рассмотренным интерфейсам и версиям.
+\item Равные веса требований внутри приоритета не отражают разную трудоёмкость реализации.
+\item Набор из 10 сценариев иллюстрирует классы задач и не исчерпывает их; сценарии выбирались по публикациям с открытыми данными.
+\item Статус \texttt{pysatl-mpest} соответствует состоянию на дату оценки.
+\end{itemize}
+
+\part{Инструменты}
+\section{Каталог}
+Список инструментов в порядке реестра. Статус: <<рассм.>> --- инструмент разобран по документации и коду, <<канд.>> --- кандидат, оценён по документации.
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{1.8cm} >{\raggedright\arraybackslash}p{2.3cm} l >{\raggedright\arraybackslash}p{6.2cm}@{}}
+\toprule
+Инструмент & Язык & Лицензия & Статус & Репозиторий \\
+\midrule
+\endhead
+PySATL mpest & Python & MIT & рассм. & \url{https://github.com/PySATL/rework-pysatl-mpest} \\
+scikit-learn (sklearn.mixture) & Python & BSD-3-Clause & рассм. & \url{https://github.com/scikit-learn/scikit-learn} \\
+pomegranate & Python & MIT & рассм. & \url{https://github.com/jmschrei/pomegranate} \\
+mixem & Python & MIT & рассм. & \url{https://github.com/sseemayer/mixem} \\
+StepMix & Python & MIT & рассм. & \url{https://github.com/Labo-Lacourse/stepmix} \\
+student-mixture & Python & MIT & рассм. & \url{https://github.com/omritomer/student-mixture} \\
+kasakh Mixture-Models & Python & MIT & рассм. & \url{https://github.com/kasakh/Mixture-Models} \\
+distfit & Python & MIT & рассм. & \url{https://github.com/erdogant/distfit} \\
+mclust (v5+) & R & GPL-2 | GPL-3 & рассм. & \url{https://github.com/cran/mclust} \\
+mixtools & R & GPL-2 | GPL-3 & рассм. & \url{https://github.com/cran/mixtools} \\
+FlexMix & R & GPL-2 | GPL-3 & рассм. & \url{https://github.com/cran/flexmix} \\
+mixR & R & GPL-2 | GPL-3 & рассм. & \url{https://github.com/GaryBAYLOR/mixR} \\
+rebmix & R / C++ & GPL-2 | GPL-3 & рассм. & \url{https://github.com/cran/rebmix} \\
+Rmixmod (mixmod) & R / C++ & GPL-3 & рассм. & \url{https://github.com/mixmod/mixmod} \\
+ClusterR & R / C++ & GPL-3 & рассм. & \url{https://github.com/mlampros/ClusterR} \\
+mixdist & R & GPL-2 & рассм. & \url{https://github.com/cran/mixdist} \\
+EMCluster & R / C & GPL-2 & рассм. & \url{https://github.com/snoweye/EMCluster} \\
+teigen & R & GPL-2 | GPL-3 & рассм. & \url{https://github.com/cran/teigen} \\
+fpc & R & GPL-2 | GPL-3 & рассм. & \url{https://github.com/cran/fpc} \\
+sn (Skew-Normal/t) & R & GPL-2 | GPL-3 & рассм. & \url{https://github.com/cran/sn} \\
+brms & R / C++ & GPL-2 & рассм. & \url{https://github.com/paul-buerkner/brms} \\
+GaussianMixtures.jl & Julia & MIT & рассм. & \url{https://github.com/davidavdav/GaussianMixtures.jl} \\
+Distributions.jl & Julia & MIT & рассм. & \url{https://github.com/JuliaStats/Distributions.jl} \\
+mlpack (mlpack::gmm) & C++ & BSD-3-Clause & рассм. & \url{https://github.com/mlpack/mlpack} \\
+Armadillo C++ & C++ & Apache-2.0 & рассм. & \url{https://gitlab.com/conradsnicta/armadillo-code} \\
+bnpy & Python & BSD-3-Clause & канд. & \url{https://github.com/bnpy/bnpy} \\
+CAMAN & R / C & GPL-2 & канд. & \url{https://github.com/cran/CAMAN} \\
+\bottomrule
+\end{longtable}}
+
+\subsection{Распределение по языкам и лицензиям}
+\begin{center}\small
+\begin{tabular}{@{}l r l r@{}}
+\toprule
+Язык & Инструментов & Лицензия & Инструментов \\
+\midrule
+Python & 9 & MIT & 9 \\
+R & 8 & GPL-2 | GPL-3 & 8 \\
+R / C++ & 4 & GPL-2 & 4 \\
+R / C & 2 & BSD-3-Clause & 3 \\
+Julia & 2 & GPL-3 & 2 \\
+C++ & 2 & Apache-2.0 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{landscape}
+\section{Сводная таблица покрытия}
+Инструменты упорядочены по общему покрытию (вес частичных $\tfrac12$). Числа в цветных ячейках --- проценты; чем темнее ячейка, тем выше покрытие.
+Обозначения: <<Да>>, <<Част.>>, <<Нет>> --- число требований с соответствующим статусом (из 86).
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}r l l r r r r r r r *{10}{r}@{}}
+\toprule
+\# & Инструмент & Язык & \rotatebox{90}{\scriptsize Да} & \rotatebox{90}{\scriptsize Част.} & \rotatebox{90}{\scriptsize Нет} & \rotatebox{90}{\scriptsize Все, \%} & \rotatebox{90}{\scriptsize Обяз., \%} & \rotatebox{90}{\scriptsize Жел., \%} & \rotatebox{90}{\scriptsize Факульт., \%} & \rotatebox{90}{\scriptsize Оценивание} & \rotatebox{90}{\scriptsize Структура смеси} & \rotatebox{90}{\scriptsize Инициализация} & \rotatebox{90}{\scriptsize Архитектура} & \rotatebox{90}{\scriptsize Инфраструктура} & \rotatebox{90}{\scriptsize Визуализация} & \rotatebox{90}{\scriptsize Специальные методы} & \rotatebox{90}{\scriptsize Представление смеси} & \rotatebox{90}{\scriptsize Производительность} & \rotatebox{90}{\scriptsize Диагностика} \\
+\midrule
+\endhead
+1 & \textbf{brms} & R / C++ & 41 & 11 & 34 & \cellcolor{hm!43}54 & \cellcolor{hm!51}66 & \cellcolor{hm!38}47 & \cellcolor{hm!36}45 & \cellcolor{hm!30}35 & \cellcolor{hm!38}48 & \cellcolor{hm!40}50 & \cellcolor{hm!75}100 & \cellcolor{hm!58}75 & \cellcolor{hm!61}80 & \cellcolor{hm!33}40 & \cellcolor{hm!49}62 & \cellcolor{hm!66}88 & \cellcolor{hm!49}62 \\
+2 & \textbf{FlexMix} & R & 33 & 14 & 39 & \cellcolor{hm!38}47 & \cellcolor{hm!55}72 & \cellcolor{hm!28}33 & \cellcolor{hm!22}25 & \cellcolor{hm!28}33 & \cellcolor{hm!40}50 & \cellcolor{hm!40}50 & \cellcolor{hm!61}80 & \cellcolor{hm!58}75 & \cellcolor{hm!54}70 & \cellcolor{hm!26}30 & \cellcolor{hm!22}25 & \cellcolor{hm!31}38 & \cellcolor{hm!31}38 \\
+3 & \textbf{mclust (v5+)} & R & 27 & 17 & 42 & \cellcolor{hm!34}41 & \cellcolor{hm!42}53 & \cellcolor{hm!32}39 & \cellcolor{hm!22}25 & \cellcolor{hm!24}27 & \cellcolor{hm!26}30 & \cellcolor{hm!46}58 & \cellcolor{hm!40}50 & \cellcolor{hm!58}75 & \cellcolor{hm!47}60 & \cellcolor{hm!33}40 & \cellcolor{hm!40}50 & \cellcolor{hm!58}75 & \cellcolor{hm!31}38 \\
+4 & \textbf{bnpy} & Python & 26 & 18 & 42 & \cellcolor{hm!33}41 & \cellcolor{hm!40}50 & \cellcolor{hm!26}30 & \cellcolor{hm!35}42 & \cellcolor{hm!28}33 & \cellcolor{hm!28}33 & \cellcolor{hm!52}67 & \cellcolor{hm!40}50 & \cellcolor{hm!28}33 & \cellcolor{hm!40}50 & \cellcolor{hm!19}20 & \cellcolor{hm!40}50 & \cellcolor{hm!75}100 & \cellcolor{hm!31}38 \\
+5 & \textbf{mixR} & R & 30 & 10 & 46 & \cellcolor{hm!33}41 & \cellcolor{hm!47}60 & \cellcolor{hm!29}34 & \cellcolor{hm!17}18 & \cellcolor{hm!27}31 & \cellcolor{hm!25}28 & \cellcolor{hm!75}100 & \cellcolor{hm!33}40 & \cellcolor{hm!58}75 & \cellcolor{hm!47}60 & \cellcolor{hm!19}20 & \cellcolor{hm!49}62 & \cellcolor{hm!40}50 & \cellcolor{hm!5}0 \\
+6 & \textbf{PySATL mpest} (цель) & Python & 31 & 6 & 49 & \cellcolor{hm!33}40 & \cellcolor{hm!62}81 & \cellcolor{hm!19}20 & \cellcolor{hm!5}0 & \cellcolor{hm!31}38 & \cellcolor{hm!34}41 & \cellcolor{hm!17}17 & \cellcolor{hm!61}80 & \cellcolor{hm!75}100 & \cellcolor{hm!5}0 & \cellcolor{hm!5}0 & \cellcolor{hm!49}62 & \cellcolor{hm!40}50 & \cellcolor{hm!5}0 \\
+7 & \textbf{StepMix} & Python & 28 & 11 & 47 & \cellcolor{hm!32}39 & \cellcolor{hm!48}62 & \cellcolor{hm!25}28 & \cellcolor{hm!17}18 & \cellcolor{hm!25}29 & \cellcolor{hm!25}28 & \cellcolor{hm!46}58 & \cellcolor{hm!47}60 & \cellcolor{hm!58}75 & \cellcolor{hm!47}60 & \cellcolor{hm!26}30 & \cellcolor{hm!22}25 & \cellcolor{hm!40}50 & \cellcolor{hm!31}38 \\
+8 & \textbf{Rmixmod (mixmod)} & R / C++ & 28 & 10 & 48 & \cellcolor{hm!32}38 & \cellcolor{hm!42}53 & \cellcolor{hm!29}34 & \cellcolor{hm!19}20 & \cellcolor{hm!22}25 & \cellcolor{hm!22}24 & \cellcolor{hm!46}58 & \cellcolor{hm!61}80 & \cellcolor{hm!58}75 & \cellcolor{hm!47}60 & \cellcolor{hm!19}20 & \cellcolor{hm!40}50 & \cellcolor{hm!66}88 & \cellcolor{hm!5}0 \\
+9 & \textbf{mixtools} & R & 24 & 18 & 44 & \cellcolor{hm!32}38 & \cellcolor{hm!44}56 & \cellcolor{hm!24}27 & \cellcolor{hm!24}28 & \cellcolor{hm!31}38 & \cellcolor{hm!29}35 & \cellcolor{hm!40}50 & \cellcolor{hm!26}30 & \cellcolor{hm!52}67 & \cellcolor{hm!47}60 & \cellcolor{hm!26}30 & \cellcolor{hm!22}25 & \cellcolor{hm!14}12 & \cellcolor{hm!31}38 \\
+10 & \textbf{rebmix} & R / C++ & 27 & 9 & 50 & \cellcolor{hm!31}37 & \cellcolor{hm!40}50 & \cellcolor{hm!32}39 & \cellcolor{hm!12}10 & \cellcolor{hm!21}23 & \cellcolor{hm!38}48 & \cellcolor{hm!5}0 & \cellcolor{hm!47}60 & \cellcolor{hm!58}75 & \cellcolor{hm!26}30 & \cellcolor{hm!5}0 & \cellcolor{hm!40}50 & \cellcolor{hm!58}75 & \cellcolor{hm!22}25 \\
+11 & \textbf{pomegranate} & Python & 23 & 16 & 47 & \cellcolor{hm!30}36 & \cellcolor{hm!47}60 & \cellcolor{hm!20}22 & \cellcolor{hm!17}18 & \cellcolor{hm!27}31 & \cellcolor{hm!29}35 & \cellcolor{hm!40}50 & \cellcolor{hm!47}60 & \cellcolor{hm!46}58 & \cellcolor{hm!5}0 & \cellcolor{hm!19}20 & \cellcolor{hm!49}62 & \cellcolor{hm!49}62 & \cellcolor{hm!5}0 \\
+12 & \textbf{Distributions.jl} & Julia & 24 & 12 & 50 & \cellcolor{hm!29}35 & \cellcolor{hm!47}60 & \cellcolor{hm!21}23 & \cellcolor{hm!12}10 & \cellcolor{hm!18}19 & \cellcolor{hm!29}35 & \cellcolor{hm!17}17 & \cellcolor{hm!54}70 & \cellcolor{hm!69}92 & \cellcolor{hm!12}10 & \cellcolor{hm!5}0 & \cellcolor{hm!66}88 & \cellcolor{hm!58}75 & \cellcolor{hm!14}12 \\
+13 & \textbf{distfit} & Python & 19 & 18 & 49 & \cellcolor{hm!28}33 & \cellcolor{hm!36}44 & \cellcolor{hm!30}36 & \cellcolor{hm!10}8 & \cellcolor{hm!15}15 & \cellcolor{hm!32}39 & \cellcolor{hm!5}0 & \cellcolor{hm!26}30 & \cellcolor{hm!58}75 & \cellcolor{hm!47}60 & \cellcolor{hm!12}10 & \cellcolor{hm!66}88 & \cellcolor{hm!31}38 & \cellcolor{hm!22}25 \\
+14 & \textbf{mixdist} & R & 23 & 10 & 53 & \cellcolor{hm!28}33 & \cellcolor{hm!39}49 & \cellcolor{hm!24}27 & \cellcolor{hm!16}15 & \cellcolor{hm!31}38 & \cellcolor{hm!25}28 & \cellcolor{hm!28}33 & \cellcolor{hm!26}30 & \cellcolor{hm!52}67 & \cellcolor{hm!19}20 & \cellcolor{hm!19}20 & \cellcolor{hm!5}0 & \cellcolor{hm!22}25 & \cellcolor{hm!40}50 \\
+15 & \textbf{scikit-learn (sklearn.mixture)} & Python & 23 & 10 & 53 & \cellcolor{hm!28}33 & \cellcolor{hm!41}51 & \cellcolor{hm!20}22 & \cellcolor{hm!17}18 & \cellcolor{hm!20}21 & \cellcolor{hm!20}22 & \cellcolor{hm!46}58 & \cellcolor{hm!40}50 & \cellcolor{hm!69}92 & \cellcolor{hm!5}0 & \cellcolor{hm!26}30 & \cellcolor{hm!31}38 & \cellcolor{hm!66}88 & \cellcolor{hm!5}0 \\
+16 & \textbf{sn (Skew-Normal/t)} & R & 23 & 8 & 55 & \cellcolor{hm!27}31 & \cellcolor{hm!39}49 & \cellcolor{hm!25}28 & \cellcolor{hm!10}8 & \cellcolor{hm!25}29 & \cellcolor{hm!22}24 & \cellcolor{hm!28}33 & \cellcolor{hm!26}30 & \cellcolor{hm!58}75 & \cellcolor{hm!19}20 & \cellcolor{hm!12}10 & \cellcolor{hm!58}75 & \cellcolor{hm!22}25 & \cellcolor{hm!22}25 \\
+17 & \textbf{EMCluster} & R / C & 22 & 9 & 55 & \cellcolor{hm!27}31 & \cellcolor{hm!37}46 & \cellcolor{hm!21}23 & \cellcolor{hm!17}18 & \cellcolor{hm!15}15 & \cellcolor{hm!22}24 & \cellcolor{hm!46}58 & \cellcolor{hm!47}60 & \cellcolor{hm!58}75 & \cellcolor{hm!19}20 & \cellcolor{hm!19}20 & \cellcolor{hm!22}25 & \cellcolor{hm!40}50 & \cellcolor{hm!31}38 \\
+18 & \textbf{teigen} & R & 19 & 14 & 53 & \cellcolor{hm!26}30 & \cellcolor{hm!35}43 & \cellcolor{hm!21}23 & \cellcolor{hm!19}20 & \cellcolor{hm!21}23 & \cellcolor{hm!23}26 & \cellcolor{hm!34}42 & \cellcolor{hm!33}40 & \cellcolor{hm!52}67 & \cellcolor{hm!47}60 & \cellcolor{hm!12}10 & \cellcolor{hm!5}0 & \cellcolor{hm!40}50 & \cellcolor{hm!14}12 \\
+19 & \textbf{CAMAN} & R / C & 20 & 9 & 57 & \cellcolor{hm!25}28 & \cellcolor{hm!36}44 & \cellcolor{hm!21}23 & \cellcolor{hm!12}10 & \cellcolor{hm!20}21 & \cellcolor{hm!28}33 & \cellcolor{hm!28}33 & \cellcolor{hm!19}20 & \cellcolor{hm!28}33 & \cellcolor{hm!47}60 & \cellcolor{hm!12}10 & \cellcolor{hm!31}38 & \cellcolor{hm!22}25 & \cellcolor{hm!22}25 \\
+20 & \textbf{GaussianMixtures.jl} & Julia & 18 & 9 & 59 & \cellcolor{hm!23}26 & \cellcolor{hm!35}43 & \cellcolor{hm!20}22 & \cellcolor{hm!8}5 & \cellcolor{hm!15}15 & \cellcolor{hm!17}17 & \cellcolor{hm!40}50 & \cellcolor{hm!33}40 & \cellcolor{hm!58}75 & \cellcolor{hm!5}0 & \cellcolor{hm!5}0 & \cellcolor{hm!31}38 & \cellcolor{hm!75}100 & \cellcolor{hm!5}0 \\
+21 & \textbf{fpc} & R & 16 & 13 & 57 & \cellcolor{hm!23}26 & \cellcolor{hm!34}41 & \cellcolor{hm!18}19 & \cellcolor{hm!14}12 & \cellcolor{hm!17}17 & \cellcolor{hm!25}28 & \cellcolor{hm!28}33 & \cellcolor{hm!40}50 & \cellcolor{hm!52}67 & \cellcolor{hm!19}20 & \cellcolor{hm!12}10 & \cellcolor{hm!5}0 & \cellcolor{hm!14}12 & \cellcolor{hm!31}38 \\
+22 & \textbf{ClusterR} & R / C++ & 20 & 4 & 62 & \cellcolor{hm!23}26 & \cellcolor{hm!31}37 & \cellcolor{hm!20}22 & \cellcolor{hm!14}12 & \cellcolor{hm!17}17 & \cellcolor{hm!14}13 & \cellcolor{hm!28}33 & \cellcolor{hm!47}60 & \cellcolor{hm!58}75 & \cellcolor{hm!19}20 & \cellcolor{hm!12}10 & \cellcolor{hm!5}0 & \cellcolor{hm!58}75 & \cellcolor{hm!22}25 \\
+23 & \textbf{mlpack (mlpack::gmm)} & C++ & 18 & 7 & 61 & \cellcolor{hm!22}25 & \cellcolor{hm!36}44 & \cellcolor{hm!14}12 & \cellcolor{hm!14}12 & \cellcolor{hm!14}12 & \cellcolor{hm!11}9 & \cellcolor{hm!34}42 & \cellcolor{hm!40}50 & \cellcolor{hm!63}83 & \cellcolor{hm!5}0 & \cellcolor{hm!12}10 & \cellcolor{hm!40}50 & \cellcolor{hm!58}75 & \cellcolor{hm!22}25 \\
+24 & \textbf{student-mixture} & Python & 15 & 10 & 61 & \cellcolor{hm!21}23 & \cellcolor{hm!35}43 & \cellcolor{hm!10}8 & \cellcolor{hm!16}15 & \cellcolor{hm!24}27 & \cellcolor{hm!20}22 & \cellcolor{hm!46}58 & \cellcolor{hm!40}50 & \cellcolor{hm!17}17 & \cellcolor{hm!5}0 & \cellcolor{hm!12}10 & \cellcolor{hm!22}25 & \cellcolor{hm!5}0 & \cellcolor{hm!5}0 \\
+25 & \textbf{kasakh Mixture-Models} & Python & 17 & 5 & 64 & \cellcolor{hm!21}23 & \cellcolor{hm!33}40 & \cellcolor{hm!18}19 & \cellcolor{hm!5}0 & \cellcolor{hm!18}19 & \cellcolor{hm!20}22 & \cellcolor{hm!40}50 & \cellcolor{hm!33}40 & \cellcolor{hm!34}42 & \cellcolor{hm!5}0 & \cellcolor{hm!5}0 & \cellcolor{hm!22}25 & \cellcolor{hm!31}38 & \cellcolor{hm!5}0 \\
+26 & \textbf{Armadillo C++} & C++ & 15 & 6 & 65 & \cellcolor{hm!20}21 & \cellcolor{hm!32}38 & \cellcolor{hm!14}12 & \cellcolor{hm!8}5 & \cellcolor{hm!15}15 & \cellcolor{hm!11}9 & \cellcolor{hm!34}42 & \cellcolor{hm!19}20 & \cellcolor{hm!58}75 & \cellcolor{hm!5}0 & \cellcolor{hm!5}0 & \cellcolor{hm!31}38 & \cellcolor{hm!58}75 & \cellcolor{hm!5}0 \\
+27 & \textbf{mixem} & Python & 14 & 5 & 67 & \cellcolor{hm!18}19 & \cellcolor{hm!36}44 & \cellcolor{hm!8}5 & \cellcolor{hm!5}0 & \cellcolor{hm!15}15 & \cellcolor{hm!20}22 & \cellcolor{hm!17}17 & \cellcolor{hm!54}70 & \cellcolor{hm!40}50 & \cellcolor{hm!5}0 & \cellcolor{hm!5}0 & \cellcolor{hm!14}12 & \cellcolor{hm!5}0 & \cellcolor{hm!5}0 \\
+\bottomrule
+\end{longtable}}
+Спектр узкий: наибольшее покрытие достигает 54\,\% (\texttt{brms}),
+медиана составляет 33\,\%; у 26 из 27 инструментов покрытие ниже половины.
+
+\end{landscape}
+\section{Сходство инструментов по профилю возможностей}
+Для каждого инструмента найдены три ближайших по мере Жаккара над множествами полностью выполненных требований. Значение $1$ означает совпадение профилей,
+$0$ --- отсутствие общих выполненных требований. Это показывает, какие инструменты заменяют друг друга и какие занимают отдельные ниши.
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{12.4cm}@{}}
+\toprule
+Инструмент & Ближайшие (мера Жаккара) \\
+\midrule
+\endhead
+brms & FlexMix (0.51), Rmixmod (mixmod) (0.44), pomegranate (0.42) \\
+FlexMix & StepMix (0.61), Rmixmod (mixmod) (0.53), brms (0.51) \\
+mclust (v5+) & StepMix (0.72), EMCluster (0.63), Rmixmod (mixmod) (0.62) \\
+bnpy & scikit-learn (sklearn.mixture) (0.48), GaussianMixtures.jl (0.47), pomegranate (0.40) \\
+mixR & mclust (v5+) (0.54), EMCluster (0.53), Rmixmod (mixmod) (0.53) \\
+PySATL mpest & Distributions.jl (0.57), pomegranate (0.46), FlexMix (0.45) \\
+StepMix & mclust (v5+) (0.72), EMCluster (0.61), FlexMix (0.61) \\
+Rmixmod (mixmod) & EMCluster (0.72), ClusterR (0.66), mclust (v5+) (0.62) \\
+mixtools & FlexMix (0.50), mixdist (0.47), CAMAN (0.47) \\
+rebmix & EMCluster (0.53), mclust (v5+) (0.50), mixR (0.46) \\
+pomegranate & Distributions.jl (0.62), mixem (0.54), Armadillo C++ (0.52) \\
+Distributions.jl & pomegranate (0.62), mixem (0.58), PySATL mpest (0.57) \\
+distfit & Distributions.jl (0.34), mixR (0.32), mixdist (0.31) \\
+mixdist & mixtools (0.47), sn (Skew-Normal/t) (0.44), FlexMix (0.44) \\
+scikit-learn (sklearn.mixture) & ClusterR (0.65), Armadillo C++ (0.65), EMCluster (0.61) \\
+sn (Skew-Normal/t) & Distributions.jl (0.52), mixdist (0.44), mixR (0.43) \\
+EMCluster & Rmixmod (mixmod) (0.72), mclust (v5+) (0.63), ClusterR (0.62) \\
+teigen & mclust (v5+) (0.53), EMCluster (0.52), Rmixmod (mixmod) (0.47) \\
+CAMAN & mixtools (0.47), FlexMix (0.43), mclust (v5+) (0.42) \\
+GaussianMixtures.jl & Armadillo C++ (0.83), mlpack (mlpack::gmm) (0.64), ClusterR (0.58) \\
+fpc & Armadillo C++ (0.41), EMCluster (0.41), mclust (v5+) (0.39) \\
+ClusterR & Armadillo C++ (0.67), Rmixmod (mixmod) (0.66), scikit-learn (sklearn.mixture) (0.65) \\
+mlpack (mlpack::gmm) & Armadillo C++ (0.74), GaussianMixtures.jl (0.64), ClusterR (0.58) \\
+student-mixture & scikit-learn (sklearn.mixture) (0.46), StepMix (0.39), EMCluster (0.37) \\
+kasakh Mixture-Models & GaussianMixtures.jl (0.40), EMCluster (0.39), Armadillo C++ (0.39) \\
+Armadillo C++ & GaussianMixtures.jl (0.83), mlpack (mlpack::gmm) (0.74), ClusterR (0.67) \\
+mixem & Distributions.jl (0.58), pomegranate (0.54), FlexMix (0.42) \\
+\bottomrule
+\end{longtable}}
+Наиболее похожая пара: \texttt{GaussianMixtures.jl} и \texttt{Armadillo C++}
+(0.83). Ближайший к \texttt{pysatl-mpest} инструмент: \texttt{Distributions.jl} (0.57);
+профиль \texttt{pysatl-mpest} не совпадает ни с одним из рассмотренных (близок к Distributions.jl).
+
+\part{Требования}
+\section{Общая картина}
+\begin{center}\small
+\begin{tabular}{@{}l r r r r r r r@{}}
+\toprule
+Категория & Всего & Обяз. & Жел. & Фак. & \shortstack[r]{\scriptsize Среднее покрытие\\\scriptsize инструментами, \%} & \shortstack[r]{\scriptsize Выполнено\\\scriptsize никем} & \shortstack[r]{\scriptsize Покрытие\\\scriptsize \texttt{mpest}, \%} \\
+\midrule
+Оценивание & 24 & 9 & 7 & 8 & \cellcolor{hm!22}24 & 5 & \cellcolor{hm!31}38 \\
+Структура смеси & 23 & 10 & 11 & 2 & \cellcolor{hm!25}28 & 4 & \cellcolor{hm!34}41 \\
+Инициализация & 6 & 3 & 3 & 0 & \cellcolor{hm!36}44 & 0 & \cellcolor{hm!17}17 \\
+Архитектура & 5 & 3 & 2 & 0 & \cellcolor{hm!41}51 & 0 & \cellcolor{hm!61}80 \\
+Инфраструктура & 6 & 6 & 0 & 0 & \cellcolor{hm!52}67 & 0 & \cellcolor{hm!75}100 \\
+Визуализация & 5 & 1 & 2 & 2 & \cellcolor{hm!27}32 & 0 & \cellcolor{hm!5}0 \\
+Специальные методы & 5 & 0 & 0 & 5 & \cellcolor{hm!16}15 & 3 & \cellcolor{hm!5}0 \\
+Представление смеси & 4 & 2 & 2 & 0 & \cellcolor{hm!32}38 & 0 & \cellcolor{hm!49}62 \\
+Производительность & 4 & 0 & 3 & 1 & \cellcolor{hm!42}53 & 0 & \cellcolor{hm!40}50 \\
+Диагностика & 4 & 0 & 2 & 2 & \cellcolor{hm!20}21 & 0 & \cellcolor{hm!5}0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Покрытие считается по 26 инструментам без \texttt{pysatl-mpest}.
+
+\subsection{Распределение требований по числу инструментов}
+Сколько требований выполняют полностью ровно $k$ инструментов (из 26, без \texttt{pysatl-mpest}).
+{\small
+\begin{center}
+\begin{tabular}{@{}l rrrrrrrrr@{}}
+\toprule
+Число инструментов & 0 & 1 & 2 & 3--4 & 5--7 & 8--11 & 12--15 & 16--19 & 20+ \\
+\midrule
+Требований & 15 & 10 & 4 & 16 & 11 & 11 & 5 & 5 & 9 \\
+\bottomrule
+\end{tabular}
+\end{center}}
+Распределение сильно скошено: 9 требований выполняют не менее 20 инструментов, а 29 --- не более двух.
+
+\subsection{Что умеют почти все}
+Не менее 20 из 26 инструментов полностью выполняют: \texttt{EST-01} Каркас и фасад классического EM-алгоритма; \texttt{EST-05} Стратегия суррогатной Q-функции на M-шаге; \texttt{STRUC-01} Однородные смеси распределений; \texttt{STRUC-03} Нормальное семейство распределений; \texttt{TECH-03} Логарифмическая стабильность вычислений; \texttt{INFRA-01} Декларативное управление зависимостями и сборкой; \texttt{INFRA-05} Автоматизированная непрерывная интеграция; \texttt{INFRA-06} Автоматическая генерация документации с математикой; \texttt{REPR-02} Сэмплирование.
+Это базовый слой, который любая новая библиотека обязана воспроизвести, но отличие на нём не строится.
+
+\subsection{Что не умеет никто}
+Ни один из 27 инструментов полностью не выполняет 12 требований: \texttt{EST-08} Стратегия метода L-моментов на M-шаге; \texttt{EST-09} Замкнутые аналитические формулы параметров на M-шаге; \texttt{STRUC-14} Жадное инкрементальное обучение порядка смеси; \texttt{STRUC-18} Предсказание порядка смеси через мета-обучение (Meta-Learning); \texttt{STRUC-19} Классификация параметрических семейств с помощью нейросетей; \texttt{STRUC-20} Амортизированный нейросетевой вывод параметров смеси (Deep Sets); \texttt{EST-19} Ускорение сходимости EM-алгоритма (Aitken, SQUAREM, PX-EM); \texttt{EST-21} Оценивание методом минимального расстояния (Hellinger, Wasserstein); \texttt{PROP-02} Скорректированные тесты отношения правдоподобий (VLMR, LMR, MLRT); \texttt{PROP-04} Символьно-аналитическое оценивание смесей высокой точности; \texttt{PROP-05} Автоматический эвристический перебор аналитических форм компонент; \texttt{EST-22} Покомпонентный EM-алгоритм (CW-EM, SAGE).
+11 из них реализуются хотя бы частично (для отдельных семейств или как расширение);
+1 не представлено даже частично: символьно-аналитическое оценивание смесей высокой точности.
+
+\subsection{Что умеют единицы}
+Не более двух инструментов, включая \texttt{pysatl-mpest}, полностью выполняют 17 требований: \texttt{EST-03} Каркас и фасад ECME-алгоритма; \texttt{EST-06} Стратегия наблюдаемого правдоподобия на M-шаге; \texttt{EST-07} Стратегия взвешенного метода моментов на M-шаге; \texttt{EST-11} Алгоритм Rough-Enhanced-Bayes; \texttt{INIT-05} Инициализация методом моментов по сегментам; \texttt{STRUC-08} Оценивание распределений с неизвестным порогом; \texttt{STRUC-13} Сравнение и отбор конфигураций семейств; \texttt{STRUC-16} Объединение перекрывающихся компонент по критерию унимодальности (DIP-тест); \texttt{STRUC-17} Непараметрическое градиентное нахождение числа компонент (NPMLE); \texttt{INFRA-03} Property-based тестирование математических инвариантов; \texttt{REPR-03} Аналитический расчет моментов смеси; \texttt{DIAG-01} Статистические критерии согласия (KS, AD, Chi2); \texttt{EST-18} Оценивание по цензурированным и усеченным данным; \texttt{EST-20} Рекурсивный потоковый EM-алгоритм; \texttt{DIAG-04} Оценка отделимости и перекрытия компонент; \texttt{EST-23} Робастное оценивание по усеченному правдоподобию (TCLUST, C-шаг); \texttt{EST-24} Байесовское сэмплирование методом расширения данных (Gibbs, MCMC).
+
+\begin{landscape}
+\section{Матрицы покрытия по категориям}
+Для каждой категории требований показаны статусы всех инструментов. Условные обозначения: \colorbox{yes!35}{+} --- выполнено,
+\colorbox{part!45}{$\pm$} --- частично, \textcolor{gray}{·} --- не выполнено. Столбцы обозначены идентификаторами требований; расшифровка идёт под таблицей.
+
+\subsection{Оценивание}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{24}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize EST-01} & \rotatebox{90}{\scriptsize EST-02} & \rotatebox{90}{\scriptsize EST-03} & \rotatebox{90}{\scriptsize EST-04} & \rotatebox{90}{\scriptsize EST-05} & \rotatebox{90}{\scriptsize EST-06} & \rotatebox{90}{\scriptsize EST-07} & \rotatebox{90}{\scriptsize EST-08} & \rotatebox{90}{\scriptsize EST-09} & \rotatebox{90}{\scriptsize EST-10} & \rotatebox{90}{\scriptsize EST-11} & \rotatebox{90}{\scriptsize EST-12} & \rotatebox{90}{\scriptsize EST-13} & \rotatebox{90}{\scriptsize EST-14} & \rotatebox{90}{\scriptsize EST-15} & \rotatebox{90}{\scriptsize EST-16} & \rotatebox{90}{\scriptsize EST-17} & \rotatebox{90}{\scriptsize EST-18} & \rotatebox{90}{\scriptsize EST-19} & \rotatebox{90}{\scriptsize EST-20} & \rotatebox{90}{\scriptsize EST-21} & \rotatebox{90}{\scriptsize EST-22} & \rotatebox{90}{\scriptsize EST-23} & \rotatebox{90}{\scriptsize EST-24} \\
+\midrule
+\endhead
+brms & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+FlexMix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mclust (v5+) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+bnpy & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+mixR & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+PySATL mpest & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+StepMix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Rmixmod (mixmod) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixtools & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+rebmix & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+pomegranate & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Distributions.jl & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+distfit & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixdist & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+sn (Skew-Normal/t) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+EMCluster & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+teigen & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+CAMAN & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+GaussianMixtures.jl & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+fpc & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+ClusterR & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mlpack (mlpack::gmm) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+student-mixture & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+kasakh Mixture-Models & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Armadillo C++ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixem & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 22 & 6 & 2 & 6 & 22 & 1 & 1 & 0 & 0 & 3 & 1 & 9 & 5 & 9 & 4 & 3 & 16 & 2 & 0 & 1 & 0 & 0 & 1 & 1 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{EST-01} & Каркас и фасад классического EM-алгоритма & обязательные & \texttt{EST-13} & Явные параметрические границы & обязательные \\
+\texttt{EST-02} & Каркас и фасад ECM-алгоритма & обязательные & \texttt{EST-14} & Предотвращение вырождения масштаба и сингулярностей правдоподобия & обязательные \\
+\texttt{EST-03} & Каркас и фасад ECME-алгоритма & обязательные & \texttt{EST-15} & Сохранение истории сходимости и времени работы & желательные \\
+\texttt{EST-04} & Direct MLE & желательные & \texttt{EST-16} & Оценивание по сгруппированным и интервальным данным & желательные \\
+\texttt{EST-05} & Стратегия суррогатной Q-функции на M-шаге & обязательные & \texttt{EST-17} & Взвешенные наблюдения и веса выборки & желательные \\
+\texttt{EST-06} & Стратегия наблюдаемого правдоподобия на M-шаге & обязательные & \texttt{EST-18} & Оценивание по цензурированным и усеченным данным & факультативные \\
+\texttt{EST-07} & Стратегия взвешенного метода моментов на M-шаге & желательные & \texttt{EST-19} & Ускорение сходимости EM-алгоритма (Aitken, SQUAREM, PX-EM) & факультативные \\
+\texttt{EST-08} & Стратегия метода L-моментов на M-шаге & желательные & \texttt{EST-20} & Рекурсивный потоковый EM-алгоритм & факультативные \\
+\texttt{EST-09} & Замкнутые аналитические формулы параметров на M-шаге & обязательные & \texttt{EST-21} & Оценивание методом минимального расстояния (Hellinger, Wasserstein) & факультативные \\
+\texttt{EST-10} & Стохастический и классификационный EM-алгоритм & факультативные & \texttt{EST-22} & Покомпонентный EM-алгоритм (CW-EM, SAGE) & желательные \\
+\texttt{EST-11} & Алгоритм Rough-Enhanced-Bayes & факультативные & \texttt{EST-23} & Робастное оценивание по усеченному правдоподобию (TCLUST, C-шаг) & факультативные \\
+\texttt{EST-12} & Фиксация подмножеств параметров & обязательные & \texttt{EST-24} & Байесовское сэмплирование методом расширения данных (Gibbs, MCMC) & факультативные \\
+\end{tabular}}
+
+\subsection{Структура смеси}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{23}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize STRUC-01} & \rotatebox{90}{\scriptsize STRUC-02} & \rotatebox{90}{\scriptsize STRUC-03} & \rotatebox{90}{\scriptsize STRUC-04} & \rotatebox{90}{\scriptsize STRUC-05} & \rotatebox{90}{\scriptsize STRUC-06} & \rotatebox{90}{\scriptsize STRUC-07} & \rotatebox{90}{\scriptsize STRUC-08} & \rotatebox{90}{\scriptsize STRUC-09} & \rotatebox{90}{\scriptsize STRUC-10} & \rotatebox{90}{\scriptsize STRUC-11} & \rotatebox{90}{\scriptsize STRUC-12} & \rotatebox{90}{\scriptsize STRUC-13} & \rotatebox{90}{\scriptsize STRUC-14} & \rotatebox{90}{\scriptsize STRUC-15} & \rotatebox{90}{\scriptsize STRUC-16} & \rotatebox{90}{\scriptsize STRUC-17} & \rotatebox{90}{\scriptsize STRUC-18} & \rotatebox{90}{\scriptsize STRUC-19} & \rotatebox{90}{\scriptsize STRUC-20} & \rotatebox{90}{\scriptsize STRUC-21} & \rotatebox{90}{\scriptsize STRUC-22} & \rotatebox{90}{\scriptsize STRUC-23} \\
+\midrule
+\endhead
+brms & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ \\
+FlexMix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+mclust (v5+) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+bnpy & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ \\
+mixR & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+PySATL mpest & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+StepMix & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Rmixmod (mixmod) & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixtools & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+rebmix & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+pomegranate & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+Distributions.jl & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+distfit & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+mixdist & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+sn (Skew-Normal/t) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+EMCluster & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+teigen & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+CAMAN & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+GaussianMixtures.jl & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+fpc & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+ClusterR & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mlpack (mlpack::gmm) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+student-mixture & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+kasakh Mixture-Models & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Armadillo C++ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixem & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 26 & 6 & 25 & 11 & 11 & 8 & 6 & 1 & 15 & 8 & 7 & 6 & 1 & 0 & 3 & 1 & 1 & 0 & 0 & 0 & 8 & 4 & 3 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{STRUC-01} & Однородные смеси распределений & обязательные & \texttt{STRUC-13} & Сравнение и отбор конфигураций семейств & желательные \\
+\texttt{STRUC-02} & Разнородные смеси распределений & обязательные & \texttt{STRUC-14} & Жадное инкрементальное обучение порядка смеси & желательные \\
+\texttt{STRUC-03} & Нормальное семейство распределений & обязательные & \texttt{STRUC-15} & Динамические переходы слияния и расщепления (SMEM) & желательные \\
+\texttt{STRUC-04} & Экспоненциальное семейство распределений & обязательные & \texttt{STRUC-16} & Объединение перекрывающихся компонент по критерию унимодальности (DIP-тест) & желательные \\
+\texttt{STRUC-05} & Асимметричные положительные семейства (Weibull, Gamma, Lognormal) & обязательные & \texttt{STRUC-17} & Непараметрическое градиентное нахождение числа компонент (NPMLE) & желательные \\
+\texttt{STRUC-06} & Тяжелохвостые семейства (Pareto, Cauchy) & обязательные & \texttt{STRUC-18} & Предсказание порядка смеси через мета-обучение (Meta-Learning) & желательные \\
+\texttt{STRUC-07} & Семейства на ограниченном носителе (Beta, Uniform) & желательные & \texttt{STRUC-19} & Классификация параметрических семейств с помощью нейросетей & желательные \\
+\texttt{STRUC-08} & Оценивание распределений с неизвестным порогом & обязательные & \texttt{STRUC-20} & Амортизированный нейросетевой вывод параметров смеси (Deep Sets) & желательные \\
+\texttt{STRUC-09} & Информационные критерии выбора числа компонент (AIC, BIC, CAIC) & обязательные & \texttt{STRUC-21} & Равенство и линейные ограничения параметров компонент & желательные \\
+\texttt{STRUC-10} & Критерий интегрированного правдоподобия классификации (ICL) & желательные & \texttt{STRUC-22} & Асимметричные и тяжелохвостые семейства (Skew-Normal, Student-t) & факультативные \\
+\texttt{STRUC-11} & Параметрический бутстреп отношения правдоподобий (LRT) & обязательные & \texttt{STRUC-23} & Вариационный байесовский вывод (VBEM) & факультативные \\
+\texttt{STRUC-12} & Динамическое удаление вырожденных компонент & обязательные &  & &  \\
+\end{tabular}}
+
+\subsection{Инициализация}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{6}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize INIT-01} & \rotatebox{90}{\scriptsize INIT-02} & \rotatebox{90}{\scriptsize INIT-03} & \rotatebox{90}{\scriptsize INIT-04} & \rotatebox{90}{\scriptsize INIT-05} & \rotatebox{90}{\scriptsize INIT-06} \\
+\midrule
+\endhead
+brms & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+FlexMix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+mclust (v5+) & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+bnpy & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+mixR & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+PySATL mpest & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+StepMix & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+Rmixmod (mixmod) & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+mixtools & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+rebmix & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+pomegranate & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+Distributions.jl & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+distfit & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixdist & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+sn (Skew-Normal/t) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+EMCluster & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+teigen & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+CAMAN & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+GaussianMixtures.jl & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+fpc & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+ClusterR & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+mlpack (mlpack::gmm) & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+student-mixture & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+kasakh Mixture-Models & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+Armadillo C++ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+mixem & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 14 & 9 & 16 & 4 & 2 & 19 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{INIT-01} & Пользовательская явная инициализация & обязательные & \texttt{INIT-04} & Квантильное детерминированное разбиение & желательные \\
+\texttt{INIT-02} & Рандомизированный мультистарт & обязательные & \texttt{INIT-05} & Инициализация методом моментов по сегментам & желательные \\
+\texttt{INIT-03} & Кластеризация данных & обязательные & \texttt{INIT-06} & Случайный выбор наблюдений & желательные \\
+\end{tabular}}
+
+\subsection{Архитектура}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{5}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize TECH-01} & \rotatebox{90}{\scriptsize TECH-02} & \rotatebox{90}{\scriptsize TECH-03} & \rotatebox{90}{\scriptsize TECH-04} & \rotatebox{90}{\scriptsize TECH-05} \\
+\midrule
+\endhead
+brms & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+FlexMix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+mclust (v5+) & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+bnpy & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixR & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+PySATL mpest & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+StepMix & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+Rmixmod (mixmod) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mixtools & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+rebmix & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+pomegranate & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+Distributions.jl & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+distfit & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+mixdist & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+sn (Skew-Normal/t) & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+EMCluster & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+teigen & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+CAMAN & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+GaussianMixtures.jl & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+fpc & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+ClusterR & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mlpack (mlpack::gmm) & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+student-mixture & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+kasakh Mixture-Models & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+Armadillo C++ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixem & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 5 & 7 & 22 & 16 & 8 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{TECH-01} & Композитный модульный пайплайн оценивания & обязательные & \texttt{TECH-04} & Иммутабельность структур параметров модели & желательные \\
+\texttt{TECH-02} & Расширяемость новыми распределениями & обязательные & \texttt{TECH-05} & scikit-learn совместимый интерфейс & желательные \\
+\texttt{TECH-03} & Логарифмическая стабильность вычислений & обязательные &  & &  \\
+\end{tabular}}
+
+\subsection{Инфраструктура}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{6}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize INFRA-01} & \rotatebox{90}{\scriptsize INFRA-02} & \rotatebox{90}{\scriptsize INFRA-03} & \rotatebox{90}{\scriptsize INFRA-04} & \rotatebox{90}{\scriptsize INFRA-05} & \rotatebox{90}{\scriptsize INFRA-06} \\
+\midrule
+\endhead
+brms & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+FlexMix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mclust (v5+) & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+bnpy & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ \\
+mixR & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+PySATL mpest & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+StepMix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+Rmixmod (mixmod) & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mixtools & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+rebmix & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+pomegranate & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+Distributions.jl & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+distfit & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mixdist & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+scikit-learn (sklearn.mixture) & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+sn (Skew-Normal/t) & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+EMCluster & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+teigen & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+CAMAN & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+GaussianMixtures.jl & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+fpc & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+ClusterR & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mlpack (mlpack::gmm) & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+student-mixture & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+kasakh Mixture-Models & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ \\
+Armadillo C++ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mixem & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+\midrule \textit{Выполнено, шт.} & 22 & 20 & 1 & 4 & 24 & 24 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{INFRA-01} & Декларативное управление зависимостями и сборкой & обязательные & \texttt{INFRA-04} & Автоматизированный статический анализ и линтинг & обязательные \\
+\texttt{INFRA-02} & Юнит- и интеграционное тестирование с высоким покрытием & обязательные & \texttt{INFRA-05} & Автоматизированная непрерывная интеграция & обязательные \\
+\texttt{INFRA-03} & Property-based тестирование математических инвариантов & обязательные & \texttt{INFRA-06} & Автоматическая генерация документации с математикой & обязательные \\
+\end{tabular}}
+
+\subsection{Визуализация}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{5}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize VIS-01} & \rotatebox{90}{\scriptsize VIS-02} & \rotatebox{90}{\scriptsize VIS-03} & \rotatebox{90}{\scriptsize VIS-04} & \rotatebox{90}{\scriptsize VIS-05} \\
+\midrule
+\endhead
+brms & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ \\
+FlexMix & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+mclust (v5+) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+bnpy & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ \\
+mixR & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+PySATL mpest & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+StepMix & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+Rmixmod (mixmod) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+mixtools & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+rebmix & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+pomegranate & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Distributions.jl & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+distfit & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixdist & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+sn (Skew-Normal/t) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+EMCluster & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+teigen & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+CAMAN & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+GaussianMixtures.jl & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+fpc & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+ClusterR & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mlpack (mlpack::gmm) & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+student-mixture & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+kasakh Mixture-Models & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Armadillo C++ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixem & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 15 & 3 & 9 & 5 & 5 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{VIS-01} & Декомпозиция плотности смеси & обязательные & \texttt{VIS-04} & Визуализация скорости сходимости & факультативные \\
+\texttt{VIS-02} & Диагностические графики согласия (Q-Q, P-P) & желательные & \texttt{VIS-05} & Графики апостериорной неопределенности & факультативные \\
+\texttt{VIS-03} & Профиль выбора числа компонент (AIC, BIC, ICL) & желательные &  & &  \\
+\end{tabular}}
+
+\subsection{Специальные методы}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{5}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize PROP-01} & \rotatebox{90}{\scriptsize PROP-02} & \rotatebox{90}{\scriptsize PROP-03} & \rotatebox{90}{\scriptsize PROP-04} & \rotatebox{90}{\scriptsize PROP-05} \\
+\midrule
+\endhead
+brms & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+FlexMix & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mclust (v5+) & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+bnpy & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixR & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+PySATL mpest & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+StepMix & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Rmixmod (mixmod) & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixtools & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+rebmix & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+pomegranate & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Distributions.jl & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+distfit & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+mixdist & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+sn (Skew-Normal/t) & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+EMCluster & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+teigen & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+CAMAN & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+GaussianMixtures.jl & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+fpc & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+ClusterR & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mlpack (mlpack::gmm) & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+student-mixture & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+kasakh Mixture-Models & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Armadillo C++ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixem & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 4 & 0 & 4 & 0 & 0 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{PROP-01} & Декларативное задание параметрических ограничений (RESTRICT) & факультативные & \texttt{PROP-04} & Символьно-аналитическое оценивание смесей высокой точности & факультативные \\
+\texttt{PROP-02} & Скорректированные тесты отношения правдоподобий (VLMR, LMR, MLRT) & факультативные & \texttt{PROP-05} & Автоматический эвристический перебор аналитических форм компонент & факультативные \\
+\texttt{PROP-03} & Адаптивная регуляризация и стабилизация масштаба & факультативные &  & &  \\
+\end{tabular}}
+
+\subsection{Представление смеси}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{4}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize REPR-01} & \rotatebox{90}{\scriptsize REPR-02} & \rotatebox{90}{\scriptsize REPR-03} & \rotatebox{90}{\scriptsize REPR-04} \\
+\midrule
+\endhead
+brms & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ \\
+FlexMix & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mclust (v5+) & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+bnpy & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+mixR & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+PySATL mpest & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+StepMix & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Rmixmod (mixmod) & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+mixtools & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+rebmix & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+pomegranate & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+Distributions.jl & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ \\
+distfit & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ \\
+mixdist & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+sn (Skew-Normal/t) & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+EMCluster & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+teigen & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+CAMAN & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+GaussianMixtures.jl & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+fpc & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+ClusterR & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mlpack (mlpack::gmm) & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+student-mixture & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+kasakh Mixture-Models & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Armadillo C++ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+mixem & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 5 & 21 & 2 & 4 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{REPR-01} & Поддержка вероятностных функций (PDF, CDF, PPF) & обязательные & \texttt{REPR-03} & Аналитический расчет моментов смеси & желательные \\
+\texttt{REPR-02} & Сэмплирование & обязательные & \texttt{REPR-04} & Сериализация смеси в JSON & желательные \\
+\end{tabular}}
+
+\subsection{Производительность}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{4}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize PERF-01} & \rotatebox{90}{\scriptsize PERF-02} & \rotatebox{90}{\scriptsize PERF-03} & \rotatebox{90}{\scriptsize PERF-04} \\
+\midrule
+\endhead
+brms & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+FlexMix & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+mclust (v5+) & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ \\
+bnpy & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mixR & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+PySATL mpest & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+StepMix & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+Rmixmod (mixmod) & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mixtools & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+rebmix & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+pomegranate & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+Distributions.jl & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+distfit & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ \\
+mixdist & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+scikit-learn (sklearn.mixture) & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+sn (Skew-Normal/t) & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+EMCluster & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+teigen & \cellcolor{part!45}$\pm$ & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+CAMAN & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+GaussianMixtures.jl & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+fpc & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} \\
+ClusterR & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mlpack (mlpack::gmm) & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+student-mixture & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+kasakh Mixture-Models & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+Armadillo C++ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ \\
+mixem & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 10 & 4 & 19 & 14 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{PERF-01} & Параллелизация независимых вычислений & желательные & \texttt{PERF-03} & Векторизованные вычисления (NumPy, SIMD) & желательные \\
+\texttt{PERF-02} & Кэширование промежуточных структур и плотностей & желательные & \texttt{PERF-04} & Контроль аллокаций памяти и потоковые вычисления & факультативные \\
+\end{tabular}}
+
+\subsection{Диагностика}
+{\scriptsize\setlength{\tabcolsep}{2.2pt}
+\begin{longtable}{@{}l *{4}{c}@{}}
+\toprule
+Инструмент & \rotatebox{90}{\scriptsize DIAG-01} & \rotatebox{90}{\scriptsize DIAG-02} & \rotatebox{90}{\scriptsize DIAG-03} & \rotatebox{90}{\scriptsize DIAG-04} \\
+\midrule
+\endhead
+brms & \cellcolor{part!45}$\pm$ & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+FlexMix & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+mclust (v5+) & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+bnpy & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \cellcolor{part!45}$\pm$ \\
+mixR & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+PySATL mpest & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+StepMix & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+Rmixmod (mixmod) & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixtools & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+rebmix & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+pomegranate & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Distributions.jl & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+distfit & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixdist & \cellcolor{yes!35}+ & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+scikit-learn (sklearn.mixture) & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+sn (Skew-Normal/t) & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+EMCluster & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+teigen & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ \\
+CAMAN & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+GaussianMixtures.jl & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+fpc & \textcolor{gray}{·} & \cellcolor{part!45}$\pm$ & \textcolor{gray}{·} & \cellcolor{yes!35}+ \\
+ClusterR & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+mlpack (mlpack::gmm) & \textcolor{gray}{·} & \textcolor{gray}{·} & \cellcolor{yes!35}+ & \textcolor{gray}{·} \\
+student-mixture & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+kasakh Mixture-Models & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+Armadillo C++ & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+mixem & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} & \textcolor{gray}{·} \\
+\midrule \textit{Выполнено, шт.} & 2 & 10 & 4 & 1 \\
+\bottomrule
+\end{longtable}}
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{7.4cm} l l >{\raggedright\arraybackslash}p{7.4cm} l@{}}
+\texttt{DIAG-01} & Статистические критерии согласия (KS, AD, Chi2) & желательные & \texttt{DIAG-03} & Бенчмарки производительности (ASV, pytest-benchmark) & факультативные \\
+\texttt{DIAG-02} & Стандартные ошибки и доверительные интервалы оценок & желательные & \texttt{DIAG-04} & Оценка отделимости и перекрытия компонент & факультативные \\
+\end{tabular}}
+
+\end{landscape}
+\part{Прикладные сценарии}
+\section{Характеристики сценариев}
+Каждый сценарий описывается пятью признаками: типом смеси (однородная или разнородная), формой компонент, априорными сведениями о числе и разделимости компонент,
+режимом наблюдения и объёмом выборки. В последних колонках --- число критических и желательных требований.
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}l >{\raggedright\arraybackslash}p{2.7cm} >{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{1.6cm} r r@{}}
+\toprule
+ID & Область & Смесь & Компоненты & Априорные сведения & Режим наблюдения & Выборка & Крит. & Жел. \\
+\midrule
+\endhead
+\textbf{UC-01} & Астрофизика & однородная & симметричные & число компонент неизвестно, компоненты разделены & прямые наблюдения & малая & 9 & 13 \\
+\textbf{UC-02} & Экология и гидрохимия & однородная & симметричные & число компонент неизвестно, компоненты перекрываются & прямые наблюдения & умеренная & 9 & 12 \\
+\textbf{UC-03} & Фармакогенетика и биомедицина & разнородная & асимметричные & число компонент известно, компоненты перекрываются & прямые наблюдения & умеренная & 7 & 10 \\
+\textbf{UC-04} & Метрология и историческое материаловедение & однородная & симметричные & число компонент неизвестно, компоненты перекрываются & прямые наблюдения & умеренная & 10 & 10 \\
+\textbf{UC-05} & Гидрогеология и геофизика & однородная & симметричные & число компонент известно, компоненты разделены & прямые наблюдения & умеренная & 12 & 10 \\
+\textbf{UC-06} & Промышленная надежность & разнородная & положительный носитель & число компонент известно, механизмы конкурируют & цензурированные наблюдения & умеренная & 13 & 11 \\
+\textbf{UC-07} & Метеорология и ветроэнергетика & разнородная & положительный носитель & число компонент неизвестно, компоненты перекрываются & прямые наблюдения & большая & 12 & 8 \\
+\textbf{UC-08} & Актуарные расчеты и финансовые риски & разнородная & тяжёлый хвост & число компонент известно, семейства разнородны & несбалансированные веса компонент & умеренная & 13 & 8 \\
+\textbf{UC-09} & Иммунология и проточная цитометрия & однородная & асимметричные & число компонент неизвестно, компоненты перекрываются & несбалансированные веса компонент & большая & 10 & 10 \\
+\textbf{UC-10} & Сетевой трафик и телекоммуникации & разнородная & тяжёлый хвост & число компонент неизвестно, семейства разнородны & сгруппированные данные & очень большая & 16 & 11 \\
+\bottomrule
+\end{longtable}}
+Состав: однородных сценариев --- 5, разнородных --- 5;
+по форме компонент: симметричные --- 4, асимметричные --- 2, положительный носитель --- 2, тяжёлый хвост --- 2;
+по выборке: умеренная --- 6, большая --- 2, малая --- 1, очень большая --- 1.
+
+\begin{landscape}
+\section{Требования сценариев}
+Таблица связывает 48 требований, на которые ссылаются сценарии (из 86), со сценариями: К --- критическое, Ж --- желательное. Справа:
+число сценариев с критическим и желательным требованием, число инструментов с полным выполнением и статус \texttt{pysatl-mpest}.
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}l >{\raggedright\arraybackslash}p{8.2cm} *{10}{c} r r r l@{}}
+\toprule
+ID & Требование & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & Крит. & Жел. & Инстр. & \texttt{mpest} \\
+\midrule
+\endhead
+\texttt{EST-01} & Каркас и фасад классического EM-алгоритма & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & 10 & 0 & 22 & \cellcolor{part!40}част. \\
+\texttt{EST-02} & Каркас и фасад ECM-алгоритма &  &  &  &  &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!70}К &  & 3 & 0 & 6 & \cellcolor{yes!30}да \\
+\texttt{EST-09} & Замкнутые аналитические формулы параметров на M-шаге &  &  &  &  & \cellcolor{hm!70}К &  &  &  &  &  & 1 & 0 & 0 & \cellcolor{part!40}част. \\
+\texttt{EST-13} & Явные параметрические границы &  &  & \cellcolor{hm!22}Ж &  &  & \cellcolor{hm!22}Ж &  & \cellcolor{hm!22}Ж &  &  & 0 & 3 & 5 & \textcolor{gray}{нет} \\
+\texttt{EST-14} & Предотвращение вырождения масштаба и сингулярностей правдоподобия & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & 10 & 0 & 9 & \cellcolor{yes!30}да \\
+\texttt{EST-15} & Сохранение истории сходимости и времени работы & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & 0 & 10 & 4 & \cellcolor{yes!30}да \\
+\texttt{EST-16} & Оценивание по сгруппированным и интервальным данным &  &  &  &  &  &  &  &  &  & \cellcolor{hm!70}К & 1 & 0 & 3 & \textcolor{gray}{нет} \\
+\texttt{EST-17} & Взвешенные наблюдения и веса выборки &  &  &  &  &  &  &  &  &  & \cellcolor{hm!22}Ж & 0 & 1 & 16 & \textcolor{gray}{нет} \\
+\texttt{EST-18} & Оценивание по цензурированным и усеченным данным &  &  &  &  &  & \cellcolor{hm!70}К &  &  &  &  & 1 & 0 & 2 & \textcolor{gray}{нет} \\
+\texttt{EST-19} & Ускорение сходимости EM-алгоритма (Aitken, SQUAREM, PX-EM) &  &  &  &  &  &  &  &  & \cellcolor{hm!22}Ж & \cellcolor{hm!70}К & 1 & 1 & 0 & \textcolor{gray}{нет} \\
+\texttt{EST-20} & Рекурсивный потоковый EM-алгоритм &  &  &  &  &  &  &  &  &  & \cellcolor{hm!22}Ж & 0 & 1 & 1 & \textcolor{gray}{нет} \\
+\texttt{EST-22} & Покомпонентный EM-алгоритм (CW-EM, SAGE) &  &  &  & \cellcolor{hm!22}Ж &  &  &  &  &  &  & 0 & 1 & 0 & \textcolor{gray}{нет} \\
+\texttt{EST-24} & Байесовское сэмплирование методом расширения данных (Gibbs, MCMC) & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж &  &  & \cellcolor{hm!22}Ж &  &  &  &  & 0 & 4 & 1 & \textcolor{gray}{нет} \\
+\texttt{STRUC-01} & Однородные смеси распределений & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  &  &  &  &  & 4 & 0 & 26 & \cellcolor{yes!30}да \\
+\texttt{STRUC-02} & Разнородные смеси распределений &  &  &  &  &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!70}К & 4 & 0 & 6 & \cellcolor{yes!30}да \\
+\texttt{STRUC-03} & Нормальное семейство распределений & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  &  &  &  &  & 4 & 0 & 25 & \cellcolor{yes!30}да \\
+\texttt{STRUC-04} & Экспоненциальное семейство распределений &  &  &  &  &  & \cellcolor{hm!22}Ж &  &  &  & \cellcolor{hm!70}К & 1 & 1 & 11 & \cellcolor{yes!30}да \\
+\texttt{STRUC-05} & Асимметричные положительные семейства (Weibull, Gamma, Lognormal) &  &  &  &  &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!70}К & 4 & 0 & 11 & \cellcolor{yes!30}да \\
+\texttt{STRUC-06} & Тяжелохвостые семейства (Pareto, Cauchy) &  &  &  &  &  &  &  & \cellcolor{hm!70}К &  & \cellcolor{hm!22}Ж & 1 & 1 & 8 & \cellcolor{yes!30}да \\
+\texttt{STRUC-08} & Оценивание распределений с неизвестным порогом &  &  &  &  &  &  &  & \cellcolor{hm!70}К &  &  & 1 & 0 & 1 & \cellcolor{yes!30}да \\
+\texttt{STRUC-09} & Информационные критерии выбора числа компонент (AIC, BIC, CAIC) & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & 10 & 0 & 15 & \cellcolor{part!40}част. \\
+\texttt{STRUC-10} & Критерий интегрированного правдоподобия классификации (ICL) &  &  &  &  &  &  &  &  & \cellcolor{hm!70}К &  & 1 & 0 & 8 & \textcolor{gray}{нет} \\
+\texttt{STRUC-11} & Параметрический бутстреп отношения правдоподобий (LRT) & \cellcolor{hm!22}Ж &  &  &  & \cellcolor{hm!22}Ж &  &  &  &  &  & 0 & 2 & 7 & \textcolor{gray}{нет} \\
+\texttt{STRUC-13} & Сравнение и отбор конфигураций семейств &  &  &  &  &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!22}Ж & 3 & 1 & 1 & \textcolor{gray}{нет} \\
+\texttt{STRUC-16} & Объединение перекрывающихся компонент по критерию унимодальности (DIP-тест) &  &  &  &  &  &  &  &  & \cellcolor{hm!22}Ж &  & 0 & 1 & 1 & \textcolor{gray}{нет} \\
+\texttt{STRUC-21} & Равенство и линейные ограничения параметров компонент & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!22}Ж &  &  &  &  & 2 & 3 & 8 & \textcolor{gray}{нет} \\
+\texttt{STRUC-22} & Асимметричные и тяжелохвостые семейства (Skew-Normal, Student-t) &  &  & \cellcolor{hm!70}К &  &  &  &  &  & \cellcolor{hm!70}К &  & 2 & 0 & 4 & \textcolor{gray}{нет} \\
+\texttt{INIT-02} & Рандомизированный мультистарт & \cellcolor{hm!22}Ж & \cellcolor{hm!70}К &  & \cellcolor{hm!22}Ж &  &  &  &  &  &  & 1 & 2 & 9 & \textcolor{gray}{нет} \\
+\texttt{INIT-03} & Кластеризация данных &  & \cellcolor{hm!22}Ж &  & \cellcolor{hm!70}К & \cellcolor{hm!22}Ж &  &  &  & \cellcolor{hm!70}К &  & 2 & 2 & 16 & \textcolor{gray}{нет} \\
+\texttt{INIT-04} & Квантильное детерминированное разбиение & \cellcolor{hm!70}К & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж &  &  & \cellcolor{hm!22}Ж & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!70}К & 4 & 3 & 4 & \textcolor{gray}{нет} \\
+\texttt{INIT-05} & Инициализация методом моментов по сегментам &  &  &  &  & \cellcolor{hm!70}К &  & \cellcolor{hm!22}Ж &  &  &  & 1 & 1 & 2 & \textcolor{gray}{нет} \\
+\texttt{INIT-06} & Случайный выбор наблюдений &  &  &  & \cellcolor{hm!22}Ж &  &  &  &  &  &  & 0 & 1 & 19 & \textcolor{gray}{нет} \\
+\texttt{TECH-01} & Композитный модульный пайплайн оценивания & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & 10 & 0 & 5 & \cellcolor{yes!30}да \\
+\texttt{TECH-03} & Логарифмическая стабильность вычислений & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & 10 & 0 & 22 & \cellcolor{yes!30}да \\
+\texttt{VIS-01} & Декомпозиция плотности смеси & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & 0 & 10 & 15 & \textcolor{gray}{нет} \\
+\texttt{VIS-02} & Диагностические графики согласия (Q-Q, P-P) & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & 0 & 10 & 3 & \textcolor{gray}{нет} \\
+\texttt{VIS-03} & Профиль выбора числа компонент (AIC, BIC, ICL) & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж &  & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & 0 & 9 & 9 & \textcolor{gray}{нет} \\
+\texttt{VIS-04} & Визуализация скорости сходимости &  &  &  &  & \cellcolor{hm!22}Ж &  &  &  &  & \cellcolor{hm!22}Ж & 0 & 2 & 5 & \textcolor{gray}{нет} \\
+\texttt{VIS-05} & Графики апостериорной неопределенности & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж &  &  &  &  &  & \cellcolor{hm!22}Ж &  & 0 & 4 & 5 & \textcolor{gray}{нет} \\
+\texttt{REPR-01} & Поддержка вероятностных функций (PDF, CDF, PPF) & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & 10 & 0 & 5 & \cellcolor{yes!30}да \\
+\texttt{REPR-02} & Сэмплирование & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & 0 & 10 & 21 & \cellcolor{yes!30}да \\
+\texttt{REPR-03} & Аналитический расчет моментов смеси &  &  &  &  & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К & \cellcolor{hm!70}К &  & \cellcolor{hm!70}К & 5 & 0 & 2 & \cellcolor{part!40}част. \\
+\texttt{PERF-01} & Параллелизация независимых вычислений &  &  &  &  &  &  &  &  &  & \cellcolor{hm!70}К & 1 & 0 & 10 & \textcolor{gray}{нет} \\
+\texttt{PERF-03} & Векторизованные вычисления (NumPy, SIMD) &  &  &  &  &  &  &  &  &  & \cellcolor{hm!70}К & 1 & 0 & 19 & \cellcolor{yes!30}да \\
+\texttt{PERF-04} & Контроль аллокаций памяти и потоковые вычисления &  &  &  &  &  &  &  &  &  & \cellcolor{hm!70}К & 1 & 0 & 14 & \textcolor{gray}{нет} \\
+\texttt{DIAG-01} & Статистические критерии согласия (KS, AD, Chi2) & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж & 0 & 10 & 2 & \textcolor{gray}{нет} \\
+\texttt{DIAG-02} & Стандартные ошибки и доверительные интервалы оценок & \cellcolor{hm!22}Ж &  & \cellcolor{hm!22}Ж &  & \cellcolor{hm!22}Ж & \cellcolor{hm!70}К & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж &  &  & 1 & 5 & 10 & \textcolor{gray}{нет} \\
+\texttt{DIAG-04} & Оценка отделимости и перекрытия компонент & \cellcolor{hm!22}Ж & \cellcolor{hm!22}Ж &  & \cellcolor{hm!22}Ж &  &  &  &  & \cellcolor{hm!22}Ж &  & 0 & 4 & 1 & \textcolor{gray}{нет} \\
+\bottomrule
+\end{longtable}}
+Столбцы 01--10 --- номера сценариев UC-01--UC-10.
+
+\end{landscape}
+\section{Структура критических требований}
+Распределение критических требований сценариев по категориям показывает, какие группы возможностей определяют пригодность инструмента для конкретной задачи.
+{\small
+\begin{longtable}{@{}l rrrrrrrrrr@{}}
+\toprule
+Сценарий & \rotatebox{90}{\scriptsize Оценивание} & \rotatebox{90}{\scriptsize Структура смеси} & \rotatebox{90}{\scriptsize Инициализация} & \rotatebox{90}{\scriptsize Архитектура} & \rotatebox{90}{\scriptsize Инфраструктура} & \rotatebox{90}{\scriptsize Визуализация} & \rotatebox{90}{\scriptsize Специальные методы} & \rotatebox{90}{\scriptsize Представление смеси} & \rotatebox{90}{\scriptsize Производительность} & \rotatebox{90}{\scriptsize Диагностика} \\
+\midrule
+\endhead
+UC-01 & 2 & 3 & 1 & 2 &  &  &  & 1 &  &  \\
+UC-02 & 2 & 3 & 1 & 2 &  &  &  & 1 &  &  \\
+UC-03 & 2 & 2 &  & 2 &  &  &  & 1 &  &  \\
+UC-04 & 2 & 4 & 1 & 2 &  &  &  & 1 &  &  \\
+UC-05 & 3 & 4 & 1 & 2 &  &  &  & 2 &  &  \\
+UC-06 & 4 & 4 &  & 2 &  &  &  & 2 &  & 1 \\
+UC-07 & 3 & 4 & 1 & 2 &  &  &  & 2 &  &  \\
+UC-08 & 2 & 6 & 1 & 2 &  &  &  & 2 &  &  \\
+UC-09 & 3 & 3 & 1 & 2 &  &  &  & 1 &  &  \\
+UC-10 & 4 & 4 & 1 & 2 &  &  &  & 2 & 3 &  \\
+\bottomrule
+\end{longtable}}
+
+\section{Покрытие сценариев инструментами}
+\subsection{Покрытие критических требований}
+Значение --- доля критических требований сценария, выполненных инструментом (частично выполненные с весом $\tfrac12$).
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}l *{11}{r}@{}}
+\toprule
+Инструмент & UC-01 & UC-02 & UC-03 & UC-04 & UC-05 & UC-06 & UC-07 & UC-08 & UC-09 & UC-10 & Ср. \\
+\midrule
+\endhead
+brms & \cellcolor{hm!56}72 & \cellcolor{hm!63}83 & \cellcolor{hm!60}79 & \cellcolor{hm!58}75 & \cellcolor{hm!52}67 & \cellcolor{hm!53}69 & \cellcolor{hm!46}58 & \cellcolor{hm!51}65 & \cellcolor{hm!44}55 & \cellcolor{hm!55}72 & \cellcolor{hm!54}70 \\
+PySATL mpest & \cellcolor{hm!59}78 & \cellcolor{hm!59}78 & \cellcolor{hm!55}71 & \cellcolor{hm!54}70 & \cellcolor{hm!52}67 & \cellcolor{hm!51}65 & \cellcolor{hm!55}71 & \cellcolor{hm!56}73 & \cellcolor{hm!47}60 & \cellcolor{hm!47}59 & \cellcolor{hm!53}69 \\
+mclust (v5+) & \cellcolor{hm!67}89 & \cellcolor{hm!59}78 & \cellcolor{hm!55}71 & \cellcolor{hm!68}90 & \cellcolor{hm!58}75 & \cellcolor{hm!40}50 & \cellcolor{hm!43}54 & \cellcolor{hm!40}50 & \cellcolor{hm!54}70 & \cellcolor{hm!47}59 & \cellcolor{hm!53}69 \\
+FlexMix & \cellcolor{hm!56}72 & \cellcolor{hm!63}83 & \cellcolor{hm!55}71 & \cellcolor{hm!58}75 & \cellcolor{hm!52}67 & \cellcolor{hm!53}69 & \cellcolor{hm!49}62 & \cellcolor{hm!43}54 & \cellcolor{hm!54}70 & \cellcolor{hm!42}53 & \cellcolor{hm!52}68 \\
+mixR & \cellcolor{hm!59}78 & \cellcolor{hm!59}78 & \cellcolor{hm!50}64 & \cellcolor{hm!58}75 & \cellcolor{hm!55}71 & \cellcolor{hm!40}50 & \cellcolor{hm!43}54 & \cellcolor{hm!40}50 & \cellcolor{hm!44}55 & \cellcolor{hm!49}62 & \cellcolor{hm!50}64 \\
+StepMix & \cellcolor{hm!56}72 & \cellcolor{hm!63}83 & \cellcolor{hm!50}64 & \cellcolor{hm!64}85 & \cellcolor{hm!52}67 & \cellcolor{hm!43}54 & \cellcolor{hm!40}50 & \cellcolor{hm!32}38 & \cellcolor{hm!58}75 & \cellcolor{hm!33}41 & \cellcolor{hm!49}63 \\
+Distributions.jl & \cellcolor{hm!52}67 & \cellcolor{hm!52}67 & \cellcolor{hm!50}64 & \cellcolor{hm!47}60 & \cellcolor{hm!49}62 & \cellcolor{hm!45}58 & \cellcolor{hm!46}58 & \cellcolor{hm!48}62 & \cellcolor{hm!36}45 & \cellcolor{hm!51}66 & \cellcolor{hm!48}61 \\
+Rmixmod (mixmod) & \cellcolor{hm!56}72 & \cellcolor{hm!63}83 & \cellcolor{hm!50}64 & \cellcolor{hm!64}85 & \cellcolor{hm!52}67 & \cellcolor{hm!32}38 & \cellcolor{hm!34}42 & \cellcolor{hm!32}38 & \cellcolor{hm!50}65 & \cellcolor{hm!40}50 & \cellcolor{hm!47}61 \\
+rebmix & \cellcolor{hm!56}72 & \cellcolor{hm!56}72 & \cellcolor{hm!50}64 & \cellcolor{hm!50}65 & \cellcolor{hm!46}58 & \cellcolor{hm!43}54 & \cellcolor{hm!40}50 & \cellcolor{hm!37}46 & \cellcolor{hm!44}55 & \cellcolor{hm!49}62 & \cellcolor{hm!47}60 \\
+pomegranate & \cellcolor{hm!52}67 & \cellcolor{hm!52}67 & \cellcolor{hm!50}64 & \cellcolor{hm!58}75 & \cellcolor{hm!46}58 & \cellcolor{hm!37}46 & \cellcolor{hm!40}50 & \cellcolor{hm!40}50 & \cellcolor{hm!44}55 & \cellcolor{hm!47}59 & \cellcolor{hm!46}59 \\
+scikit-learn (sklearn.mixture) & \cellcolor{hm!56}72 & \cellcolor{hm!63}83 & \cellcolor{hm!50}64 & \cellcolor{hm!61}80 & \cellcolor{hm!49}62 & \cellcolor{hm!29}35 & \cellcolor{hm!31}38 & \cellcolor{hm!29}35 & \cellcolor{hm!44}55 & \cellcolor{hm!38}47 & \cellcolor{hm!45}57 \\
+student-mixture & \cellcolor{hm!48}61 & \cellcolor{hm!56}72 & \cellcolor{hm!60}79 & \cellcolor{hm!50}65 & \cellcolor{hm!40}50 & \cellcolor{hm!35}42 & \cellcolor{hm!37}46 & \cellcolor{hm!35}42 & \cellcolor{hm!58}75 & \cellcolor{hm!25}28 & \cellcolor{hm!44}56 \\
+bnpy & \cellcolor{hm!52}67 & \cellcolor{hm!59}78 & \cellcolor{hm!50}64 & \cellcolor{hm!54}70 & \cellcolor{hm!43}54 & \cellcolor{hm!27}31 & \cellcolor{hm!28}33 & \cellcolor{hm!27}31 & \cellcolor{hm!44}55 & \cellcolor{hm!38}47 & \cellcolor{hm!42}53 \\
+sn (Skew-Normal/t) & \cellcolor{hm!44}56 & \cellcolor{hm!44}56 & \cellcolor{hm!45}57 & \cellcolor{hm!44}55 & \cellcolor{hm!52}67 & \cellcolor{hm!35}42 & \cellcolor{hm!31}38 & \cellcolor{hm!35}42 & \cellcolor{hm!33}40 & \cellcolor{hm!29}34 & \cellcolor{hm!39}49 \\
+mixem & \cellcolor{hm!48}61 & \cellcolor{hm!48}61 & \cellcolor{hm!40}50 & \cellcolor{hm!44}55 & \cellcolor{hm!40}50 & \cellcolor{hm!35}42 & \cellcolor{hm!37}46 & \cellcolor{hm!35}42 & \cellcolor{hm!30}35 & \cellcolor{hm!33}41 & \cellcolor{hm!39}48 \\
+kasakh Mixture-Models & \cellcolor{hm!48}61 & \cellcolor{hm!48}61 & \cellcolor{hm!40}50 & \cellcolor{hm!50}65 & \cellcolor{hm!37}46 & \cellcolor{hm!24}27 & \cellcolor{hm!25}29 & \cellcolor{hm!29}35 & \cellcolor{hm!44}55 & \cellcolor{hm!27}31 & \cellcolor{hm!37}46 \\
+ClusterR & \cellcolor{hm!48}61 & \cellcolor{hm!48}61 & \cellcolor{hm!40}50 & \cellcolor{hm!50}65 & \cellcolor{hm!40}50 & \cellcolor{hm!24}27 & \cellcolor{hm!25}29 & \cellcolor{hm!24}27 & \cellcolor{hm!36}45 & \cellcolor{hm!33}41 & \cellcolor{hm!37}46 \\
+GaussianMixtures.jl & \cellcolor{hm!48}61 & \cellcolor{hm!48}61 & \cellcolor{hm!40}50 & \cellcolor{hm!50}65 & \cellcolor{hm!40}50 & \cellcolor{hm!24}27 & \cellcolor{hm!25}29 & \cellcolor{hm!24}27 & \cellcolor{hm!36}45 & \cellcolor{hm!33}41 & \cellcolor{hm!37}46 \\
+EMCluster & \cellcolor{hm!44}56 & \cellcolor{hm!52}67 & \cellcolor{hm!35}43 & \cellcolor{hm!54}70 & \cellcolor{hm!43}54 & \cellcolor{hm!27}31 & \cellcolor{hm!22}25 & \cellcolor{hm!21}23 & \cellcolor{hm!40}50 & \cellcolor{hm!27}31 & \cellcolor{hm!36}45 \\
+teigen & \cellcolor{hm!36}44 & \cellcolor{hm!36}44 & \cellcolor{hm!45}57 & \cellcolor{hm!47}60 & \cellcolor{hm!37}46 & \cellcolor{hm!27}31 & \cellcolor{hm!28}33 & \cellcolor{hm!27}31 & \cellcolor{hm!54}70 & \cellcolor{hm!27}31 & \cellcolor{hm!36}45 \\
+mixtools & \cellcolor{hm!48}61 & \cellcolor{hm!40}50 & \cellcolor{hm!30}36 & \cellcolor{hm!40}50 & \cellcolor{hm!37}46 & \cellcolor{hm!35}42 & \cellcolor{hm!37}46 & \cellcolor{hm!32}38 & \cellcolor{hm!33}40 & \cellcolor{hm!31}38 & \cellcolor{hm!36}45 \\
+mlpack (mlpack::gmm) & \cellcolor{hm!44}56 & \cellcolor{hm!48}61 & \cellcolor{hm!35}43 & \cellcolor{hm!47}60 & \cellcolor{hm!37}46 & \cellcolor{hm!21}23 & \cellcolor{hm!22}25 & \cellcolor{hm!21}23 & \cellcolor{hm!33}40 & \cellcolor{hm!31}38 & \cellcolor{hm!34}41 \\
+mixdist & \cellcolor{hm!44}56 & \cellcolor{hm!36}44 & \cellcolor{hm!25}29 & \cellcolor{hm!40}50 & \cellcolor{hm!37}46 & \cellcolor{hm!29}35 & \cellcolor{hm!31}38 & \cellcolor{hm!32}38 & \cellcolor{hm!19}20 & \cellcolor{hm!40}50 & \cellcolor{hm!33}40 \\
+fpc & \cellcolor{hm!44}56 & \cellcolor{hm!44}56 & \cellcolor{hm!35}43 & \cellcolor{hm!47}60 & \cellcolor{hm!37}46 & \cellcolor{hm!24}27 & \cellcolor{hm!22}25 & \cellcolor{hm!21}23 & \cellcolor{hm!33}40 & \cellcolor{hm!20}22 & \cellcolor{hm!33}40 \\
+CAMAN & \cellcolor{hm!44}56 & \cellcolor{hm!44}56 & \cellcolor{hm!35}43 & \cellcolor{hm!40}50 & \cellcolor{hm!37}46 & \cellcolor{hm!27}31 & \cellcolor{hm!22}25 & \cellcolor{hm!21}23 & \cellcolor{hm!26}30 & \cellcolor{hm!29}34 & \cellcolor{hm!33}39 \\
+Armadillo C++ & \cellcolor{hm!40}50 & \cellcolor{hm!40}50 & \cellcolor{hm!30}36 & \cellcolor{hm!44}55 & \cellcolor{hm!34}42 & \cellcolor{hm!18}19 & \cellcolor{hm!20}21 & \cellcolor{hm!18}19 & \cellcolor{hm!30}35 & \cellcolor{hm!29}34 & \cellcolor{hm!30}36 \\
+distfit & \cellcolor{hm!28}33 & \cellcolor{hm!28}33 & \cellcolor{hm!30}36 & \cellcolor{hm!26}30 & \cellcolor{hm!25}29 & \cellcolor{hm!29}35 & \cellcolor{hm!31}38 & \cellcolor{hm!37}46 & \cellcolor{hm!22}25 & \cellcolor{hm!31}38 & \cellcolor{hm!29}34 \\
+\bottomrule
+\end{longtable}}
+Лучший инструмент для сценария в среднем закрывает 78\,\% его критических требований; полное покрытие отсутствует у всех инструментов во всех сценариях.
+
+\subsection{Сколько инструментов нужно, чтобы закрыть сценарий}
+Если ни один инструмент не закрывает критические требования сценария полностью, возникает вопрос, сколько инструментов пришлось бы совмещать.
+Жадный подбор: на каждом шаге выбирается инструмент, полностью выполняющий наибольшее число ещё не закрытых критических требований. Результат --- верхняя оценка
+размера набора и показатель разрозненности возможностей.
+{\footnotesize
+\begin{longtable}{@{}l r >{\raggedright\arraybackslash}p{8.8cm} >{\raggedright\arraybackslash}p{3.6cm}@{}}
+\toprule
+Сценарий & Набор & Инструменты (сколько критических требований добавляет) & Не закрыто \\
+\midrule
+\endhead
+UC-01 & 2 & mixR (7), PySATL mpest (2) & --- \\
+UC-02 & 2 & StepMix (7), PySATL mpest (2) & --- \\
+UC-03 & 2 & student-mixture (5), PySATL mpest (2) & --- \\
+UC-04 & 2 & StepMix (8), PySATL mpest (2) & --- \\
+UC-05 & 3 & StepMix (7), sn (Skew-Normal/t) (3), PySATL mpest (1) & EST-09 \\
+UC-06 & 5 & FlexMix (8), PySATL mpest (2), sn (Skew-Normal/t) (1), mixR (1), distfit (1) & --- \\
+UC-07 & 4 & PySATL mpest (7), mixR (3), sn (Skew-Normal/t) (1), distfit (1) & --- \\
+UC-08 & 4 & PySATL mpest (8), mixR (3), sn (Skew-Normal/t) (1), distfit (1) & --- \\
+UC-09 & 3 & student-mixture (7), PySATL mpest (2), teigen (1) & --- \\
+UC-10 & 3 & brms (10), mixR (4), sn (Skew-Normal/t) (1) & EST-19 \\
+\bottomrule
+\end{longtable}}
+Среднее число инструментов в наборе: 3.0. Сценарии, у которых после подбора остаются полностью не выполненные никем требования:
+UC-05, UC-10.
+Это значит, что для сценария либо нужно совмещать несколько пакетов (и вручную согласовывать форматы моделей), либо дописывать недостающее.
+
+\part{Разнородные смеси}
+\begin{landscape}
+\section{Полное сопоставление средств для разнородных смесей}
+Разнородные смеси, где компоненты принадлежат разным семействам, --- основной сценарий библиотеки. Полностью допускают их 5 инструментов кроме \texttt{pysatl-mpest}:
+\texttt{pomegranate}, \texttt{mixem}, \texttt{FlexMix}, \texttt{brms}, \texttt{Distributions.jl}; частично --- \texttt{StepMix}, \texttt{Rmixmod (mixmod)}, \texttt{mixdist}. Таблица сопоставляет все 86 требований для этих 9 средств.
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}l >{\raggedright\arraybackslash}p{8.0cm} *{9}{c}@{}}
+\toprule
+ID & Требование & \rotatebox{90}{\scriptsize pomegranate} & \rotatebox{90}{\scriptsize mixem} & \rotatebox{90}{\scriptsize FlexMix} & \rotatebox{90}{\scriptsize brms} & \rotatebox{90}{\scriptsize Distributions.jl} & \rotatebox{90}{\scriptsize PySATL mpest} & \rotatebox{90}{\scriptsize StepMix} & \rotatebox{90}{\scriptsize Rmixmod (mixmod)} & \rotatebox{90}{\scriptsize mixdist} \\
+\midrule
+\endhead
+\midrule \multicolumn{11}{@{}l}{\textbf{Оценивание}} \\
+\texttt{EST-01} & Каркас и фасад классического EM-алгоритма & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{EST-02} & Каркас и фасад ECM-алгоритма & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-03} & Каркас и фасад ECME-алгоритма & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-04} & Direct MLE & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{EST-05} & Стратегия суррогатной Q-функции на M-шаге & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{EST-06} & Стратегия наблюдаемого правдоподобия на M-шаге & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-07} & Стратегия взвешенного метода моментов на M-шаге & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-08} & Стратегия метода L-моментов на M-шаге & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-09} & Замкнутые аналитические формулы параметров на M-шаге & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. \\
+\texttt{EST-10} & Стохастический и классификационный EM-алгоритм & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{EST-11} & Алгоритм Rough-Enhanced-Bayes & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-12} & Фиксация подмножеств параметров & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{yes!30}да \\
+\texttt{EST-13} & Явные параметрические границы & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{EST-14} & Предотвращение вырождения масштаба и сингулярностей правдоподобия & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} \\
+\texttt{EST-15} & Сохранение истории сходимости и времени работы & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. \\
+\texttt{EST-16} & Оценивание по сгруппированным и интервальным данным & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{EST-17} & Взвешенные наблюдения и веса выборки & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{EST-18} & Оценивание по цензурированным и усеченным данным & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-19} & Ускорение сходимости EM-алгоритма (Aitken, SQUAREM, PX-EM) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. \\
+\texttt{EST-20} & Рекурсивный потоковый EM-алгоритм & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-21} & Оценивание методом минимального расстояния (Hellinger, Wasserstein) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. \\
+\texttt{EST-22} & Покомпонентный EM-алгоритм (CW-EM, SAGE) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-23} & Робастное оценивание по усеченному правдоподобию (TCLUST, C-шаг) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{EST-24} & Байесовское сэмплирование методом расширения данных (Gibbs, MCMC) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Структура смеси}} \\
+\texttt{STRUC-01} & Однородные смеси распределений & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{STRUC-02} & Разнородные смеси распределений & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. \\
+\texttt{STRUC-03} & Нормальное семейство распределений & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{STRUC-04} & Экспоненциальное семейство распределений & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{STRUC-05} & Асимметричные положительные семейства (Weibull, Gamma, Lognormal) & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{STRUC-06} & Тяжелохвостые семейства (Pareto, Cauchy) & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-07} & Семейства на ограниченном носителе (Beta, Uniform) & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-08} & Оценивание распределений с неизвестным порогом & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. \\
+\texttt{STRUC-09} & Информационные критерии выбора числа компонент (AIC, BIC, CAIC) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. \\
+\texttt{STRUC-10} & Критерий интегрированного правдоподобия классификации (ICL) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{STRUC-11} & Параметрический бутстреп отношения правдоподобий (LRT) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-12} & Динамическое удаление вырожденных компонент & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-13} & Сравнение и отбор конфигураций семейств & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-14} & Жадное инкрементальное обучение порядка смеси & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-15} & Динамические переходы слияния и расщепления (SMEM) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-16} & Объединение перекрывающихся компонент по критерию унимодальности (DIP-тест) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-17} & Непараметрическое градиентное нахождение числа компонент (NPMLE) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-18} & Предсказание порядка смеси через мета-обучение (Meta-Learning) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-19} & Классификация параметрических семейств с помощью нейросетей & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-20} & Амортизированный нейросетевой вывод параметров смеси (Deep Sets) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-21} & Равенство и линейные ограничения параметров компонент & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{STRUC-22} & Асимметричные и тяжелохвостые семейства (Skew-Normal, Student-t) & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{STRUC-23} & Вариационный байесовский вывод (VBEM) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Инициализация}} \\
+\texttt{INIT-01} & Пользовательская явная инициализация & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{yes!30}да \\
+\texttt{INIT-02} & Рандомизированный мультистарт & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{INIT-03} & Кластеризация данных & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{INIT-04} & Квантильное детерминированное разбиение & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{INIT-05} & Инициализация методом моментов по сегментам & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{INIT-06} & Случайный выбор наблюдений & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Архитектура}} \\
+\texttt{TECH-01} & Композитный модульный пайплайн оценивания & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{TECH-02} & Расширяемость новыми распределениями & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{TECH-03} & Логарифмическая стабильность вычислений & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. \\
+\texttt{TECH-04} & Иммутабельность структур параметров модели & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{TECH-05} & scikit-learn совместимый интерфейс & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Инфраструктура}} \\
+\texttt{INFRA-01} & Декларативное управление зависимостями и сборкой & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{INFRA-02} & Юнит- и интеграционное тестирование с высоким покрытием & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. \\
+\texttt{INFRA-03} & Property-based тестирование математических инвариантов & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{INFRA-04} & Автоматизированный статический анализ и линтинг & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. \\
+\texttt{INFRA-05} & Автоматизированная непрерывная интеграция & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{INFRA-06} & Автоматическая генерация документации с математикой & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Визуализация}} \\
+\texttt{VIS-01} & Декомпозиция плотности смеси & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\texttt{VIS-02} & Диагностические графики согласия (Q-Q, P-P) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{VIS-03} & Профиль выбора числа компонент (AIC, BIC, ICL) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{VIS-04} & Визуализация скорости сходимости & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{VIS-05} & Графики апостериорной неопределенности & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Специальные методы}} \\
+\texttt{PROP-01} & Декларативное задание параметрических ограничений (RESTRICT) & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{yes!30}да \\
+\texttt{PROP-02} & Скорректированные тесты отношения правдоподобий (VLMR, LMR, MLRT) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{PROP-03} & Адаптивная регуляризация и стабилизация масштаба & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \textcolor{gray}{нет} \\
+\texttt{PROP-04} & Символьно-аналитическое оценивание смесей высокой точности & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{PROP-05} & Автоматический эвристический перебор аналитических форм компонент & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Представление смеси}} \\
+\texttt{REPR-01} & Поддержка вероятностных функций (PDF, CDF, PPF) & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{REPR-02} & Сэмплирование & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{REPR-03} & Аналитический расчет моментов смеси & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{REPR-04} & Сериализация смеси в JSON & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Производительность}} \\
+\texttt{PERF-01} & Параллелизация независимых вычислений & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{PERF-02} & Кэширование промежуточных структур и плотностей & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \textcolor{gray}{нет} \\
+\texttt{PERF-03} & Векторизованные вычисления (NumPy, SIMD) & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} \\
+\texttt{PERF-04} & Контроль аллокаций памяти и потоковые вычисления & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{yes!30}да & \cellcolor{yes!30}да \\
+\midrule \multicolumn{11}{@{}l}{\textbf{Диагностика}} \\
+\texttt{DIAG-01} & Статистические критерии согласия (KS, AD, Chi2) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{DIAG-02} & Стандартные ошибки и доверительные интервалы оценок & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \cellcolor{yes!30}да \\
+\texttt{DIAG-03} & Бенчмарки производительности (ASV, pytest-benchmark) & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{yes!30}да & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\texttt{DIAG-04} & Оценка отделимости и перекрытия компонент & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \textcolor{gray}{нет} & \cellcolor{part!40}част. & \textcolor{gray}{нет} & \textcolor{gray}{нет} \\
+\bottomrule
+\end{longtable}}
+
+\end{landscape}
+\section{Выводы по разнородным смесям}
+{\small
+\begin{center}
+\begin{tabular}{@{}l l r r r r@{}}
+\toprule
+Инструмент & Разнородность & Все, \% & Обяз., \% & \shortstack[r]{\scriptsize В тройке лучших\\\scriptsize по 5 разнор. сценариям} & \shortstack[r]{\scriptsize Среднее покрытие\\\scriptsize разнор. сценариев, \%} \\
+\midrule
+pomegranate & полностью & \cellcolor{hm!30}36 & \cellcolor{hm!47}60 & 0 & \cellcolor{hm!43}54 \\
+mixem & полностью & \cellcolor{hm!18}19 & \cellcolor{hm!36}44 & 0 & \cellcolor{hm!36}44 \\
+FlexMix & полностью & \cellcolor{hm!38}47 & \cellcolor{hm!55}72 & 3 & \cellcolor{hm!48}62 \\
+brms & полностью & \cellcolor{hm!43}54 & \cellcolor{hm!51}66 & 4 & \cellcolor{hm!53}69 \\
+Distributions.jl & полностью & \cellcolor{hm!29}35 & \cellcolor{hm!47}60 & 3 & \cellcolor{hm!48}61 \\
+PySATL mpest & полностью & \cellcolor{hm!33}40 & \cellcolor{hm!62}81 & 3 & \cellcolor{hm!53}68 \\
+StepMix & частично & \cellcolor{hm!32}39 & \cellcolor{hm!48}62 & 0 & \cellcolor{hm!40}49 \\
+Rmixmod (mixmod) & частично & \cellcolor{hm!32}38 & \cellcolor{hm!42}53 & 0 & \cellcolor{hm!38}47 \\
+mixdist & частично & \cellcolor{hm!28}33 & \cellcolor{hm!39}49 & 0 & \cellcolor{hm!31}38 \\
+\bottomrule
+\end{tabular}
+\end{center}}
+\begin{itemize}
+\item Схему ECME среди разнородных средств реализует только \texttt{PySATL mpest}; блочную схему ECM --- \texttt{FlexMix}, \texttt{PySATL mpest}.
+Остальные средства либо оптимизируют все параметры сразу (\texttt{pomegranate}, \texttt{mixem}), либо вообще не используют итерационное оценивание
+(\texttt{brms} применяет байесовское сэмплирование).
+\item Мультистарт, информационные критерии, фиксацию параметров и явные границы одновременно выполняет \texttt{brms}.
+Этот инструмент не оценивает смесь итерационно по максимуму правдоподобия.
+\item Сравнение конфигураций семейств (\texttt{STRUC-13}) не выполняет ни одно из этих средств; для разнородных смесей остаётся
+комбинаторным перебором, который нужно ограничивать порядком и бюджетом.
+\item Бутстреп отношения правдоподобий не реализован ни в одном из этих средств.
+\end{itemize}
+
+\part{Положение \texttt{pysatl-mpest}}
+\begin{landscape}
+\section{Пробелы}
+\texttt{pysatl-mpest} выполняет полностью 31 из 86 требований, частично --- 6, не выполняет --- 49.
+Покрытие: общее 40\,\%, обязательные 81\,\%, желательные 20\,\%, факультативные 0\,\%.
+Возможности, которые больше не выполняет полностью ни один инструмент: \texttt{EST-06} Стратегия наблюдаемого правдоподобия на M-шаге; \texttt{STRUC-08} Оценивание распределений с неизвестным порогом; \texttt{INFRA-03} Property-based тестирование математических инвариантов.
+
+Таблица содержит все требования, не выполненные полностью, в порядке приоритета, числа сценариев с критическим требованием и числа сценариев с желательным.
+<<Др.>> --- сколько других инструментов выполняют требование полностью; <<Доноры>> --- первые из них (готовые решения, которые можно изучить).
+{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}l >{\raggedright\arraybackslash}p{8.2cm} l l r r r >{\raggedright\arraybackslash}p{6.2cm}@{}}
+\toprule
+ID & Требование & Приоритет & Статус & Др. & Крит. & Жел. & Доноры \\
+\midrule
+\endhead
+\texttt{EST-01} & Каркас и фасад классического EM-алгоритма & обязательные & \cellcolor{part!40}част. & 22 & 10 & --- & scikit-learn (sklearn.mixture), pomegranate, mixem, StepMix \\
+\texttt{STRUC-09} & Информационные критерии выбора числа компонент (AIC, BIC, CAIC) & обязательные & \cellcolor{part!40}част. & 15 & 10 & --- & scikit-learn (sklearn.mixture), StepMix, student-mixture, kasakh Mixture-Models \\
+\texttt{INIT-03} & Кластеризация данных & обязательные & \textcolor{gray}{нет} & 16 & 2 & 2 & scikit-learn (sklearn.mixture), pomegranate, StepMix, student-mixture \\
+\texttt{INIT-02} & Рандомизированный мультистарт & обязательные & \textcolor{gray}{нет} & 9 & 1 & 2 & scikit-learn (sklearn.mixture), StepMix, student-mixture, FlexMix \\
+\texttt{EST-09} & Замкнутые аналитические формулы параметров на M-шаге & обязательные & \cellcolor{part!40}част. & 0 & 1 & --- & --- \\
+\texttt{VIS-01} & Декомпозиция плотности смеси & обязательные & \textcolor{gray}{нет} & 15 & --- & 10 & StepMix, distfit, mclust (v5+), mixtools \\
+\texttt{EST-13} & Явные параметрические границы & обязательные & \textcolor{gray}{нет} & 5 & --- & 3 & kasakh Mixture-Models, distfit, mixR, mixdist \\
+\texttt{STRUC-11} & Параметрический бутстреп отношения правдоподобий (LRT) & обязательные & \textcolor{gray}{нет} & 7 & --- & 2 & StepMix, mclust (v5+), mixtools, mixR \\
+\texttt{REPR-03} & Аналитический расчет моментов смеси & желательные & \cellcolor{part!40}част. & 2 & 5 & --- & sn (Skew-Normal/t), Distributions.jl \\
+\texttt{INIT-04} & Квантильное детерминированное разбиение & желательные & \textcolor{gray}{нет} & 4 & 4 & 3 & mclust (v5+), mixtools, mixR, mixdist \\
+\texttt{STRUC-13} & Сравнение и отбор конфигураций семейств & желательные & \textcolor{gray}{нет} & 1 & 3 & 1 & distfit \\
+\texttt{STRUC-21} & Равенство и линейные ограничения параметров компонент & желательные & \textcolor{gray}{нет} & 8 & 2 & 3 & StepMix, mclust (v5+), FlexMix, Rmixmod (mixmod) \\
+\texttt{DIAG-02} & Стандартные ошибки и доверительные интервалы оценок & желательные & \textcolor{gray}{нет} & 10 & 1 & 5 & StepMix, mclust (v5+), mixtools, FlexMix \\
+\texttt{INIT-05} & Инициализация методом моментов по сегментам & желательные & \textcolor{gray}{нет} & 2 & 1 & 1 & mixR, sn (Skew-Normal/t) \\
+\texttt{PERF-01} & Параллелизация независимых вычислений & желательные & \textcolor{gray}{нет} & 10 & 1 & --- & scikit-learn (sklearn.mixture), StepMix, mclust (v5+), Rmixmod (mixmod) \\
+\texttt{STRUC-10} & Критерий интегрированного правдоподобия классификации (ICL) & желательные & \textcolor{gray}{нет} & 8 & 1 & --- & StepMix, kasakh Mixture-Models, mclust (v5+), FlexMix \\
+\texttt{EST-16} & Оценивание по сгруппированным и интервальным данным & желательные & \textcolor{gray}{нет} & 3 & 1 & --- & mixR, rebmix, mixdist \\
+\texttt{VIS-02} & Диагностические графики согласия (Q-Q, P-P) & желательные & \textcolor{gray}{нет} & 3 & --- & 10 & distfit, mixR, brms \\
+\texttt{DIAG-01} & Статистические критерии согласия (KS, AD, Chi2) & желательные & \textcolor{gray}{нет} & 2 & --- & 10 & distfit, mixdist \\
+\texttt{VIS-03} & Профиль выбора числа компонент (AIC, BIC, ICL) & желательные & \textcolor{gray}{нет} & 9 & --- & 9 & StepMix, distfit, mclust (v5+), FlexMix \\
+\texttt{INIT-06} & Случайный выбор наблюдений & желательные & \textcolor{gray}{нет} & 19 & --- & 1 & scikit-learn (sklearn.mixture), pomegranate, StepMix, student-mixture \\
+\texttt{EST-17} & Взвешенные наблюдения и веса выборки & желательные & \textcolor{gray}{нет} & 16 & --- & 1 & scikit-learn (sklearn.mixture), pomegranate, StepMix, mclust (v5+) \\
+\texttt{STRUC-16} & Объединение перекрывающихся компонент по критерию унимодальности (DIP-тест) & желательные & \textcolor{gray}{нет} & 1 & --- & 1 & fpc \\
+\texttt{EST-22} & Покомпонентный EM-алгоритм (CW-EM, SAGE) & желательные & \textcolor{gray}{нет} & 0 & --- & 1 & --- \\
+\texttt{TECH-05} & scikit-learn совместимый интерфейс & желательные & \textcolor{gray}{нет} & 8 & --- & --- & scikit-learn (sklearn.mixture), StepMix, student-mixture, rebmix \\
+\texttt{EST-04} & Direct MLE & желательные & \textcolor{gray}{нет} & 6 & --- & --- & kasakh Mixture-Models, distfit, mixdist, sn (Skew-Normal/t) \\
+\texttt{REPR-04} & Сериализация смеси в JSON & желательные & \textcolor{gray}{нет} & 4 & --- & --- & pomegranate, distfit, Rmixmod (mixmod), mlpack (mlpack::gmm) \\
+\texttt{STRUC-15} & Динамические переходы слияния и расщепления (SMEM) & желательные & \textcolor{gray}{нет} & 3 & --- & --- & rebmix, GaussianMixtures.jl, bnpy \\
+\texttt{EST-07} & Стратегия взвешенного метода моментов на M-шаге & желательные & \cellcolor{part!40}част. & 1 & --- & --- & sn (Skew-Normal/t) \\
+\texttt{STRUC-17} & Непараметрическое градиентное нахождение числа компонент (NPMLE) & желательные & \textcolor{gray}{нет} & 1 & --- & --- & CAMAN \\
+\texttt{EST-08} & Стратегия метода L-моментов на M-шаге & желательные & \cellcolor{part!40}част. & 0 & --- & --- & --- \\
+\texttt{STRUC-14} & Жадное инкрементальное обучение порядка смеси & желательные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\texttt{STRUC-18} & Предсказание порядка смеси через мета-обучение (Meta-Learning) & желательные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\texttt{STRUC-19} & Классификация параметрических семейств с помощью нейросетей & желательные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\texttt{STRUC-20} & Амортизированный нейросетевой вывод параметров смеси (Deep Sets) & желательные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\texttt{STRUC-22} & Асимметричные и тяжелохвостые семейства (Skew-Normal, Student-t) & факультативные & \textcolor{gray}{нет} & 4 & 2 & --- & student-mixture, teigen, sn (Skew-Normal/t), brms \\
+\texttt{EST-19} & Ускорение сходимости EM-алгоритма (Aitken, SQUAREM, PX-EM) & факультативные & \textcolor{gray}{нет} & 0 & 1 & 1 & --- \\
+\texttt{PERF-04} & Контроль аллокаций памяти и потоковые вычисления & факультативные & \textcolor{gray}{нет} & 14 & 1 & --- & scikit-learn (sklearn.mixture), pomegranate, mixR, rebmix \\
+\texttt{EST-18} & Оценивание по цензурированным и усеченным данным & факультативные & \textcolor{gray}{нет} & 2 & 1 & --- & mixR, brms \\
+\texttt{VIS-05} & Графики апостериорной неопределенности & факультативные & \textcolor{gray}{нет} & 5 & --- & 4 & StepMix, mclust (v5+), mixtools, FlexMix \\
+\texttt{DIAG-04} & Оценка отделимости и перекрытия компонент & факультативные & \textcolor{gray}{нет} & 1 & --- & 4 & fpc \\
+\texttt{EST-24} & Байесовское сэмплирование методом расширения данных (Gibbs, MCMC) & факультативные & \textcolor{gray}{нет} & 1 & --- & 4 & brms \\
+\texttt{VIS-04} & Визуализация скорости сходимости & факультативные & \textcolor{gray}{нет} & 5 & --- & 2 & mixtools, Rmixmod (mixmod), brms, bnpy \\
+\texttt{EST-20} & Рекурсивный потоковый EM-алгоритм & факультативные & \textcolor{gray}{нет} & 1 & --- & 1 & bnpy \\
+\texttt{DIAG-03} & Бенчмарки производительности (ASV, pytest-benchmark) & факультативные & \textcolor{gray}{нет} & 4 & --- & --- & ClusterR, brms, mlpack (mlpack::gmm), bnpy \\
+\texttt{PROP-01} & Декларативное задание параметрических ограничений (RESTRICT) & факультативные & \textcolor{gray}{нет} & 4 & --- & --- & StepMix, FlexMix, mixdist, brms \\
+\texttt{PROP-03} & Адаптивная регуляризация и стабилизация масштаба & факультативные & \textcolor{gray}{нет} & 4 & --- & --- & scikit-learn (sklearn.mixture), mclust (v5+), brms, bnpy \\
+\texttt{EST-10} & Стохастический и классификационный EM-алгоритм & факультативные & \textcolor{gray}{нет} & 3 & --- & --- & mixtools, FlexMix, Rmixmod (mixmod) \\
+\texttt{STRUC-23} & Вариационный байесовский вывод (VBEM) & факультативные & \textcolor{gray}{нет} & 3 & --- & --- & scikit-learn (sklearn.mixture), student-mixture, bnpy \\
+\texttt{EST-11} & Алгоритм Rough-Enhanced-Bayes & факультативные & \textcolor{gray}{нет} & 1 & --- & --- & rebmix \\
+\texttt{EST-23} & Робастное оценивание по усеченному правдоподобию (TCLUST, C-шаг) & факультативные & \textcolor{gray}{нет} & 1 & --- & --- & fpc \\
+\texttt{EST-21} & Оценивание методом минимального расстояния (Hellinger, Wasserstein) & факультативные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\texttt{PROP-02} & Скорректированные тесты отношения правдоподобий (VLMR, LMR, MLRT) & факультативные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\texttt{PROP-04} & Символьно-аналитическое оценивание смесей высокой точности & факультативные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\texttt{PROP-05} & Автоматический эвристический перебор аналитических форм компонент & факультативные & \textcolor{gray}{нет} & 0 & --- & --- & --- \\
+\bottomrule
+\end{longtable}}
+
+\end{landscape}
+\section{Приоритеты развития}\label{sec:roadmap}
+Чтобы упорядочить пробелы по пользе для прикладных задач, для каждого невыполненного требования рассчитан средний прирост покрытия критических требований по 10 сценариям:
+прирост равен сумме по сценариям, где требование критическое, величины (недостающая доля требования)/(число критических требований сценария), делённой на 10.
+Таким образом, требование ценнее, если оно критично для многих сценариев с коротким списком критических требований. Расчёт не учитывает трудоёмкость реализации.
+
+В таблице: <<Сцен.>> --- число сценариев с критическим требованием, <<Прирост>> --- вклад требования в среднее покрытие (процентные пункты), <<Накопл.>> --- среднее покрытие после закрытия этого и всех предыдущих пробелов (\%).
+
+Исходное среднее покрытие критических требований по сценариям: 69\,\%. Если довести до полного выполнения все обязательные требования (в том числе выполненные частично), оно станет 82\,\%,
+общее покрытие --- 47\,\%; если закрыть все критические требования сценариев --- 100\,\%.
+{\footnotesize
+\begin{longtable}{@{}r l >{\raggedright\arraybackslash}p{5.8cm} l r r r@{}}
+\toprule
+\# & ID & Требование & Приоритет & Сцен. & Прирост & Накопл. \\
+\midrule
+\endhead
+1 & \texttt{EST-01} & Каркас и фасад классического EM-алгоритма & обязательные & 10 & 4.7 & 74.0 \\
+2 & \texttt{STRUC-09} & Информационные критерии выбора числа компонент (AIC, BIC, CAIC) & обязательные & 10 & 4.7 & 78.7 \\
+3 & \texttt{INIT-04} & Квантильное детерминированное разбиение & желательные & 4 & 3.3 & 82.1 \\
+4 & \texttt{STRUC-22} & Асимметричные и тяжелохвостые семейства (Skew-Normal, Student-t) & факультативные & 2 & 2.4 & 84.5 \\
+5 & \texttt{STRUC-13} & Сравнение и отбор конфигураций семейств & желательные & 3 & 2.4 & 86.9 \\
+6 & \texttt{INIT-03} & Кластеризация данных & обязательные & 2 & 2.0 & 88.9 \\
+7 & \texttt{REPR-03} & Аналитический расчет моментов смеси & желательные & 5 & 1.9 & 90.8 \\
+8 & \texttt{STRUC-21} & Равенство и линейные ограничения параметров компонент & желательные & 2 & 1.8 & 92.6 \\
+9 & \texttt{INIT-02} & Рандомизированный мультистарт & обязательные & 1 & 1.1 & 93.7 \\
+10 & \texttt{STRUC-10} & Критерий интегрированного правдоподобия классификации (ICL) & желательные & 1 & 1.0 & 94.7 \\
+11 & \texttt{INIT-05} & Инициализация методом моментов по сегментам & желательные & 1 & 0.8 & 95.5 \\
+12 & \texttt{DIAG-02} & Стандартные ошибки и доверительные интервалы оценок & желательные & 1 & 0.8 & 96.3 \\
+\bottomrule
+\end{longtable}}
+Первые двенадцать пробелов поднимают среднее покрытие с 69\,\% до 96\,\%.
+Порядок следует читать как ориентир: он основан на критичности для выбранных сценариев, а не на оценке стоимости разработки.
+
+\section{Что ещё следует из таблиц}
+\begin{itemize}
+\item Обязательные требования, не выполненные \texttt{pysatl-mpest}: кластеризация данных; рандомизированный мультистарт; декомпозиция плотности смеси; явные параметрические границы; параметрический бутстреп отношения правдоподобий (LRT). Для каждого из них в таблице пробелов указаны инструменты-доноры.
+\item Критические требования не менее чем двух сценариев, выполненные не полностью: каркас и фасад классического EM-алгоритма; кластеризация данных; квантильное детерминированное разбиение; аналитический расчет моментов смеси; информационные критерии выбора числа компонент (AIC, BIC, CAIC); сравнение и отбор конфигураций семейств; равенство и линейные ограничения параметров компонент; асимметричные и тяжелохвостые семейства (Skew-Normal, Student-t).
+\item Связь методов EM, ECM и ECME с объёмом данных и числом компонент в базе не оценивалась: сценарии различаются выборкой
+(малая, умеренная, большая, очень большая) и знанием числа компонент, но оценки фиксируют наличие метода, а не его поведение.
+Выбор метода под класс сценария проверяется экспериментально.
+\end{itemize}
+
+\end{document}

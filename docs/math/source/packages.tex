@@ -1,0 +1,44 @@
+\usepackage{graphicx}
+\usepackage{subfiles}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{amsmath, amsthm, amsfonts, thmtools, mathtools}
+\graphicspath{{images/}}
+
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+\setmainfont{CMU Serif}
+\newfontfamily{\cyrillicfonttt}{CMU Typewriter Text}
+
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=blue,
+	urlcolor=black
+}
+\usepackage{amssymb}
+\usepackage[breakable]{tcolorbox}
+
+\usepackage{tikz}
+%\usepackage{tikz-cd}
+\usetikzlibrary{cd, automata,arrows,positioning,calc, babel}
+\usepackage{pgfplots}
+
+\usepackage{bbold}
+
+\usepackage{xcolor}
+
+\usepackage[
+	backend=biber,
+	style=gost-numeric,
+	sorting=none
+]{biblatex}
+
+% Указываем biblatex, какой файл использовать для библиографии
+\addbibresource{ref.bib}

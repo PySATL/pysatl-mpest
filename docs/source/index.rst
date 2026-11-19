@@ -6,18 +6,21 @@
 Mpest documentation
 ===================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
 
 .. toctree::
    :maxdepth: 2
    :caption: Quick Start
 
-   intro
+   user_guide/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Design
+
+   design/index
 
 .. toctree::
    :maxdepth: 2
-   :caption: API:
+   :caption: API
 
-   api/modules
+   api/index
