@@ -70,7 +70,8 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/build/
+docs/source/**/generated/
 
 # PyBuilder
 .pybuilder/
@@ -166,3 +167,9 @@ cython_debug/
 #test results
 */results/*.pkl
 */results/*.csv
+
+# local agent instructions
+AGENTS.md
+
+# mutation testing
+mutants/

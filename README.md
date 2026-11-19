@@ -4,13 +4,15 @@
 
 ## Installation
 
+The package is developed with [Poetry](https://python-poetry.org/). Clone the repository and install the dependencies:
+
 ```
-pip install mpest
+poetry install
 ```
 
 ## Abstract
 
-This package contains realization of em algorithm for solving the parameter estimation of mixture distribution problem:
+This package contains realization of EM-type algorithms for solving the parameter estimation of mixture distribution problem:
 
 $$p(x | \Omega, F, \Theta) = \sum_{j=1}^k \omega_j f_j(x | \theta_j)$$
 
@@ -21,82 +23,78 @@ $$p(x | \Omega, F, \Theta) = \sum_{j=1}^k \omega_j f_j(x | \theta_j)$$
 
 The problem is to find $\Omega$ and $\Theta$ params of custom mixture distribution with known (or guessed) $k$, $F$ and guessed or randomized initial approximation.
 
-This package uses EM algorithm tuned to work with different distributions models and optimizers, which could match the given interfaces. This allows using this package even for mixture distribution of different distributions classes. For example mixture distribution of both Gaussian and Exponential distributions.
+The components of a mixture are distributions of [pysatl-core](https://github.com/PySATL/pysatl-core), so the package works with any family registered there, and a mixture may consist of different families, for example Gaussian and exponential ones. The package itself is concerned with the estimation algorithms and the optimizers they use.
 
 ## Usage
 
-The package can work with mixture distribution of any combination of models, which implements `AModel` abstract class. EM algorithm result can be calculated by using `EM` class with `AOptimizer` implementation and guessed or random initial approximation.
+A component is created from a family that is registered in `pysatl-core`: `normal(mu=0.0, sigma=1.0)` is a normal distribution, and `normal.view(mu=0.0)(sigma=1.0)` is one whose mean is fixed and is not estimated. A `MixtureModel` holds the components and their weights. Importing `pysatl_mpest` registers the built-in families of `pysatl-core`.
 
-Given samples should be wrapped in `MixtureDistribution` then by using `EM.solve` the result will be calculated. `EM` class depends on `ABreakpointer`, `ADistributionChecker` and `AMethod` objects. :
-- `ABreakpointer` class $-$ the EM algorithm breakpointer function. There are few basic realizations of that abstract class in that package.
-- `ADistributionChecker` class $-$ sometimes because of using math optimizers in M-step of EM algorithm, some distributions inside mixture distribution can become degenerated. Such distributions may be detected and removed from calculations. There are few basic realizations of that abstract class in that package.
-- `Method` class $-$ for E and M steps. In each method there are few variants of E step. Sometimes M step object uses `AOptimizer` :
-- - `AOptimizer`/`AOptimizerJacobian` classes $-$ math optimizers for M step of algorithm. There are few SciPy optimizers made follow the given interfaces.
+The estimators fit a `MixtureModel` to a sample starting from an initial approximation:
+
+- `EM` fits the mixture by the classic Expectation-Maximization algorithm: the E-step computes the responsibilities of the observations and the M-step updates the weights and every free parameter of each component by maximizing the Q-function.
+- `ECM` maximizes the expected complete-data log-likelihood (the Q-function) separately for every component.
+- `ECME` can maximize the observed data likelihood directly instead, for the components you choose.
+
+All three take the same arguments:
+
+- `breakpointers` - the stopping criteria. `StepBreakpointer(max_steps)` stops after a number of iterations, `LikelihoodBreakpointer(threshold)` stops when the log-likelihood no longer changes by more than the threshold.
+- `pruners` - strategies that remove components during the fit. `PriorThresholdPruner(threshold)` removes the components whose weight falls below the threshold. May be empty.
+- `optimizer` - a numerical optimizer for the parameters that have no closed-form estimate: `ScipyNelderMead` or `ScipyPowell`. For the normal (`meanStd`) and exponential (`rate`) parametrizations the estimates are computed analytically.
+
+Note: the current `ECM` implementation performs the same component-wise Q-function updates as `EM`.
 
 ### Code example
 
 ```Python
-import numpy as np
+from pysatl_core.families import ParametricFamilyRegister
+from pysatl_core.types import FamilyName
 
-import matplotlib.pyplot as plt
-import seaborn as sns
+from pysatl_mpest.core import MixtureModel
+from pysatl_mpest.estimators import EM
+from pysatl_mpest.estimators.iterative import LikelihoodBreakpointer, PriorThresholdPruner, StepBreakpointer
+from pysatl_mpest.optimizers import ScipyNelderMead
 
-from mpest import Distribution, MixtureDistribution, Problem
-from mpest.models import WeibullModelExp, GaussianModel
-from mpest.em.methods.method import Method
-from mpest.em.methods.likelihood_method import BayesEStep, LikelihoodMStep
-from mpest.optimizers.scipy_cobyla import ScipyCOBYLA
-from mpest.em.breakpointers import StepCountBreakpointer
-from mpest.em.distribution_checkers import FiniteChecker
-from mpest.em import EM
+normal = ParametricFamilyRegister.get(FamilyName.NORMAL)
 
-base_mixture_distribution = MixtureDistribution.from_distributions(
-    [
-        Distribution.from_params(WeibullModelExp, [0.5, 1.0]),
-        Distribution.from_params(GaussianModel, [5.0, 1.0]),
-    ],
-    [0.33, 0.66],
+
+def show(mixture: MixtureModel) -> None:
+    for weight, component in zip(mixture.weights, mixture):
+        parameters = {name: round(value, 3) for name, value in component.parameters.items()}
+        print(f"weight={weight:.3f}  {parameters}")
+
+
+# A sample from a mixture of two normal distributions.
+truth = MixtureModel([normal(mu=0.0, sigma=1.0), normal(mu=6.0, sigma=1.5)], weights=[0.4, 0.6])
+X = truth.generate(size=2000, random_state=0)
+
+# The initial approximation: the number and the families of the components are known, the parameters are guessed.
+start = MixtureModel([normal(mu=1.0, sigma=2.0), normal(mu=4.0, sigma=2.0)], weights=[0.5, 0.5])
+
+em = EM(
+    breakpointers=[LikelihoodBreakpointer(1e-6), StepBreakpointer(200)],
+    pruners=[PriorThresholdPruner(0.05)],
+    optimizer=ScipyNelderMead(),
 )
+show(em.fit(X, start))
 
-x = base_mixture_distribution.generate(200)
-
-problem = Problem(
-    x,
-    MixtureDistribution.from_distributions(
-        [
-            Distribution.from_params(WeibullModelExp, [1.0, 2.0]),
-            Distribution.from_params(GaussianModel, [0.0, 5.0]),
-        ]
-    ),
-)
-
-e = BayesEStep()
-m = LikelihoodMStep(ScipyCOBYLA())
-method = Method(e, m)
-em = EM(StepCountBreakpointer(max_step=32), FiniteChecker(), method=method)
-
-result = em.solve(problem)
-
-
-fig, axs = plt.subplots()
-axs.set_xlabel("x")
-
-sns.histplot(x, color="lightsteelblue")
-
-axs_ = axs.twinx()
-axs_.set_ylabel("p(x)")
-axs_.set_yscale("log")
-
-X = np.linspace(0.001, max(x), 2048)
-axs_.plot(X, [base_mixture_distribution.pdf(x) for x in X], color="green", label="base")
-axs_.plot(X, [result.result.pdf(x) for x in X], color="red", label="result")
-
-plt.legend()
-plt.show()
+# The mean of the first component is known: fix it, and only its standard deviation is estimated.
+start = MixtureModel([normal.view(mu=0.0)(sigma=2.0), normal(mu=4.0, sigma=2.0)], weights=[0.5, 0.5])
+show(em.fit(X, start))
 ```
-![plot](https://github.com/toxakaz/EM-algo/raw/main/examples/readme_example/example.png)
+
+Output:
+
+```
+weight=0.405  {'mu': -0.052, 'sigma': 0.972}
+weight=0.595  {'mu': 5.978, 'sigma': 1.495}
+weight=0.406  {'sigma': 0.98}
+weight=0.594  {'mu': 5.984, 'sigma': 1.489}
+```
+
+`parameters` of a component lists only its free parameters, so the fixed mean of the first component is not shown in the second fit; it stays exactly `0.0`.
 
 ## Requirements
-- python >= 3.11
+- python >= 3.12, < 3.14
 - numpy
 - scipy
+- pysatl-core

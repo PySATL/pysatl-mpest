@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "mpest"
+name = "pysatl_mpest"
 version = "0.1.0"
 description = "Parameter estimation of mixture distribution problem solver, based on EM algorithm"
 authors = ["ToxaKaz <anton.a.kazancev@gmail.com>", "iraedeus <dtotjmyanin@mail.ru>"]
@@ -16,35 +16,32 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = ">=3.11"
-matplotlib = ">=3.10.0,<4.0.0"
+python = ">=3.12,<3.14"
 numpy = ">=2.2.3,<3.0.0"
-scikit-learn = ">=1.6.1,<2.0.0"
 scipy = ">=1.15.2,<2.0.0"
-seaborn = ">=0.13.2,<0.14.0"
+pysatl-core = "0.1.0a0"
+
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
+pytest-mock = "^3.14.1"
 pre-commit = "^4.1.0"
 ruff = "^0.9.6"
 mypy = "==1.13.0"
-sphinx = "^8.2.0"
 hypothesis = "^6.131.7"
+pytest-cov = "^7.0.0"
+mutmut = "^3.8.0"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^8.2.3"
 myst-parser = "^4.0.1"
-furo = "^2024.8.6"
-types-pyyaml = "^6.0.12.20250516"
-types-tqdm = "^4.67.0.20250516"
-
-[tool.poetry.group.experiments.dependencies]
-tqdm = "^4.67.1"
-multiprocess = "^0.70.17"
-ruamel-yaml = "^0.18.10"
-
+sphinxcontrib-mermaid = "^1.0.0"
+pydata-sphinx-theme = "^0.16.1"
 
 [tool.ruff]
 line-length = 120
 output-format = "grouped"
-src = ["mpest", "experimental_env", "tests"]
+src = ["pysatl_mpest", "tests"]
 exclude = ["*.ipynb"]
 
 [tool.ruff.format]
@@ -59,12 +56,36 @@ ignore = ["PLR0913"]
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F401"]
 
+
 [tool.mypy]
-files = ["mpest", "experimental_env"]
+files = ["pysatl_mpest"]
 ignore_missing_imports = true
-exclude = ["^mpest/utils.py"]
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+addopts = [
+    "--cov=pysatl_mpest",          # Укажите здесь имя вашего основного пакета/папки с кодом
+    "--cov-report=term-missing", # Выводить отчет в консоль с указанием пропущенных строк
+    "--cov-report=html",         # Генерировать детальный HTML-отчет
+    "--cov-fail-under=80",       # Считать запуск тестов проваленным, если покрытие ниже 80%
+]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mutmut]
+source_paths = ["pysatl_mpest"]
+only_mutate = [
+    "pysatl_mpest/core/mixture.py",
+    "pysatl_mpest/core/_components.py",
+    "pysatl_mpest/estimators/iterative/_strategies/*.py",
+    "pysatl_mpest/estimators/iterative/steps/*.py",
+    "pysatl_mpest/estimators/iterative/pipeline.py",
+]
+# Our default pytest options measure coverage and fail below a threshold, which mutmut does itself in another way.
+pytest_add_cli_args = ["-o", "addopts=", "-p", "no:cacheprovider"]
+pytest_add_cli_args_test_selection = ["tests"]

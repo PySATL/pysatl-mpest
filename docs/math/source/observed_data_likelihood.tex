@@ -1,0 +1,57 @@
+% !TEX program = xelatex
+\documentclass[14pt, a4paper, oneside]{memoir}
+
+\input{./packages.tex}
+\input{./styles.tex}
+\input{./commands.tex}
+
+\title{Обоснование стратегии оптимизации правдоподобия при наблюдаемых данных}
+\begin{document}
+
+\begin{titlingpage}
+	\maketitle
+\end{titlingpage}
+
+\section{Правдоподобие смеси}
+
+Допустим мы имеем независимые наблюдения $x_1, \dots, x_n$ полученные из смеси распределений.
+
+Плотность смеси распределений имеет следующий вид:
+
+\[f(x ~|~ \Psi) = \sum_{i=1}^k \omega_i \cdot f_i (x~|~\theta_i)\]
+
+где $\Psi$ --- вектор параметров смеси $\omega_i, \theta_i$, $f_i$ --- $i$-ая компонента смеси.
+
+Правдоподобием смеси распределений при наблюдаемых данных будет называться функция:
+
+\[\mathcal{L}(x ~|~ \Psi) = \prod_{i=1}^n f(x_i ~|~ \Psi) = \prod_{i=1}^n \left(\sum_{j=1}^k \omega_j \cdot f_j(x_i ~|~ \theta_j)\right)\]
+
+Для оценки параметров достаточно максимизировать правдоподобие. В силу монотонности логарифма можно оптимизировать логарифм правдоподобия:
+
+\[\ln \mathcal{L}(x ~|~ \Psi) = \sum_{i=1}^n \ln \left(\sum_{j=1}^k \omega_j \cdot f_j(x_i~|~ \theta_j)\right)\]
+
+\section{Покомпонентная оптимизация логарифма правдоподобия при наблюдаемых данных}
+
+Пусть мы оптимизируем параметры $\theta_q$. Найдем градиент логарифма правдоподобия:
+
+\[\nabla_{\theta_q} \ln \mathcal{L}(x ~|~ \Psi) = \sum_{i=1}^n \nabla_{\theta_q} \ln \left( \sum_{j=1}^k \omega_j \cdot f_j(x_i~|~ \theta_j)\right)\]
+
+По правилу дифференцирования сложной функции:
+
+\[\sum_{i=1}^n \nabla_{\theta_q} \ln \left( \sum_{j=1}^k \omega_j \cdot f_j(x_i~|~ \theta_j)\right) = \sum_{i=1}^n \frac{1}{\sum_{j=1}^k \omega_j \cdot f_j(x_i~|~ \theta_j)} \cdot \nabla_{\theta_q} \left(\sum_{j=1}^k \omega_j \cdot f_j(x_i~|~ \theta_j) \right)\]
+
+В последнем сомножители все слагаемые кроме $\omega_j \cdot f_q(x_i~|~ \theta_q)$ не зависят от $\theta_q$, поэтому:
+
+\[\nabla_{\theta_q} \left(\sum_{j=1}^k \omega_j \cdot f_j(x_i~|~ \theta_j) \right) = \omega_q \cdot \nabla_{\theta_q} f_q(x_i ~|~ \theta_q)\]
+
+Подставим обратно:
+
+\[\nabla_{\theta_q} \ln \mathcal{L}(x ~|~ \Psi) = \sum_{i=1}^n \frac{\omega_q \cdot \nabla_{\theta_q} f_q(x_i ~|~ \theta_q)}{\sum_{j=1}^k\omega_j \cdot f_j(x_i~|~ \theta_j)}\]
+
+Итоговое условие экстремума:
+
+\[\sum_{i=1}^n \frac{\omega_q \cdot \nabla_{\theta_q} f_j(x_i ~|~\theta_q)}{C + \omega_q \cdot f_q(x_i~|~ \theta_q)} = 0\]
+
+где $C$ -- вклад остальных компонент.
+
+\end{document}

@@ -1,0 +1,59 @@
+\newcommand{\bN}{\mathbb{N}}
+\newcommand{\bZ}{\mathbb{Z}}
+\newcommand{\bR}{\mathbb{R}}
+\newcommand{\bC}{\mathbb{C}}
+\newcommand{\bQ}{\mathbb{Q}}
+\newcommand{\seq}[1]{\left\{#1\right\}}
+\newcommand{\darrow}[1]{\underset{#1}{\rightrightarrows}}
+\newcommand{\normunder}[2]{||{#1}||_{#2}}
+\newcommand{\liml}{\lim\limits}
+\newcommand{\bZero}{\mathbb{0}}
+\newcommand{\sign}{\mathrm{sign}}
+\newcommand{\norm}[1]{\left|\left| {#1} \right| \right|}
+\newcommand{\abs}[1]{\left| {#1} \right|}
+
+
+\DeclareMathOperator{\Int}{Int}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Lin}{Lin}
+\DeclareMathOperator{\Imm}{Im}
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\codim}{codim}
+\DeclareMathOperator{\In}{In}
+\DeclareMathOperator{\slim}{s-lim}
+\DeclareMathOperator{\wlim}{w-lim}
+\DeclareMathOperator{\wstarlim}{w*-lim}
+\DeclareMathOperator{\Com}{Com}
+\DeclareMathOperator{\rank}{rank}
+
+
+\NewDocumentCommand{\calL}{}{\mathcal{L}}
+\NewDocumentCommand{\R}{}{\mathcal{R}}
+\NewDocumentCommand{\B}{}{\mathcal{B}}
+\NewDocumentCommand{\K}{}{\mathcal{K}}
+\NewDocumentCommand{\HCal}{}{\mathcal{H}}
+\NewDocumentCommand{\Rho}{}{\mathcal{P}}
+
+\let\oldforall\forall
+\renewcommand{\forall}{\oldforall \, }
+\let\oldexist\exists
+\renewcommand{\exists}{\oldexist \: }
+\newcommand\existu{\oldexist! \: }
+
+
+%tikz
+\tikzset
+{%
+  pics/matrix/.style n args={6}{% rows, columns, text above, text below,
+                                % text left, text right (or symbols)
+    code={%
+      \begin{scope}[y=-1cm,scale=0.5]
+        \draw    (0,0) grid (#2,#1);
+        \node at (0.5*#2,-0.5)   {#3};
+        \node at (0.5*#2,#1+0.5) {#4};
+        \node at (-0.5,0.5*#1)   {#5};
+        \node at (#2+0.5,0.5*#1) {#6};
+      \end{scope}
+    }},
+}
