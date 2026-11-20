@@ -47,21 +47,22 @@
 
 /* PyData switches the right sidebar from a drawer to a column at 1200px. */
 @media (min-width: 1200px) {
+  /* Fixed, so the button appearing after load does not shift the columns. */
   .navigation-toc-toggle {
-    align-self: flex-start;
     display: grid;
-    flex: 0 0 2rem;
     font-size: 1.5rem;
     height: 2.25rem;
-    margin-block-start: 1rem;
-    margin-inline: 0.5rem;
     padding: 0;
     place-items: center;
-    position: sticky;
+    position: fixed;
+    right: 0.75rem;
     top: calc(var(--pst-header-height) + 1rem);
+    width: 2rem;
+    z-index: 3;
   }
 
-  .navigation-toc-collapsed {
+  /* Set on <html> by navigation-early.js before the first paint. */
+  html.navigation-toc-collapsed .bd-sidebar-secondary {
     display: none;
   }
 }
