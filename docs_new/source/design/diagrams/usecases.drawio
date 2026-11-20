@@ -113,13 +113,7 @@
         <mxCell id="a-d-ext" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;" edge="1" parent="1" source="developer" target="extend">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="lg-impl" value="implemented" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="105" y="705" width="75" height="28" as="geometry" />
-        </mxCell>
-        <mxCell id="lg-plan" value="planned" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="190" y="705" width="75" height="28" as="geometry" />
-        </mxCell>
-      </root>
+      <mxCell id="lg" value="Legend" style="swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="105" y="705" width="191" height="52" as="geometry"/></mxCell><mxCell id="lg-swatch-0" value="" style="ellipse;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1"><mxGeometry x="115" y="733" width="24" height="14" as="geometry"/></mxCell><mxCell id="lg-caption-0" value="implemented" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="145" y="731" width="62" height="18" as="geometry"/></mxCell><mxCell id="lg-swatch-1" value="" style="ellipse;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;" vertex="1" parent="1"><mxGeometry x="217" y="733" width="24" height="14" as="geometry"/></mxCell><mxCell id="lg-caption-1" value="planned" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="247" y="731" width="39" height="18" as="geometry"/></mxCell></root>
     </mxGraphModel>
   </diagram>
 </mxfile>
