@@ -175,3 +175,7 @@ AGENTS.md
 
 # mutation testing
 mutants/
+
+# draw.io backups
+.$*.bkp
+.$*.dtmp
