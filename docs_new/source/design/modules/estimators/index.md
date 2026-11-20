@@ -6,6 +6,7 @@
 :maxdepth: 1
 
 iterative/iterative
+direct/direct
 ```
 
 ## Состав модуля
@@ -16,7 +17,7 @@ iterative/iterative
 - `em.py`, `ecm.py`, `ecme.py` — готовые оценщики, далее фасады.
 - `_parameter_groups.py` — приватная функция `build_optimization_blocks`, общая для `ECM` и `ECME`: проверяет группы параметров и строит из них блоки M-шага.
 - `iterative/` — итерационный конвейер: `Pipeline`, шаги, критерии остановки, правила удаления компонент, история итераций. Это основная часть модуля, она описана на странице [«Модуль `estimators.iterative`»](iterative/iterative.md).
-- `direct/` — неитерационные оценщики (Запланировано). Пакет пуст.
+- `direct/` — неитерационные оценщики (Запланировано). Пакет пуст, см. [«Модуль `estimators.direct`»](direct/direct.md).
 
 ## Диаграмма классов
 
