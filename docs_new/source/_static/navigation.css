@@ -1,0 +1,60 @@
+.navigation-resize,
+.navigation-toc-toggle {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .bd-container .bd-container__inner,
+  .bd-main .bd-content .bd-article-container {
+    max-width: none;
+  }
+
+  .bd-main .bd-content .bd-article-container {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bd-sidebar-primary {
+    width: var(--navigation-width, min(25%, 14rem));
+  }
+
+  .navigation-resize {
+    align-self: flex-start;
+    cursor: col-resize;
+    display: block;
+    flex: 0 0 12px;
+    height: calc(100vh - var(--pst-header-height));
+    margin-inline: -6px;
+    position: sticky;
+    top: var(--pst-header-height);
+    touch-action: none;
+    z-index: 2;
+  }
+
+  .navigation-resize:focus-visible,
+  .navigation-resize:active {
+    box-shadow: inset 2px 0 var(--pst-color-primary);
+  }
+}
+
+/* PyData switches the right sidebar from a drawer to a column at 1200px. */
+@media (min-width: 1200px) {
+  .navigation-toc-toggle {
+    align-self: flex-start;
+    display: grid;
+    flex: 0 0 2rem;
+    font-size: 1.5rem;
+    height: 2.25rem;
+    margin-block-start: 1rem;
+    margin-inline-end: 0.5rem;
+    order: 3;
+    padding: 0;
+    place-items: center;
+    position: sticky;
+    top: calc(var(--pst-header-height) + 1rem);
+  }
+
+  .navigation-toc-collapsed {
+    display: none;
+  }
+}

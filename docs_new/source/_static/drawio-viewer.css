@@ -1,5 +1,15 @@
+.mxgraph {
+  margin-inline: auto;
+}
+
+.drawio-source {
+  text-align: center;
+}
+
 /* Diagrams are strictly monochrome, so inverting them gives light lines on a dark
    background; hue-rotate keeps any accidental colour close to the original. */
 html[data-theme="dark"] .mxgraph {
   filter: invert(1) hue-rotate(180deg);
+  /* Let the page background show through the inverted white fills. */
+  mix-blend-mode: screen;
 }

@@ -44,8 +44,9 @@ def _viewer_node(xml: str, page: int) -> nodes.raw:
     config = {
         "highlight": "#000000",
         "nav": True,
-        "resize": True,
-        "toolbar": "pages zoom layers lightbox",
+        "auto-fit": True,
+        "resize": False,
+        "toolbar": "pages layers lightbox",
         "edit": None,
         "page": page,
         "xml": xml,
@@ -61,12 +62,11 @@ def _viewer_node(xml: str, page: int) -> nodes.raw:
 
 
 def _on_doctree_resolved(app: Sphinx, doctree: nodes.document, docname: str) -> None:
-    """Insert a viewer block after each paragraph that links to a diagram."""
+    """Insert viewer blocks above their source links."""
     if app.builder.format != "html":
         return
 
-    inserted: dict[int, int] = {}
-    for link in _iter_drawio_links(doctree):
+    for link in list(_iter_drawio_links(doctree)):
         _, abspath = app.env.relfn2path(link["reftarget"], docname)
         path = Path(abspath)
         if not path.is_file():
@@ -92,10 +92,10 @@ def _on_doctree_resolved(app: Sphinx, doctree: nodes.document, docname: str) -> 
             pages = [0]
 
         parent = block.parent
+        if pages and "drawio-source" not in block["classes"]:
+            block["classes"].append("drawio-source")
         for page in pages:
-            offset = inserted.get(id(block), 0) + 1
-            parent.insert(parent.children.index(block) + offset, _viewer_node(xml, page))
-            inserted[id(block)] = offset
+            parent.insert(parent.index(block), _viewer_node(xml, page))
 
 
 def _on_html_page_context(
