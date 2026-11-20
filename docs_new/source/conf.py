@@ -30,6 +30,8 @@ extensions = [
     "sphinxcontrib.mermaid",
     "sphinx.ext.autosummary",
     "drawio_viewer",
+    "sphinxcontrib.bibtex",
+    "sphinx_proof",
 ]
 
 autodoc_typehints = "description"
@@ -54,6 +56,16 @@ myst_enable_extensions = [
     "dollarmath",
     "amsmath",
 ]
+
+# -- Bibliography and math --
+
+bibtex_bibfiles = ["math/references.bib"]
+bibtex_reference_style = "author_year"
+bibtex_default_style = "plain"
+
+math_numfig = True
+math_eqref_format = "({number})"
+numfig = True
 
 
 # -- Options for HTML output -------------------------------------------------
