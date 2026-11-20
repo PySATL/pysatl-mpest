@@ -24,7 +24,7 @@
 ```
 source/design/
   diagrams/
-    full-architecture.drawio        # 1 лист (состав — решить)
+    full-architecture.drawio        # 1 лист System context: вход/выход системы и зависимости
     module-architecture.drawio      # листы: Overview, Detailed
     usecases.drawio
     sequences.drawio                # листы seq-*: fit, E/M-шаг, pruning, ...
@@ -67,7 +67,7 @@ source/design/
 5. **Экспорт PNG скриптом** (CLI `/opt/drawio/drawio`, тот же, что использует `drawio-diff`; скилл `drawio-skill` как справочник по XML).
 6. Дашборды (`requirements_dashbard.html`, `usecases_dashboard.html`), блок `math/` и `review/` — готовятся к релизу; встроить в доку хотя бы ссылками, при необходимости вынести верхнеуровневую информацию.
 
-7. **`full-architecture`:** один лист, C4 container: пользователи (researcher, developer), `pysatl-mpest` (модули, planned выделены), внешние зависимости (`pysatl-core`, `numpy`, `scipy`), вход/выход (sample → fitted `MixtureModel`). Дополнительные листы (экосистема PySATL) — позже при необходимости.
+7. **`full-architecture`:** один лист `System context` (id `system-context`), контекст системы. `pysatl-mpest` — один блок без модулей (модули — на `module-architecture`, пользователи — на `usecases`). Показаны входы от researcher (сейчас: `X` + начальная `MixtureModel`; planned: `X` + семейства без параметров через `initializers`, только `X` через `structure_selection`), выход (fitted `MixtureModel`, `IterationsHistory`) и что берётся из `pysatl-core`, `numpy`, `scipy`. Дополнительные листы (экосистема PySATL) — позже при необходимости.
 8. **Дашборды, `math/`, `review/`:** новый раздел доки «Материалы»: по короткой странице на каждый вывод из `math/` (цель, ключевая формула, ссылка на PDF; соответствие стратегиям), краткие выводы из `review/` со ссылкой, дашборды как статические HTML (`html_extra_path`) со страницами-ссылками и аннотацией. Отдельная инфраструктура сбора статей и требований — позже (понадобится для конвейера реализации стратегий агентами).
 
 ## Остаётся обсудить
