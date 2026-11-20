@@ -8,6 +8,7 @@
 domain
 architecture
 behavior
+modules/index
 ```
 
 ## Что делает библиотека
