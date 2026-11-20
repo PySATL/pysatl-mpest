@@ -61,6 +61,7 @@ myst_enable_extensions = [
 
 bibtex_bibfiles = ["math/references.bib"]
 bibtex_reference_style = "author_year"
+bibtex_foot_reference_style = "foot"
 bibtex_default_style = "plain"
 
 math_numfig = True
