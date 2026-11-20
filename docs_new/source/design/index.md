@@ -31,7 +31,7 @@ modules/index
 - Сейчас пользователь подаёт выборку `X` и начальную `MixtureModel`, которую сам собирает из компонент `pysatl-core` (`ParametricFamilyDistribution`), выбирает оценщик (`EM`, `ECM`, `ECME`) с критериями остановки (`breakpointers`), правилами удаления компонент (`pruners`) и оптимизатором, вызывает `fit` и получает обученную `MixtureModel`; историю итераций даёт свойство `history` (`IterationsHistory`).
 - На листе на входе написан `EM(...)`; `ECM` и `ECME` принимают ту же базовую конфигурацию и дополнительно поддерживают разбиение параметров на группы.
 - Два серых пути на листе запланированы: «`X` + семейства без параметров» (начальные параметры подбирает модуль `initializers`) и «только `X`» (модуль `structure_selection` подбирает число компонент и их семейства, затем начальные параметры) — Запланировано.
-- Из зависимостей берутся: `pysatl-core` — параметрические семейства и распределения, конечная смесь (`FiniteMixtureDistribution`), стратегии сэмплирования; `scipy` — `optimize.minimize` (методы Nelder–Mead и Powell в `optimizers`) и `special.logsumexp`/`softmax`; `numpy` — массивы.
+- Из зависимостей берутся: `pysatl-core` — параметрические семейства и распределения (компонентой может быть любое из них), стратегия сэмплирования и конечная смесь `FiniteMixtureDistribution` только для экспорта через `to_core_mixture`; `scipy` — `optimize.minimize` (методы Nelder–Mead и Powell в `optimizers`) и `special.logsumexp`/`softmax`; `numpy` — массивы.
 
 ## Стек
 
@@ -46,12 +46,12 @@ modules/index
 
 | Возможность | Модуль | Статус |
 | --- | --- | --- |
-| Смесь распределений: плотность, логарифм правдоподобия, генерация выборки | `core` | Готово |
-| Готовые оценщики `EM`, `ECM`, `ECME` | `estimators` | Готово |
-| Собственный итеративный конвейер из шагов (`Pipeline`, `ExpectationStep`, `WeightsStep`, `MaximizationStep`) | `estimators.iterative` | Готово |
-| Критерии остановки (`StepBreakpointer`, `LikelihoodBreakpointer`) | `estimators.iterative` | Готово |
-| Удаление вырожденных компонент (`PriorThresholdPruner`) | `estimators.iterative` | Готово |
-| Численные оптимизаторы (`ScipyNelderMead`, `ScipyPowell`) | `optimizers` | Готово |
-| Прямые (неитеративные) методы оценки | `estimators.direct` | Запланировано |
-| Подбор начального приближения | `initializers` | Запланировано |
-| Выбор структуры смеси (число компонент и семейства) | `structure_selection` | Запланировано |
+| Смесь распределений: плотность, логарифм правдоподобия, генерация выборки | [`core`](modules/core/core.md) | Готово |
+| Готовые оценщики `EM`, `ECM`, `ECME` | [`estimators`](modules/estimators/index.md) | Готово |
+| Собственный итеративный конвейер из шагов (`Pipeline`, `ExpectationStep`, `WeightsStep`, `MaximizationStep`) | [`estimators.iterative`](modules/estimators/iterative/iterative.md) | Готово |
+| Критерии остановки (`StepBreakpointer`, `LikelihoodBreakpointer`) | [`estimators.iterative`](modules/estimators/iterative/iterative.md) | Готово |
+| Удаление вырожденных компонент (`PriorThresholdPruner`) | [`estimators.iterative`](modules/estimators/iterative/iterative.md) | Готово |
+| Численные оптимизаторы (`ScipyNelderMead`, `ScipyPowell`) | [`optimizers`](modules/optimizers/optimizers.md) | Готово |
+| Прямые (неитеративные) методы оценки | [`estimators.direct`](modules/estimators/direct/direct.md) | Запланировано |
+| Подбор начального приближения | [`initializers`](modules/initializers/initializers.md) | Запланировано |
+| Выбор структуры смеси (число компонент и семейства) | [`structure_selection`](modules/structure_selection/structure_selection.md) | Запланировано |
