@@ -4,7 +4,8 @@
 }
 
 @media (min-width: 960px) {
-  .bd-container .bd-container__inner,
+  /* The layout spans the whole window so the header lines up with the sidebars. */
+  .bd-page-width,
   .bd-main .bd-content .bd-article-container {
     max-width: none;
   }
@@ -12,6 +13,13 @@
   .bd-main .bd-content .bd-article-container {
     flex: 1;
     min-width: 0;
+  }
+
+  /* Text keeps a readable line length; 58rem still fits a 900 px diagram. */
+  .bd-article-container > * {
+    margin-inline: auto;
+    max-width: 58rem;
+    width: 100%;
   }
 
   .bd-sidebar-primary {
@@ -46,8 +54,7 @@
     font-size: 1.5rem;
     height: 2.25rem;
     margin-block-start: 1rem;
-    margin-inline-end: 0.5rem;
-    order: 3;
+    margin-inline: 0.5rem;
     padding: 0;
     place-items: center;
     position: sticky;

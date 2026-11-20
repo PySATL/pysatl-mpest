@@ -46,7 +46,10 @@ def _viewer_node(xml: str, page: int) -> nodes.raw:
         "nav": True,
         "auto-fit": True,
         "resize": False,
+        # No zoom button: with it the viewer stops fitting the sheet on narrow screens.
+        # The toolbar stays visible because touch screens have no hover to reveal the lightbox.
         "toolbar": "pages layers lightbox",
+        "toolbar-nohide": True,
         "edit": None,
         "page": page,
         "xml": xml,

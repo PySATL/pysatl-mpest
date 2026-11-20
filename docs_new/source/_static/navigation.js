@@ -1,3 +1,24 @@
+// Pages whose table of contents starts collapsed until the reader opens it.
+const TOC_COLLAPSED_PAGES = new Set(["design/index"]);
+const WIDTH_KEY = "mpest.navigation-width";
+const TOC_KEY = "mpest.toc-expanded";
+
+function readSetting(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeSetting(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Storage may be unavailable (private mode, blocked site data): keep the default.
+  }
+}
+
 function setupNavigationResize(sidebar) {
   const minWidth = 180;
   const maxWidth = 360;
@@ -18,11 +39,15 @@ function setupNavigationResize(sidebar) {
       separator.setAttribute("aria-valuenow", currentWidth());
     }
   };
-  const resize = (width) => {
+  const resize = (width, save = true) => {
     const boundedWidth = Math.min(maxWidth, Math.max(minWidth, width));
     sidebar.style.setProperty("--navigation-width", boundedWidth + "px");
+    if (save) writeSetting(WIDTH_KEY, boundedWidth);
     announceWidth();
   };
+
+  const savedWidth = Number(readSetting(WIDTH_KEY));
+  if (savedWidth) resize(savedWidth, false);
 
   let dragOffset = 0;
   separator.addEventListener("pointerdown", (event) => {
@@ -63,9 +88,18 @@ function setupTocToggle(sidebar) {
     button.title = label;
     button.textContent = expanded ? "›" : "‹";
   };
-  setExpanded(!document.querySelector(".bd-article > section#design"));
-  button.addEventListener("click", () => setExpanded(button.getAttribute("aria-expanded") === "false"));
-  sidebar.after(button);
+
+  const saved = readSetting(TOC_KEY);
+  // Sphinx declares DOCUMENTATION_OPTIONS with const, so it is not a property of window.
+  const pagename = typeof DOCUMENTATION_OPTIONS === "undefined" ? undefined : DOCUMENTATION_OPTIONS.pagename;
+  setExpanded(saved === null ? !TOC_COLLAPSED_PAGES.has(pagename) : saved === "true");
+  button.addEventListener("click", () => {
+    const expanded = button.getAttribute("aria-expanded") === "false";
+    setExpanded(expanded);
+    writeSetting(TOC_KEY, expanded);
+  });
+  // Placed right before the table of contents so the button stays next to it.
+  sidebar.before(button);
 }
 
 const primarySidebar = document.getElementById("pst-primary-sidebar");

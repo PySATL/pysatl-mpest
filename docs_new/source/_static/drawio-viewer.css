@@ -1,4 +1,7 @@
 .mxgraph {
+  /* The viewer sets an inline margin-top of 26px for its always-visible toolbar;
+     add a gap so the toolbar does not stick to the paragraph above. */
+  margin-top: calc(26px + 1rem) !important;
   margin-inline: auto;
 }
 
