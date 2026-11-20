@@ -23,20 +23,20 @@ pysatl-core = "0.1.0a0"
 
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
+pytest = ">=8.3.4,<10.0.0"
 pytest-mock = "^3.14.1"
 pre-commit = "^4.1.0"
-ruff = "^0.9.6"
-mypy = "==1.13.0"
+ruff = ">=0.9.6,<0.18.0"
+mypy = "==2.4.1"
 hypothesis = "^6.131.7"
 pytest-cov = "^7.0.0"
 mutmut = "^3.8.0"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.2.3"
-myst-parser = "^4.0.1"
-sphinxcontrib-mermaid = "^1.0.0"
-pydata-sphinx-theme = "^0.16.1"
+myst-parser = ">=4.0.1,<6.0.0"
+sphinxcontrib-mermaid = ">=1,<3"
+pydata-sphinx-theme = ">=0.16.1,<0.25.0"
 
 [tool.ruff]
 line-length = 120
