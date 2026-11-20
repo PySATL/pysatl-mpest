@@ -10,6 +10,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath("../../"))
+sys.path.insert(0, os.path.abspath("./_ext"))
 
 project = "Mpest"
 copyright = "2025, Danil Totmyanin, Anton Kazancev"
@@ -28,6 +29,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinxcontrib.mermaid",
     "sphinx.ext.autosummary",
+    "drawio_viewer",
 ]
 
 autodoc_typehints = "description"
