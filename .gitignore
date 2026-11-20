@@ -170,6 +170,7 @@ cython_debug/
 
 # local agent instructions
 AGENTS.md
+.agents/
 
 # mutation testing
 mutants/
