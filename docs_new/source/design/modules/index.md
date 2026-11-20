@@ -7,4 +7,6 @@
 core/core
 optimizers/optimizers
 estimators/index
+initializers/initializers
+structure_selection/structure_selection
 ```
