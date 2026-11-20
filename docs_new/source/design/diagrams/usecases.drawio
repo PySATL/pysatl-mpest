@@ -47,7 +47,7 @@
         <mxCell id="prune" value="Set pruners" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="740" y="345" width="130" height="56" as="geometry" />
         </mxCell>
-        <mxCell id="est" value="Estimate number of components" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=13;fontFamily=Helvetica;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="est" value="Select mixture structure" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=13;fontFamily=Helvetica;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="125" y="400" width="130" height="56" as="geometry" />
         </mxCell>
         <mxCell id="extend" value="Extend library" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;" vertex="1" parent="1">
