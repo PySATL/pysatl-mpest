@@ -6,4 +6,5 @@
 
 core/core
 optimizers/optimizers
+estimators/index
 ```
