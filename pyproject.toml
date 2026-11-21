@@ -37,6 +37,8 @@ sphinx = "^8.2.3"
 myst-parser = "^4.0.1"
 sphinxcontrib-mermaid = "^1.0.0"
 pydata-sphinx-theme = "^0.16.1"
+sphinxcontrib-bibtex = "^2.7.0"
+sphinx-proof = "^0.4.1"
 
 [tool.ruff]
 line-length = 120

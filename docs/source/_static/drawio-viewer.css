@@ -1,0 +1,18 @@
+.mxgraph {
+  /* The viewer sets an inline margin-top of 26px for its always-visible toolbar;
+     add a gap so the toolbar does not stick to the paragraph above. */
+  margin-top: calc(26px + 1rem) !important;
+  margin-inline: auto;
+}
+
+.drawio-source {
+  text-align: center;
+}
+
+/* Diagrams are strictly monochrome, so inverting them gives light lines on a dark
+   background; hue-rotate keeps any accidental colour close to the original. */
+html[data-theme="dark"] .mxgraph {
+  filter: invert(1) hue-rotate(180deg);
+  /* Let the page background show through the inverted white fills. */
+  mix-blend-mode: screen;
+}

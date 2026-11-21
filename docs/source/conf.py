@@ -10,9 +10,10 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath("../../"))
+sys.path.insert(0, os.path.abspath("./_ext"))
 
 project = "Mpest"
-copyright = "2025, Danil Totmyanin, Anton Kazancev"
+copyright = "2025–2026, Danil Totmyanin, Anton Kazancev"
 author = "Danil Totmyanin, Anton Kazancev"
 release = "1.0"
 
@@ -28,6 +29,9 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinxcontrib.mermaid",
     "sphinx.ext.autosummary",
+    "drawio_viewer",
+    "sphinxcontrib.bibtex",
+    "sphinx_proof",
 ]
 
 autodoc_typehints = "description"
@@ -53,12 +57,26 @@ myst_enable_extensions = [
     "amsmath",
 ]
 
+# -- Bibliography and math --
+
+bibtex_bibfiles = ["math/references.bib"]
+bibtex_reference_style = "author_year"
+bibtex_foot_reference_style = "foot"
+bibtex_default_style = "plain"
+
+math_numfig = True
+math_eqref_format = "({number})"
+numfig = True
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
+html_show_sourcelink = False
+html_css_files = ["navigation.css"]
+html_js_files = ["navigation-early.js", ("navigation.js", {"defer": "defer"})]
 mermaid_init_js = """
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs'
 

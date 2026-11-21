@@ -170,6 +170,11 @@ cython_debug/
 
 # local agent instructions
 AGENTS.md
+.agents/
 
 # mutation testing
 mutants/
+
+# draw.io backups
+.$*.bkp
+.$*.dtmp
