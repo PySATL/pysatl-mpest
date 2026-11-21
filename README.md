@@ -12,16 +12,18 @@ poetry install
 
 ## Abstract
 
-This package contains realization of EM-type algorithms for solving the parameter estimation of mixture distribution problem:
+This package implements EM-type algorithms for estimating the parameters of a finite mixture of distributions:
 
-$$p(x | \Omega, F, \Theta) = \sum_{j=1}^k \omega_j f_j(x | \theta_j)$$
+$$f(x \mid \Psi) = \sum_{j=1}^k \omega_j f_j(x \mid \theta_j)$$
 
-- $p(x | \Omega, F, \Theta)$ - mixture distribution
-- $f_j(x | \theta_j) \in F$ - $j$ distribution
-- $\omega_j \in \Omega$ - prior probability of $j$ distribution
-- $\theta_j \in \Theta$ - parameters of $j$ distribution
+- $f(x \mid \Psi)$ - the mixture density
+- $k$ - the number of components
+- $f_j(x \mid \theta_j)$ - the density of the $j$-th component
+- $\omega_j$ - the weight (prior probability) of the $j$-th component
+- $\theta_j$ - the parameters of the $j$-th component
+- $\Psi = (\omega_1, \dots, \omega_k, \theta_1, \dots, \theta_k)$ - all parameters of the mixture
 
-The problem is to find $\Omega$ and $\Theta$ params of custom mixture distribution with known (or guessed) $k$ and $F$ and a user-provided initial approximation.
+The problem is to estimate $\Psi$ from a sample when $k$ and the families of the components are known (or guessed) and a user-provided initial approximation is given.
 
 The components of a mixture are distributions of [pysatl-core](https://github.com/PySATL/pysatl-core), so the package works with any family registered there, and a mixture may consist of different families, for example Gaussian and exponential ones. The package itself is concerned with the estimation algorithms and the optimizers they use.
 

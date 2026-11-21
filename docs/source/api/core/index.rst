@@ -1,8 +1,8 @@
 .. _api.core:
 
-##########
-mpest.core
-##########
+#################
+pysatl_mpest.core
+#################
 
 .. automodule:: pysatl_mpest.core
     :no-members:
