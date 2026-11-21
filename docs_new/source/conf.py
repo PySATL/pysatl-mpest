@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 sys.path.insert(0, os.path.abspath("./_ext"))
 
 project = "Mpest"
-copyright = "2025, Danil Totmyanin, Anton Kazancev"
+copyright = "2025–2026, Danil Totmyanin, Anton Kazancev"
 author = "Danil Totmyanin, Anton Kazancev"
 release = "1.0"
 
