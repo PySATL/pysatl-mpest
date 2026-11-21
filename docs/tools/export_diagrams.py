@@ -6,10 +6,10 @@ the source. A PNG that is newer than its ``.drawio`` is skipped unless ``--force
 
 Usage::
 
-    python3 docs_new/tools/export_diagrams.py [--force] [--scale 2] [PATH ...]
+    python3 docs/tools/export_diagrams.py [--force] [--scale 2] [PATH ...]
 
 ``PATH`` is a ``.drawio`` file or a directory searched recursively.
-The default is ``docs_new/source/design``.
+The default is ``docs/source/design``.
 Needs the draw.io desktop CLI 27.0.2 or newer: page numbers are 1-based
 (``drawio`` on ``PATH`` or ``/opt/drawio/drawio``).
 """

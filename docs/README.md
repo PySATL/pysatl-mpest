@@ -1,11 +1,13 @@
-# docs_new
+# Документация
 
-Новая документация pysatl-mpest. До переключения собирается отдельно от `docs/` и не участвует в CI.
+Документация pysatl-mpest: Sphinx-проект в `source/`, сборка в `build/html`. При пуше в `main` workflow `.github/workflows/docs.yml` собирает её и публикует на GitHub Pages.
 
 ```bash
-poetry run sphinx-build -W --keep-going -n -b html docs_new/source docs_new/build/html
-poetry run python docs_new/tools/export_diagrams.py   # PNG из всех листов .drawio
+poetry run make -C docs html                      # сборка, как в CI
+poetry run python docs/tools/export_diagrams.py   # PNG из всех листов .drawio
 ```
+
+Вне Sphinx лежат исходные материалы: `math/` — выводы стратегий M-шага (LaTeX и PDF), `review/` — обзор литературы, `requirements_dashbard.html` и `usecases_dashboard.html` — дашборды требований и сценариев.
 
 ## Диаграммы
 

@@ -1,8 +1,8 @@
 .. _api.optimizers:
 
-###############
+################
 mpest.optimizers
-###############
+################
 
 .. automodule:: pysatl_mpest.optimizers
    :no-members:

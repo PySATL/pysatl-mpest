@@ -1,8 +1,8 @@
 .. _api.estimators:
 
-###############
+################
 mpest.estimators
-###############
+################
 
 .. toctree::
    :maxdepth: 2

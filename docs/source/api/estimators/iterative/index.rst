@@ -1,8 +1,8 @@
-.. _api.estimators.direct:
+.. _api.estimators.iterative:
 
-###############
+##########################
 mpest.estimators.iterative
-###############
+##########################
 
 .. automodule:: pysatl_mpest.estimators.iterative
    :no-members:
