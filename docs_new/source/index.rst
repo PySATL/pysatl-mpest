@@ -14,7 +14,7 @@ Mpest documentation
    user_guide/index
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Design
    :titlesonly:
    :includehidden:
