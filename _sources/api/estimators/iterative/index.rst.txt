@@ -1,14 +1,14 @@
 .. _api.estimators.iterative:
 
-##########################
-mpest.estimators.iterative
-##########################
+#################################
+pysatl_mpest.estimators.iterative
+#################################
 
 .. automodule:: pysatl_mpest.estimators.iterative
    :no-members:
 
-Abstract Classes
-================
+Pipeline
+========
 
 .. autosummary::
    :toctree: generated
@@ -16,16 +16,24 @@ Abstract Classes
    :template: class.rst
 
    ~Pipeline
-   ~PipelineStep
    ~PipelineState
+
+Base Classes
+============
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+   :template: class.rst
+
+   ~PipelineStep
    ~Breakpointer
    ~Pruner
 
-Available Implementations
--------------------------
+Implementations
+===============
 
-The concrete implementations of the base classes, available for use when
-building a pipeline, will be listed below.
+Concrete steps, stopping criteria and pruners for building a pipeline.
 
 Steps (`PipelineStep`):
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,6 +46,17 @@ Steps (`PipelineStep`):
    ~ExpectationStep
    ~WeightsStep
    ~MaximizationStep
+
+M-step configuration (`MaximizationStep`):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+   :template: class.rst
+
+   ~OptimizationBlock
+   ~MaximizationStrategy
 
 Breakpointers (`Breakpointer`):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,6 +78,3 @@ Pruners (`Pruner`):
    :template: class.rst
 
    ~PriorThresholdPruner
-
-Usage Example
--------------

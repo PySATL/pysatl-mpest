@@ -1,0 +1,30 @@
+﻿
+OptimizationBlock
+=================
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.OptimizationBlock
+   :show-inheritance:
+
+
+
+    
+
+    
+        
+    
+
+
+
+
+.. autosummary::
+   :toctree: .
+   :template: method.rst
+   :hidden:
+
+
+   ~OptimizationBlock.params_to_update
+
+
+

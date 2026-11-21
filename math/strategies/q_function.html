@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../" >
+<html lang="ru" data-content_root="../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Стратегия q_function &#8212; Mpest 1.0 documentation</title>
+    <title>Стратегия q_function &#8212; документация pysatl-mpest 1.0</title>
   
   
   
@@ -41,20 +41,21 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/documentation_options.js?v=9ca2116e"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/translations.js?v=cd1d70c9"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'math/strategies/q_function';</script>
     <script src="../../_static/navigation-early.js?v=3315ea9b"></script>
     <script defer="defer" src="../../_static/navigation.js?v=60fd207b"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" />
     <link rel="next" title="Стратегия observed_data_likelihood" href="observed_data_likelihood.html" />
     <link rel="prev" title="Стратегии M-шага" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:language" content="ru"/>
   <meta name="docsearch:version" content="" />
   </head>
   
@@ -63,7 +64,7 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Перейти к основному содержанию</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -97,7 +98,7 @@
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Навигация по сайту">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -117,7 +118,7 @@
   
   
   
-    <p class="title logo__title">Mpest 1.0 documentation</p>
+    <p class="title logo__title">документация pysatl-mpest 1.0</p>
   
 </a></div>
     
@@ -176,9 +177,9 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
         </div>
@@ -187,8 +188,8 @@
         <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
@@ -199,16 +200,16 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
     </div>
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="На этой странице">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -285,8 +286,8 @@
           <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
@@ -297,8 +298,8 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 <nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+     aria-label="В этом разделе">
+  <p class="bd-links__title" role="heading" aria-level="1">В этом разделе</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../mixture_model.html">Модель смеси</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../algorithms/index.html">EM-подобные алгоритмы</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -345,11 +346,11 @@
       
         <div class="header-article-item">
 
-<nav aria-label="Breadcrumb" class="d-print-none">
+<nav aria-label="Хлебная крошка" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
+      <a href="../../index.html" class="nav-link" aria-label="Главная">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
@@ -377,13 +378,13 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="q-function">
-<h1>Стратегия <code class="docutils literal notranslate"><span class="pre">q_function</span></code><a class="headerlink" href="#q-function" title="Link to this heading">#</a></h1>
+<h1>Стратегия <code class="docutils literal notranslate"><span class="pre">q_function</span></code><a class="headerlink" href="#q-function" title="Ссылка на этот заголовок">#</a></h1>
 <p><strong>Назначение:</strong> описать, какую задачу решает стратегия <code class="docutils literal notranslate"><span class="pre">QFUNCTION</span></code>, почему её блоки разных компонент независимы, как устроен численный путь и как выводятся решения в явном виде для (<code class="docutils literal notranslate"><span class="pre">Normal</span></code>, <code class="docutils literal notranslate"><span class="pre">meanStd</span></code>) и (<code class="docutils literal notranslate"><span class="pre">Exponential</span></code>, <code class="docutils literal notranslate"><span class="pre">rate</span></code>).</p>
 <section id="id1">
-<h2>Задача<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<h2>Задача<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">#</a></h2>
 <p>Обозначим слагаемое Q-функции, относящееся к <span class="math notranslate nohighlight">\(j\)</span>-й компоненте в разложении <a class="reference internal" href="../algorithms/em.html#equation-eq-q-split">(7)</a>:</p>
 <div class="math notranslate nohighlight" id="equation-eq-qj">
-<span class="eqno">(15)<a class="headerlink" href="#equation-eq-qj" title="Link to this equation">#</a></span>\[
+<span class="eqno">(15)<a class="headerlink" href="#equation-eq-qj" title="Ссылка на эту формулу">#</a></span>\[
 Q_j(\theta_j) = \sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j).
 \]</div>
 <p>Блок стратегии <code class="docutils literal notranslate"><span class="pre">QFUNCTION</span></code> для компоненты <span class="math notranslate nohighlight">\(j\)</span> с набором параметров <span class="math notranslate nohighlight">\(\theta_j^{[s]}\)</span> максимизирует <a class="reference internal" href="#equation-eq-qj">(15)</a> по этому набору, остальные параметры <span class="math notranslate nohighlight">\(\theta_j\)</span> не меняются:</p>
@@ -394,7 +395,7 @@ Q_j(\theta_j) = \sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j).
 <p>Если блок содержит все параметры компоненты, это M-шаг EM <a class="reference internal" href="../algorithms/em.html#equation-eq-em-component">(10)</a>, иначе — CM-шаг ECM <a class="reference internal" href="../algorithms/ecm.html#equation-eq-ecm-cm-step">(12)</a>.</p>
 </section>
 <section id="id2">
-<h2>Независимость компонент<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<h2>Независимость компонент<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">#</a></h2>
 <p>По разложению <a class="reference internal" href="../algorithms/em.html#equation-eq-q-split">(7)</a> функция <span class="math notranslate nohighlight">\(Q\)</span> — сумма слагаемого весов и слагаемых <a class="reference internal" href="#equation-eq-qj">(15)</a>. Слагаемое <span class="math notranslate nohighlight">\(Q_j\)</span> зависит только от <span class="math notranslate nohighlight">\(\theta_j\)</span>, от выборки и от столбца <span class="math notranslate nohighlight">\(\gamma_{\cdot j}^{(t)}\)</span>, который на M-шаге не меняется. Поэтому:</p>
 <ul class="simple">
 <li><p>максимум <span class="math notranslate nohighlight">\(Q\)</span> по <span class="math notranslate nohighlight">\(\theta_j\)</span> не зависит от параметров других компонент;</p></li>
@@ -403,7 +404,7 @@ Q_j(\theta_j) = \sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j).
 </ul>
 </section>
 <section id="id3">
-<h2>Численный путь<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<h2>Численный путь<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">#</a></h2>
 <p>Для пар «семейство, параметризация» без решения в явном виде стратегия передаёт оптимизатору функцию <span class="math notranslate nohighlight">\(-Q_j\)</span> от параметров блока и начинает поиск с текущих значений. Две детали реализации.</p>
 <p><strong>Нулевые ответственности.</strong> Слагаемые с <span class="math notranslate nohighlight">\(\gamma_{ij}^{(t)} = 0\)</span> исключаются из суммы, даже если в них <span class="math notranslate nohighlight">\(f_j(x_i \mid \theta_j) = 0\)</span>: иначе слагаемое <span class="math notranslate nohighlight">\(0 \cdot (-\infty)\)</span> дало бы <code class="docutils literal notranslate"><span class="pre">NaN</span></code>. Фактически минимизируется</p>
 <div class="math notranslate nohighlight">
@@ -414,14 +415,14 @@ Q_j(\theta_j) = \sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j).
 <p>Численный путь находит не точный максимум <a class="reference internal" href="#equation-eq-qj">(15)</a>, поэтому монотонность итерации зависит от того, возвращает ли оптимизатор точку не хуже стартовой; это разобрано в разделе <a class="reference internal" href="../algorithms/em.html#math-em-deviations"><span class="std std-ref">Отступления от теории</span></a>.</p>
 </section>
 <section id="id4">
-<h2>Решения в явном виде<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<h2>Решения в явном виде<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">#</a></h2>
 <p>Ниже используются сумма ответственностей компоненты <a class="reference internal" href="../algorithms/em.html#equation-eq-nj">(8)</a> и взвешенное среднее:</p>
 <div class="math notranslate nohighlight">
 \[
 n_j = \sum_{i=1}^{n} \gamma_{ij}^{(t)}, \qquad \bar{x}_j = \frac{1}{n_j} \sum_{i=1}^{n} \gamma_{ij}^{(t)} x_i.
 \]</div>
 <section id="normal-meanstd">
-<span id="math-q-normal"></span><h3><code class="docutils literal notranslate"><span class="pre">Normal</span></code>, параметризация <code class="docutils literal notranslate"><span class="pre">meanStd</span></code><a class="headerlink" href="#normal-meanstd" title="Link to this heading">#</a></h3>
+<span id="math-q-normal"></span><h3><code class="docutils literal notranslate"><span class="pre">Normal</span></code>, параметризация <code class="docutils literal notranslate"><span class="pre">meanStd</span></code><a class="headerlink" href="#normal-meanstd" title="Ссылка на этот заголовок">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Символ</p></th>
@@ -455,7 +456,7 @@ Q_j(\mu_j, \sigma_j) = -n_j \ln \sigma_j - \frac{1}{2\sigma_j^2} \sum_{i=1}^{n} 
 \]</div>
 <p>Приравнивая их нулю, получаем</p>
 <div class="math notranslate nohighlight" id="equation-eq-q-normal">
-<span class="eqno">(16)<a class="headerlink" href="#equation-eq-q-normal" title="Link to this equation">#</a></span>\[
+<span class="eqno">(16)<a class="headerlink" href="#equation-eq-q-normal" title="Ссылка на эту формулу">#</a></span>\[
 \mu_j = \bar{x}_j, \qquad \sigma_j^2 = \frac{1}{n_j} \sum_{i=1}^{n} \gamma_{ij}^{(t)} (x_i - \mu_j)^2.
 \]</div>
 <p>Обе точки — максимумы. По <span class="math notranslate nohighlight">\(\mu_j\)</span> функция <span class="math notranslate nohighlight">\(Q_j\)</span> вогнута. По <span class="math notranslate nohighlight">\(\sigma_j\)</span> при фиксированном <span class="math notranslate nohighlight">\(\mu_j\)</span> она стремится к <span class="math notranslate nohighlight">\(-\infty\)</span> на обоих концах интервала:</p>
@@ -472,7 +473,7 @@ Q_j \to -\infty \quad \text{при} \quad \sigma_j \to 0 \quad \text{и} \quad \
 <p>Как порядок блоков <code class="docutils literal notranslate"><span class="pre">{&quot;mu&quot;}</span></code> и <code class="docutils literal notranslate"><span class="pre">{&quot;sigma&quot;}</span></code> меняет итерацию, показано в <a class="reference internal" href="../algorithms/ecm.html"><span class="std std-doc">примере на странице ECM</span></a>.</p>
 </section>
 <section id="exponential-rate">
-<span id="math-q-exponential"></span><h3><code class="docutils literal notranslate"><span class="pre">Exponential</span></code>, параметризация <code class="docutils literal notranslate"><span class="pre">rate</span></code><a class="headerlink" href="#exponential-rate" title="Link to this heading">#</a></h3>
+<span id="math-q-exponential"></span><h3><code class="docutils literal notranslate"><span class="pre">Exponential</span></code>, параметризация <code class="docutils literal notranslate"><span class="pre">rate</span></code><a class="headerlink" href="#exponential-rate" title="Ссылка на этот заголовок">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Символ</p></th>
@@ -498,12 +499,12 @@ Q_j(\lambda_j) = n_j \ln \lambda_j - \lambda_j \sum_{i=1}^{n} \gamma_{ij}^{(t)} 
 \]</div>
 <p>Функция <span class="math notranslate nohighlight">\(Q_j\)</span> вогнута, и единственная стационарная точка — максимум:</p>
 <div class="math notranslate nohighlight" id="equation-eq-q-exponential">
-<span class="eqno">(17)<a class="headerlink" href="#equation-eq-q-exponential" title="Link to this equation">#</a></span>\[
+<span class="eqno">(17)<a class="headerlink" href="#equation-eq-q-exponential" title="Ссылка на эту формулу">#</a></span>\[
 \lambda_j = \frac{n_j}{\sum_{i=1}^{n} \gamma_{ij}^{(t)} x_i} = \frac{1}{\bar{x}_j}.
 \]</div>
 </section>
 <section id="math-q-guards">
-<span id="id5"></span><h3>Защита от вырождения<a class="headerlink" href="#math-q-guards" title="Link to this heading">#</a></h3>
+<span id="id5"></span><h3>Защита от вырождения<a class="headerlink" href="#math-q-guards" title="Ссылка на этот заголовок">#</a></h3>
 <p>Формулы <a class="reference internal" href="#equation-eq-q-normal">(16)</a> и <a class="reference internal" href="#equation-eq-q-exponential">(17)</a> не определены или вырождаются на краях. В этих случаях код оставляет параметры прежними; порог <code class="docutils literal notranslate"><span class="pre">NUMERICAL_TOLERANCE</span></code> равен <span class="math notranslate nohighlight">\(10^{-9}\)</span>.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -545,18 +546,18 @@ Q_j(\lambda_j) = n_j \ln \lambda_j - \lambda_j \sum_{i=1}^{n} \gamma_{ij}^{(t)} 
 <div class="prev-next-area">
     <a class="left-prev"
        href="index.html"
-       title="previous page">
+       title="предыдущая страница">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-subtitle">назад</p>
         <p class="prev-next-title">Стратегии M-шага</p>
       </div>
     </a>
     <a class="right-next"
        href="observed_data_likelihood.html"
-       title="next page">
+       title="следующая страница">
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-subtitle">вперёд</p>
         <p class="prev-next-title">Стратегия <code class="docutils literal notranslate"><span class="pre">observed_data_likelihood</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
@@ -576,7 +577,7 @@ Q_j(\lambda_j) = n_j \ln \lambda_j - \lambda_j \sum_{i=1}^{n} \gamma_{ij}^{(t)} 
 <div
     id="pst-page-navigation-heading-2"
     class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+    <i class="fa-solid fa-list"></i> На этой странице
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
@@ -617,7 +618,7 @@ Q_j(\lambda_j) = n_j \ln \lambda_j - \lambda_j \sum_{i=1}^{n} \gamma_{ij}^{(t)} 
 
   <p class="copyright">
     
-      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      © Копирайт 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>
@@ -626,7 +627,7 @@ Q_j(\lambda_j) = n_j \ln \lambda_j - \lambda_j \sum_{i=1}^{n} \gamma_{ij}^{(t)} 
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Создано с использованием <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>
@@ -640,7 +641,7 @@ Q_j(\lambda_j) = n_j \ln \lambda_j - \lambda_j \sum_{i=1}^{n} \gamma_{ij}^{(t)} 
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Собрано с использованием темы <a href=\"https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html\">PyData Sphinx</a> 0.16.1.
 </p></div>
       
     </div>

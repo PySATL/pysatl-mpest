@@ -1,0 +1,12 @@
+﻿
+MaximizationStrategy
+====================
+
+.. currentmodule:: pysatl_mpest.estimators.iterative
+
+.. autoclass:: pysatl_mpest.estimators.iterative.MaximizationStrategy
+   :show-inheritance:
+
+
+
+

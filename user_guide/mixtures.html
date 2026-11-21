@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="ru" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Компоненты и смеси &#8212; Mpest 1.0 documentation</title>
+    <title>Компоненты и смеси &#8212; документация pysatl-mpest 1.0</title>
   
   
   
@@ -41,18 +41,19 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/documentation_options.js?v=9ca2116e"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=cd1d70c9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/mixtures';</script>
     <script src="../_static/navigation-early.js?v=3315ea9b"></script>
     <script defer="defer" src="../_static/navigation.js?v=60fd207b"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="index" title="Алфавитный указатель" href="../genindex.html" />
+    <link rel="search" title="Поиск" href="../search.html" />
     <link rel="next" title="Выбор и настройка оценщика" href="estimators.html" />
     <link rel="prev" title="Быстрый старт" href="quickstart.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:language" content="ru"/>
   <meta name="docsearch:version" content="" />
   </head>
   
@@ -61,7 +62,7 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Перейти к основному содержанию</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -95,7 +96,7 @@
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Навигация по сайту">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -115,7 +116,7 @@
   
   
   
-    <p class="title logo__title">Mpest 1.0 documentation</p>
+    <p class="title logo__title">документация pysatl-mpest 1.0</p>
   
 </a></div>
     
@@ -174,9 +175,9 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
         </div>
@@ -185,8 +186,8 @@
         <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
@@ -197,16 +198,16 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
     </div>
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="На этой странице">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -283,8 +284,8 @@
           <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
@@ -295,8 +296,8 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 <nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+     aria-label="В этом разделе">
+  <p class="bd-links__title" role="heading" aria-level="1">В этом разделе</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Быстрый старт</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Компоненты и смеси</a></li>
@@ -334,11 +335,11 @@
       
         <div class="header-article-item">
 
-<nav aria-label="Breadcrumb" class="d-print-none">
+<nav aria-label="Хлебная крошка" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../index.html" class="nav-link" aria-label="Home">
+      <a href="../index.html" class="nav-link" aria-label="Главная">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
@@ -363,11 +364,11 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>Компоненты и смеси<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<h1>Компоненты и смеси<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">#</a></h1>
 <p><strong>Назначение:</strong> показать, как создавать компоненты из семейств <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>, фиксировать параметры и собирать из компонент начальную смесь.</p>
-<p>Примеры продолжают <a class="reference internal" href="quickstart.html"><span class="std std-doc">быстрый старт</span></a>: используются его импорты, функция <code class="docutils literal notranslate"><span class="pre">show</span></code> и выборка <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
+<p>Примеры продолжают <a class="reference internal" href="quickstart.html"><span class="std std-doc">быстрый старт</span></a>: используются его импорты, функция <code class="docutils literal notranslate"><span class="pre">show</span></code>, выборка <code class="docutils literal notranslate"><span class="pre">X</span></code> и оценщик <code class="docutils literal notranslate"><span class="pre">em</span></code>.</p>
 <section id="id2">
-<h2>Семейства и параметризации<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<h2>Семейства и параметризации<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">#</a></h2>
 <p>Компонента смеси — распределение <code class="docutils literal notranslate"><span class="pre">ParametricFamilyDistribution</span></code> из <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>. Своих распределений в <code class="docutils literal notranslate"><span class="pre">pysatl-mpest</span></code> нет, поэтому подходит любое семейство, зарегистрированное в <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>. Сейчас там есть:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -404,7 +405,7 @@
 <p>Оценка работает в той параметризации, в которой создана компонента, и в ней же возвращает результат. От параметризации зависит скорость: для (<code class="docutils literal notranslate"><span class="pre">Normal</span></code>, <code class="docutils literal notranslate"><span class="pre">meanStd</span></code>) и (<code class="docutils literal notranslate"><span class="pre">Exponential</span></code>, <code class="docutils literal notranslate"><span class="pre">rate</span></code>) новые параметры на M-шаге вычисляются в явном виде, для остальных пар их ищет оптимизатор. Таблица всех случаев — в разделе <a class="reference internal" href="../math/strategies/index.html"><span class="std std-doc">Стратегии M-шага</span></a>.</p>
 </section>
 <section id="id3">
-<h2>Фиксированные параметры<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<h2>Фиксированные параметры<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">#</a></h2>
 <p>Если часть параметров известна, их фиксируют через <code class="docutils literal notranslate"><span class="pre">family.view(...)</span></code>. Компонента из такого представления оценивает только свободные параметры:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fixed_start</span> <span class="o">=</span> <span class="n">MixtureModel</span><span class="p">([</span><span class="n">normal</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="n">show</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">fixed_start</span><span class="p">))</span>
@@ -417,7 +418,7 @@ weight=0.594  {'mu': 5.984, 'sigma': 1.489}
 <p><code class="docutils literal notranslate"><span class="pre">component.parameters</span></code> перечисляет только свободные параметры, поэтому <code class="docutils literal notranslate"><span class="pre">mu</span></code> первой компоненты в выводе нет; он остаётся равным <code class="docutils literal notranslate"><span class="pre">0.0</span></code>. Фиксированный параметр нельзя назвать в <code class="docutils literal notranslate"><span class="pre">parameter_groups</span></code> у <code class="docutils literal notranslate"><span class="pre">ECM</span></code> и <code class="docutils literal notranslate"><span class="pre">ECME</span></code>: <code class="docutils literal notranslate"><span class="pre">fit</span></code> бросит <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
 </section>
 <section id="id4">
-<h2>Смеси разных семейств<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<h2>Смеси разных семейств<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">#</a></h2>
 <p>Компоненты одной смеси могут быть из разных семейств:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mixed_truth</span> <span class="o">=</span> <span class="n">MixtureModel</span><span class="p">([</span><span class="n">exponential</span><span class="p">(</span><span class="n">lambda_</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="n">mixed_truth</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -433,7 +434,7 @@ weight=0.705  {'mu': 7.988, 'sigma': 1.025}
 <p>Без <code class="docutils literal notranslate"><span class="pre">weights</span></code> компоненты получают равные веса.</p>
 </section>
 <section id="id5">
-<h2>Работа со смесью<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<h2>Работа со смесью<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code> неизменяема. Методы <code class="docutils literal notranslate"><span class="pre">with_component</span></code>, <code class="docutils literal notranslate"><span class="pre">with_components</span></code>, <code class="docutils literal notranslate"><span class="pre">with_log_weights</span></code>, <code class="docutils literal notranslate"><span class="pre">with_added_component</span></code> и <code class="docutils literal notranslate"><span class="pre">without_component</span></code> возвращают новую смесь. Кроме того, у смеси есть:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">weights</span></code>, <code class="docutils literal notranslate"><span class="pre">log_weights</span></code>, <code class="docutils literal notranslate"><span class="pre">components</span></code>, <code class="docutils literal notranslate"><span class="pre">n_components</span></code>, индексация <code class="docutils literal notranslate"><span class="pre">mixture[j]</span></code> и обход <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">component</span> <span class="pre">in</span> <span class="pre">mixture</span></code>;</p></li>
@@ -457,18 +458,18 @@ weight=0.705  {'mu': 7.988, 'sigma': 1.025}
 <div class="prev-next-area">
     <a class="left-prev"
        href="quickstart.html"
-       title="previous page">
+       title="предыдущая страница">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-subtitle">назад</p>
         <p class="prev-next-title">Быстрый старт</p>
       </div>
     </a>
     <a class="right-next"
        href="estimators.html"
-       title="next page">
+       title="следующая страница">
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-subtitle">вперёд</p>
         <p class="prev-next-title">Выбор и настройка оценщика</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
@@ -488,7 +489,7 @@ weight=0.705  {'mu': 7.988, 'sigma': 1.025}
 <div
     id="pst-page-navigation-heading-2"
     class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+    <i class="fa-solid fa-list"></i> На этой странице
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
@@ -524,7 +525,7 @@ weight=0.705  {'mu': 7.988, 'sigma': 1.025}
 
   <p class="copyright">
     
-      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      © Копирайт 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>
@@ -533,7 +534,7 @@ weight=0.705  {'mu': 7.988, 'sigma': 1.025}
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Создано с использованием <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>
@@ -547,7 +548,7 @@ weight=0.705  {'mu': 7.988, 'sigma': 1.025}
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Собрано с использованием темы <a href=\"https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html\">PyData Sphinx</a> 0.16.1.
 </p></div>
       
     </div>

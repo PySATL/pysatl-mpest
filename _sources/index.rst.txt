@@ -3,13 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Mpest documentation
-===================
+pysatl-mpest documentation
+==========================
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Quick Start
+   :caption: User Guide
    :titlesonly:
    :includehidden:
 

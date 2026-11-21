@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="ru" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Модуль optimizers &#8212; Mpest 1.0 documentation</title>
+    <title>Модуль optimizers &#8212; документация pysatl-mpest 1.0</title>
   
   
   
@@ -41,19 +41,20 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/documentation_options.js?v=9ca2116e"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/translations.js?v=cd1d70c9"></script>
     <script defer="defer" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'design/modules/optimizers/optimizers';</script>
     <script src="../../../_static/navigation-early.js?v=3315ea9b"></script>
     <script defer="defer" src="../../../_static/navigation.js?v=60fd207b"></script>
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" />
     <link rel="next" title="Модуль estimators" href="../estimators/index.html" />
     <link rel="prev" title="Модуль core" href="../core/core.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:language" content="ru"/>
   <meta name="docsearch:version" content="" />
   </head>
   
@@ -62,7 +63,7 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Перейти к основному содержанию</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -96,7 +97,7 @@
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Навигация по сайту">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -116,7 +117,7 @@
   
   
   
-    <p class="title logo__title">Mpest 1.0 documentation</p>
+    <p class="title logo__title">документация pysatl-mpest 1.0</p>
   
 </a></div>
     
@@ -175,9 +176,9 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
         </div>
@@ -186,8 +187,8 @@
         <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
@@ -198,16 +199,16 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
     </div>
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="На этой странице">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -284,8 +285,8 @@
           <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
@@ -296,8 +297,8 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 <nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+     aria-label="В этом разделе">
+  <p class="bd-links__title" role="heading" aria-level="1">В этом разделе</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../domain.html">Предметная область и сценарии</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Архитектура</a></li>
@@ -346,11 +347,11 @@
       
         <div class="header-article-item">
 
-<nav aria-label="Breadcrumb" class="d-print-none">
+<nav aria-label="Хлебная крошка" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../../index.html" class="nav-link" aria-label="Home">
+      <a href="../../../index.html" class="nav-link" aria-label="Главная">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
@@ -378,10 +379,10 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="optimizers">
-<h1>Модуль <code class="docutils literal notranslate"><span class="pre">optimizers</span></code><a class="headerlink" href="#optimizers" title="Link to this heading">#</a></h1>
+<h1>Модуль <code class="docutils literal notranslate"><span class="pre">optimizers</span></code><a class="headerlink" href="#optimizers" title="Ссылка на этот заголовок">#</a></h1>
 <p><strong>Назначение:</strong> объяснить, где в оценке смеси нужна численная оптимизация, какой контракт должен выполнять оптимизатор и как подключить свой.</p>
 <section id="id1">
-<h2>Состав модуля<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<h2>Состав модуля<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">#</a></h2>
 <p>Модуль экспортирует три класса — <a class="reference internal" href="../../../api/optimizers/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">Optimizer</span></code>, <code class="docutils literal notranslate"><span class="pre">ScipyNelderMead</span></code> и <code class="docutils literal notranslate"><span class="pre">ScipyPowell</span></code></span></a>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">optimizer.py</span></code> — абстрактный <code class="docutils literal notranslate"><span class="pre">Optimizer</span></code> с единственным методом <code class="docutils literal notranslate"><span class="pre">minimize(target,</span> <span class="pre">params)</span></code>.</p></li>
@@ -391,7 +392,7 @@
 <p>Модуль не зависит от <code class="docutils literal notranslate"><span class="pre">core</span></code> и <code class="docutils literal notranslate"><span class="pre">estimators</span></code>: оптимизатор получает только целевую функцию и начальную точку и ничего не знает о смесях.</p>
 </section>
 <section id="id2">
-<h2>Диаграмма классов<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<h2>Диаграмма классов<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">#</a></h2>
 <p>Лист Overview показывает иерархию оптимизаторов, классы <code class="docutils literal notranslate"><span class="pre">estimators</span></code>, которые их хранят и вызывают, и функцию <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, на которой они построены.</p>
 <div class="mxgraph" style="max-width:100%;border:1px solid #e0e0e0;margin-bottom:1rem;" data-mxgraph="{&quot;highlight&quot;: &quot;#000000&quot;, &quot;nav&quot;: true, &quot;auto-fit&quot;: true, &quot;resize&quot;: false, &quot;toolbar&quot;: &quot;pages layers lightbox&quot;, &quot;toolbar-nohide&quot;: true, &quot;edit&quot;: null, &quot;page&quot;: 0, &quot;xml&quot;: &quot;&lt;mxfile host=\&quot;Electron\&quot;&gt;\n  &lt;diagram id=\&quot;overview\&quot; name=\&quot;Overview\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;1201\&quot; dy=\&quot;827\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;0\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;827\&quot; pageHeight=\&quot;1169\&quot; background=\&quot;#ffffff\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;title\&quot; parent=\&quot;1\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=0;fontSize=18;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;optimizers: overview\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;24\&quot; width=\&quot;860\&quot; x=\&quot;20\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;estimators\&quot; parent=\&quot;1\&quot; style=\&quot;shape=umlFrame;whiteSpace=wrap;html=1;width=130;height=26;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=8;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;fillColor=#ffffff;\&quot; value=\&quot;estimators\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;350\&quot; width=\&quot;230\&quot; x=\&quot;10\&quot; y=\&quot;50\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;iterative\&quot; parent=\&quot;1\&quot; style=\&quot;shape=umlFrame;whiteSpace=wrap;html=1;width=100;height=26;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=8;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;fillColor=#ffffff;\&quot; value=\&quot;iterative\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;135\&quot; width=\&quot;210\&quot; x=\&quot;20\&quot; y=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;strategies\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;«module»&amp;lt;br&amp;gt;_strategies\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;44\&quot; width=\&quot;180\&quot; x=\&quot;35\&quot; y=\&quot;112\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;maximization-step\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;MaximizationStep\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;34\&quot; width=\&quot;180\&quot; x=\&quot;35\&quot; y=\&quot;168\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;em\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;EM\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;34\&quot; width=\&quot;180\&quot; x=\&quot;35\&quot; y=\&quot;240\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;ecm\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ECM\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;34\&quot; width=\&quot;180\&quot; x=\&quot;35\&quot; y=\&quot;290\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;ecme\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ECME\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;34\&quot; width=\&quot;180\&quot; x=\&quot;35\&quot; y=\&quot;340\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizer\&quot; parent=\&quot;1\&quot; style=\&quot;swimlane;fontStyle=1;align=center;verticalAlign=middle;startSize=40;horizontal=1;html=1;collapsible=0;fillColor=#ffffff;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;«abstract»&amp;lt;br&amp;gt;&amp;lt;i&amp;gt;Optimizer&amp;lt;/i&amp;gt;\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;65\&quot; width=\&quot;300\&quot; x=\&quot;320\&quot; y=\&quot;100\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizer-members0\&quot; parent=\&quot;optimizer\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;&amp;lt;i&amp;gt;+ minimize(target, params): list[float]&amp;lt;/i&amp;gt;\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;25\&quot; width=\&quot;300\&quot; y=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;nelder-mead\&quot; parent=\&quot;1\&quot; style=\&quot;swimlane;fontStyle=1;align=center;verticalAlign=middle;startSize=30;horizontal=1;html=1;collapsible=0;fillColor=#ffffff;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ScipyNelderMead\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;55\&quot; width=\&quot;240\&quot; x=\&quot;400\&quot; y=\&quot;215\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;nelder-mead-members0\&quot; parent=\&quot;nelder-mead\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;+ minimize(target, params): list[float]\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;25\&quot; width=\&quot;240\&quot; y=\&quot;30\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;powell\&quot; parent=\&quot;1\&quot; style=\&quot;swimlane;fontStyle=1;align=center;verticalAlign=middle;startSize=30;horizontal=1;html=1;collapsible=0;fillColor=#ffffff;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ScipyPowell\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;55\&quot; width=\&quot;240\&quot; x=\&quot;400\&quot; y=\&quot;315\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;powell-members0\&quot; parent=\&quot;powell\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;+ minimize(target, params): list[float]\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;25\&quot; width=\&quot;240\&quot; y=\&quot;30\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;scipy\&quot; parent=\&quot;1\&quot; style=\&quot;shape=umlFrame;whiteSpace=wrap;html=1;width=80;height=26;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=8;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;fillColor=#F2F2F2;swimlaneFillColor=#F2F2F2;\&quot; value=\&quot;scipy\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;165\&quot; width=\&quot;150\&quot; x=\&quot;740\&quot; y=\&quot;205\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;minimize\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;optimize.minimize\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;130\&quot; x=\&quot;750\&quot; y=\&quot;272\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-strat-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;strategies\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=open;endFill=0;endSize=10;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;dashed=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitPerimeter=0;entryX=0;entryY=0.523;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;minimize()\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; x=\&quot;0.25\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;mxPoint y=\&quot;-12\&quot; as=\&quot;offset\&quot; /&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-maximization-step-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;maximization-step\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=open;endFill=0;endSize=10;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;strokeColor=#000000;fontColor=#000000;exitX=1;exitY=0.5;exitPerimeter=0;entryX=0;entryY=0.8;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;280\&quot; y=\&quot;152\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-em-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;em\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=open;endFill=0;endSize=10;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;strokeColor=#000000;fontColor=#000000;exitX=1;exitY=0.5;exitPerimeter=0;entryX=0;entryY=0.8;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;280\&quot; y=\&quot;152\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecm-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecm\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=open;endFill=0;endSize=10;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;strokeColor=#000000;fontColor=#000000;exitX=1;exitY=0.5;exitPerimeter=0;entryX=0;entryY=0.8;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;280\&quot; y=\&quot;152\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecme-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecme\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=open;endFill=0;endSize=10;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;strokeColor=#000000;fontColor=#000000;exitX=1;exitY=0.5;exitPerimeter=0;entryX=0;entryY=0.8;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;280\&quot; y=\&quot;152\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;lbl-optimizer\&quot; parent=\&quot;1\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;fontSize=12;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;optimizer\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;20\&quot; width=\&quot;70\&quot; x=\&quot;286\&quot; y=\&quot;225\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-nm-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;nelder-mead\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0;exitY=0.5;exitPerimeter=0;entryX=0.2;entryY=1;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;380\&quot; y=\&quot;242\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-pw-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;powell\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0;exitY=0.5;exitPerimeter=0;entryX=0.2;entryY=1;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;380\&quot; y=\&quot;342\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-nm-min\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;nelder-mead\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=open;endFill=0;endSize=10;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;dashed=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0;entryPerimeter=0;\&quot; target=\&quot;minimize\&quot; value=\&quot;Nelder-Mead\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; x=\&quot;-0.45\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;815\&quot; y=\&quot;242\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-pw-min\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;powell\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=open;endFill=0;endSize=10;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;dashed=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=1;entryPerimeter=0;\&quot; target=\&quot;minimize\&quot; value=\&quot;Powell\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; x=\&quot;-0.45\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;815\&quot; y=\&quot;342\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;lg\&quot; parent=\&quot;1\&quot; style=\&quot;swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;Legend\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;52\&quot; width=\&quot;197\&quot; x=\&quot;693\&quot; y=\&quot;420\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;lg-swatch-0\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;\&quot; value=\&quot;\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;14\&quot; width=\&quot;24\&quot; x=\&quot;703\&quot; y=\&quot;448\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;lg-caption-0\&quot; parent=\&quot;1\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;implemented\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;18\&quot; width=\&quot;62\&quot; x=\&quot;733\&quot; y=\&quot;446\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;lg-swatch-1\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;\&quot; value=\&quot;\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;14\&quot; width=\&quot;24\&quot; x=\&quot;805\&quot; y=\&quot;448\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;lg-caption-1\&quot; parent=\&quot;1\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;external\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;18\&quot; width=\&quot;45\&quot; x=\&quot;835\&quot; y=\&quot;446\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n      &lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n&lt;/mxfile&gt;\n&quot;}"></div><p class="drawio-source"><a class="reference download internal" download="" href="../../../_downloads/854a4dd0c89cedf53458c2ba3ab1aa66/optimizers.drawio"><span class="xref download myst">Исходник диаграммы классов</span></a></p>
 <ul class="simple">
@@ -402,7 +403,7 @@
 </ul>
 </section>
 <section id="minimize">
-<h2>Контракт <code class="docutils literal notranslate"><span class="pre">minimize</span></code><a class="headerlink" href="#minimize" title="Link to this heading">#</a></h2>
+<h2>Контракт <code class="docutils literal notranslate"><span class="pre">minimize</span></code><a class="headerlink" href="#minimize" title="Ссылка на этот заголовок">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">minimize(target,</span> <span class="pre">params)</span></code> получает целевую функцию от вектора параметров и начальную точку и возвращает точку, в которой цель меньше. Стратегии M-шага задают цель так:</p>
 <ul class="simple">
 <li><p>Параметры оптимизируются без ограничений. Если точка нарушает ограничения параметризации, например отрицательный масштаб, цель возвращает <code class="docutils literal notranslate"><span class="pre">+inf</span></code>. Реализация должна выдерживать такие значения.</p></li>
@@ -411,7 +412,7 @@
 <p>Оптимизатор не сообщает, сошёлся ли он: возвращается лучшая найденная точка. <code class="docutils literal notranslate"><span class="pre">MaximizationStep</span></code> применяет её как есть. Если точка нарушает ограничения параметризации, пересборка компоненты бросает <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>, и <code class="docutils literal notranslate"><span class="pre">fit</span></code> прерывается с этим исключением. Поэтому реализация должна возвращать точку, где цель конечна, например не хуже начальной.</p>
 </section>
 <section id="id3">
-<h2>Выбор оптимизатора<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<h2>Выбор оптимизатора<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">#</a></h2>
 <p>Оба метода не используют производные, поэтому подходят для любых семейств <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -431,11 +432,11 @@
 </div>
 </section>
 <section id="id4">
-<h2>Как добавить оптимизатор<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<h2>Как добавить оптимизатор<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">#</a></h2>
 <p>Унаследовать <code class="docutils literal notranslate"><span class="pre">Optimizer</span></code> и реализовать <code class="docutils literal notranslate"><span class="pre">minimize</span></code>. Реализация принимает начальную точку списком чисел, возвращает список той же длины, выдерживает <code class="docutils literal notranslate"><span class="pre">+inf</span></code> в значениях цели и не возвращает точку, где цель бесконечна. Состояние между вызовами не требуется: один экземпляр оптимизатора используется для всех блоков и итераций.</p>
 </section>
 <section id="id5">
-<h2>Ограничения<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<h2>Ограничения<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">#</a></h2>
 <ul class="simple">
 <li><p>Ограничения на параметры передаются только через <code class="docutils literal notranslate"><span class="pre">+inf</span></code> в цели, границы и ограничения <code class="docutils literal notranslate"><span class="pre">scipy</span></code> не используются.</p></li>
 <li><p>Настройки <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code> (число итераций, допуски) не передаются и остаются по умолчанию.</p></li>
@@ -457,18 +458,18 @@
 <div class="prev-next-area">
     <a class="left-prev"
        href="../core/core.html"
-       title="previous page">
+       title="предыдущая страница">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-subtitle">назад</p>
         <p class="prev-next-title">Модуль <code class="docutils literal notranslate"><span class="pre">core</span></code></p>
       </div>
     </a>
     <a class="right-next"
        href="../estimators/index.html"
-       title="next page">
+       title="следующая страница">
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-subtitle">вперёд</p>
         <p class="prev-next-title">Модуль <code class="docutils literal notranslate"><span class="pre">estimators</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
@@ -488,7 +489,7 @@
 <div
     id="pst-page-navigation-heading-2"
     class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+    <i class="fa-solid fa-list"></i> На этой странице
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
@@ -526,7 +527,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      © Копирайт 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>
@@ -535,7 +536,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Создано с использованием <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>
@@ -549,7 +550,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Собрано с использованием темы <a href=\"https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html\">PyData Sphinx</a> 0.16.1.
 </p></div>
       
     </div>

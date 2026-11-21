@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="ru" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Design &#8212; Mpest 1.0 documentation</title>
+    <title>Design &#8212; документация pysatl-mpest 1.0</title>
   
   
   
@@ -41,19 +41,20 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/documentation_options.js?v=9ca2116e"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=cd1d70c9"></script>
     <script defer="defer" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'design/index';</script>
     <script src="../_static/navigation-early.js?v=3315ea9b"></script>
     <script defer="defer" src="../_static/navigation.js?v=60fd207b"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="index" title="Алфавитный указатель" href="../genindex.html" />
+    <link rel="search" title="Поиск" href="../search.html" />
     <link rel="next" title="Предметная область и сценарии" href="domain.html" />
     <link rel="prev" title="Результат и история" href="../user_guide/results.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:language" content="ru"/>
   <meta name="docsearch:version" content="" />
   </head>
   
@@ -62,7 +63,7 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Перейти к основному содержанию</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -96,7 +97,7 @@
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Навигация по сайту">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -116,7 +117,7 @@
   
   
   
-    <p class="title logo__title">Mpest 1.0 documentation</p>
+    <p class="title logo__title">документация pysatl-mpest 1.0</p>
   
 </a></div>
     
@@ -175,9 +176,9 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
         </div>
@@ -186,8 +187,8 @@
         <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
@@ -198,16 +199,16 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
     </div>
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="На этой странице">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -284,8 +285,8 @@
           <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
@@ -296,8 +297,8 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 <nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+     aria-label="В этом разделе">
+  <p class="bd-links__title" role="heading" aria-level="1">В этом разделе</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="domain.html">Предметная область и сценарии</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Архитектура</a></li>
@@ -346,11 +347,11 @@
       
         <div class="header-article-item">
 
-<nav aria-label="Breadcrumb" class="d-print-none">
+<nav aria-label="Хлебная крошка" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../index.html" class="nav-link" aria-label="Home">
+      <a href="../index.html" class="nav-link" aria-label="Главная">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
@@ -372,16 +373,16 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="design">
-<h1>Design<a class="headerlink" href="#design" title="Link to this heading">#</a></h1>
+<h1>Design<a class="headerlink" href="#design" title="Ссылка на этот заголовок">#</a></h1>
 <p><strong>Назначение:</strong> дать разработчику общее представление об устройстве библиотеки, используемом стеке, статусе возможностей и навигации по архитектурной документации.</p>
 <div class="toctree-wrapper compound">
 </div>
 <section id="id1">
-<h2>Что делает библиотека<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<h2>Что делает библиотека<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">pysatl-mpest</span></code> оценивает параметры конечных смесей распределений по выборке EM-подобными алгоритмами; компоненты смеси — параметрические распределения из <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>.</p>
 </section>
 <section id="id2">
-<h2>Карта раздела<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<h2>Карта раздела<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="domain.html"><span class="std std-doc">Предметная область и сценарии</span></a> — методы оценки и сценарий работы с библиотекой.</p></li>
 <li><p><a class="reference internal" href="architecture.html"><span class="std std-doc">Архитектура</span></a> — модули и их зависимости.</p></li>
@@ -390,18 +391,26 @@
 </ul>
 </section>
 <section id="id3">
-<h2>Контекст системы<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<h2>Контекст системы<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">#</a></h2>
 <p>Лист System context показывает место библиотеки в окружении, форматы входных и выходных данных, а также внешние зависимости.</p>
 <div class="mxgraph" style="max-width:100%;border:1px solid #e0e0e0;margin-bottom:1rem;" data-mxgraph="{&quot;highlight&quot;: &quot;#000000&quot;, &quot;nav&quot;: true, &quot;auto-fit&quot;: true, &quot;resize&quot;: false, &quot;toolbar&quot;: &quot;pages layers lightbox&quot;, &quot;toolbar-nohide&quot;: true, &quot;edit&quot;: null, &quot;page&quot;: 0, &quot;xml&quot;: &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;mxfile host=\&quot;drawio\&quot;&gt;&lt;diagram id=\&quot;system-context\&quot; name=\&quot;System context\&quot;&gt;&lt;mxGraphModel dx=\&quot;880\&quot; dy=\&quot;540\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;0\&quot; pageScale=\&quot;1\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot; background=\&quot;#ffffff\&quot;&gt;&lt;root&gt;&lt;mxCell id=\&quot;0\&quot;/&gt;&lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot;/&gt;&lt;mxCell id=\&quot;title\&quot; value=\&quot;pysatl-mpest: system context\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=0;fontSize=18;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;20\&quot; y=\&quot;20\&quot; width=\&quot;600\&quot; height=\&quot;24\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;researcher\&quot; value=\&quot;Researcher\&quot; style=\&quot;shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;45\&quot; y=\&quot;150\&quot; width=\&quot;30\&quot; height=\&quot;55\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;system\&quot; value=\&quot;pysatl-mpest\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;380\&quot; y=\&quot;70\&quot; width=\&quot;480\&quot; height=\&quot;220\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;pysatl-core\&quot; value=\&quot;pysatl-core\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;385.0\&quot; y=\&quot;420\&quot; width=\&quot;150\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;numpy\&quot; value=\&quot;numpy\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;545.0\&quot; y=\&quot;420\&quot; width=\&quot;150\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;scipy\&quot; value=\&quot;scipy\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;705.0\&quot; y=\&quot;420\&quot; width=\&quot;150\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-fit\&quot; value=\&quot;\&quot; style=\&quot;endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;110\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;110\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-fit\&quot; value=\&quot;EM(breakpointers, pruners, optimizer)&amp;lt;br&amp;gt;.fit(X: ArrayLike, mixture: MixtureModel)\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;74\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-families\&quot; value=\&quot;\&quot; style=\&quot;dashed=1;endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#666666;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;165\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;165\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-families\&quot; value=\&quot;X, families without parameters&amp;lt;br&amp;gt;via initializers\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;129\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-sample-only\&quot; value=\&quot;\&quot; style=\&quot;dashed=1;endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#666666;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;220\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;220\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-sample-only\&quot; value=\&quot;X only&amp;lt;br&amp;gt;via structure_selection\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;184\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-result\&quot; value=\&quot;\&quot; style=\&quot;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;260\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;260\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-result\&quot; value=\&quot;fitted MixtureModel&amp;lt;br&amp;gt;.history: IterationsHistory\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;266\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-components\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;entryX=0;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; target=\&quot;pysatl-core\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;60\&quot; y=\&quot;235\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;Array as=\&quot;points\&quot;&gt;&lt;mxPoint x=\&quot;60\&quot; y=\&quot;445\&quot;/&gt;&lt;/Array&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-components\&quot; value=\&quot;components:&amp;lt;br&amp;gt;ParametricFamilyDistribution&amp;lt;br&amp;gt;&amp;lt;font color=&amp;quot;#666666&amp;quot;&amp;gt;families: ParametricFamily&amp;lt;/font&amp;gt;\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;68\&quot; y=\&quot;322\&quot; width=\&quot;175\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-pysatl-core\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;exitX=0.1667;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;system\&quot; target=\&quot;pysatl-core\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-pysatl-core\&quot; value=\&quot;ParametricFamily,&amp;lt;br&amp;gt;FiniteMixtureDistribution,&amp;lt;br&amp;gt;SamplingStrategy\&quot; style=\&quot;text;html=1;align=right;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;287\&quot; y=\&quot;331.0\&quot; width=\&quot;165\&quot; height=\&quot;48\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-numpy\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;system\&quot; target=\&quot;numpy\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-numpy\&quot; value=\&quot;arrays\&quot; style=\&quot;text;html=1;align=right;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;571\&quot; y=\&quot;347.0\&quot; width=\&quot;41\&quot; height=\&quot;16\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-scipy\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;exitX=0.8333;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;system\&quot; target=\&quot;scipy\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-scipy\&quot; value=\&quot;optimize.minimize,&amp;lt;br&amp;gt;special.logsumexp\&quot; style=\&quot;text;html=1;align=right;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;656\&quot; y=\&quot;339.0\&quot; width=\&quot;116\&quot; height=\&quot;32\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg\&quot; value=\&quot;Legend\&quot; style=\&quot;swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;584\&quot; y=\&quot;493\&quot; width=\&quot;276\&quot; height=\&quot;52\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-0\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;594\&quot; y=\&quot;521\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-0\&quot; value=\&quot;implemented\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;624\&quot; y=\&quot;519\&quot; width=\&quot;62\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-1\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;696\&quot; y=\&quot;521\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-1\&quot; value=\&quot;planned\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;726\&quot; y=\&quot;519\&quot; width=\&quot;39\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-2\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;775\&quot; y=\&quot;521\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-2\&quot; value=\&quot;external\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;805\&quot; y=\&quot;519\&quot; width=\&quot;45\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;/root&gt;&lt;/mxGraphModel&gt;&lt;/diagram&gt;&lt;/mxfile&gt;\n&quot;}"></div><p class="drawio-source"><a class="reference download internal" download="" href="../_downloads/3e7259b08d00c95fc12573c40c2512ea/full-architecture.drawio"><span class="xref download myst">Исходник схемы контекста</span></a></p>
 <ul class="simple">
-<li><p>Сейчас пользователь подаёт выборку <code class="docutils literal notranslate"><span class="pre">X</span></code> и начальную <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code>, которую сам собирает из компонент <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> (<code class="docutils literal notranslate"><span class="pre">ParametricFamilyDistribution</span></code>), выбирает оценщик (<code class="docutils literal notranslate"><span class="pre">EM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECME</span></code>) с критериями остановки (<code class="docutils literal notranslate"><span class="pre">breakpointers</span></code>), правилами удаления компонент (<code class="docutils literal notranslate"><span class="pre">pruners</span></code>) и оптимизатором, вызывает <code class="docutils literal notranslate"><span class="pre">fit</span></code> и получает обученную <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code>; историю итераций даёт свойство <code class="docutils literal notranslate"><span class="pre">history</span></code> (<code class="docutils literal notranslate"><span class="pre">IterationsHistory</span></code>).</p></li>
+<li><p>Вход: выборка <code class="docutils literal notranslate"><span class="pre">X</span></code> и начальная <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code>, которую пользователь сам собирает из компонент <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> (<code class="docutils literal notranslate"><span class="pre">ParametricFamilyDistribution</span></code>).</p></li>
+<li><p>Настройка: пользователь выбирает оценщик (<code class="docutils literal notranslate"><span class="pre">EM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECME</span></code>), критерии остановки (<code class="docutils literal notranslate"><span class="pre">breakpointers</span></code>), правила удаления компонент (<code class="docutils literal notranslate"><span class="pre">pruners</span></code>) и оптимизатор.</p></li>
+<li><p>Выход: <code class="docutils literal notranslate"><span class="pre">fit</span></code> возвращает обученную <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code>; историю итераций даёт свойство <code class="docutils literal notranslate"><span class="pre">history</span></code> (<code class="docutils literal notranslate"><span class="pre">IterationsHistory</span></code>).</p></li>
 <li><p>На листе на входе написан <code class="docutils literal notranslate"><span class="pre">EM(...)</span></code>; <code class="docutils literal notranslate"><span class="pre">ECM</span></code> и <code class="docutils literal notranslate"><span class="pre">ECME</span></code> принимают ту же базовую конфигурацию и дополнительно поддерживают разбиение параметров на группы.</p></li>
 <li><p>Два серых пути на листе запланированы: «<code class="docutils literal notranslate"><span class="pre">X</span></code> + семейства без параметров» (начальные параметры подбирает модуль <code class="docutils literal notranslate"><span class="pre">initializers</span></code>) и «только <code class="docutils literal notranslate"><span class="pre">X</span></code>» (модуль <code class="docutils literal notranslate"><span class="pre">structure_selection</span></code> подбирает число компонент и их семейства, затем начальные параметры) — Запланировано.</p></li>
-<li><p>Из зависимостей берутся: <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> — параметрические семейства и распределения (компонентой может быть любое из них), стратегия сэмплирования и конечная смесь <code class="docutils literal notranslate"><span class="pre">FiniteMixtureDistribution</span></code> только для экспорта через <code class="docutils literal notranslate"><span class="pre">to_core_mixture</span></code>; <code class="docutils literal notranslate"><span class="pre">scipy</span></code> — <code class="docutils literal notranslate"><span class="pre">optimize.minimize</span></code> (методы Nelder–Mead и Powell в <code class="docutils literal notranslate"><span class="pre">optimizers</span></code>) и <code class="docutils literal notranslate"><span class="pre">special.logsumexp</span></code>/<code class="docutils literal notranslate"><span class="pre">softmax</span></code>; <code class="docutils literal notranslate"><span class="pre">numpy</span></code> — массивы.</p></li>
+<li><p>Из зависимостей берутся:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> — параметрические семейства и распределения (компонентой может быть любое из них), базовый класс <code class="docutils literal notranslate"><span class="pre">SamplingStrategy</span></code> для собственной стратегии <code class="docutils literal notranslate"><span class="pre">DeterministicSampling</span></code> и конечная смесь <code class="docutils literal notranslate"><span class="pre">FiniteMixtureDistribution</span></code> только для экспорта через <code class="docutils literal notranslate"><span class="pre">to_core_mixture</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code> — <code class="docutils literal notranslate"><span class="pre">optimize.minimize</span></code> (методы Nelder–Mead и Powell в <code class="docutils literal notranslate"><span class="pre">optimizers</span></code>) и <code class="docutils literal notranslate"><span class="pre">special.logsumexp</span></code>/<code class="docutils literal notranslate"><span class="pre">softmax</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> — массивы.</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="id4">
-<h2>Стек<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<h2>Стек<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">#</a></h2>
 <ul class="simple">
 <li><p>Python: <code class="docutils literal notranslate"><span class="pre">&gt;=3.12,&lt;3.14</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>: <code class="docutils literal notranslate"><span class="pre">0.1.0a0</span></code></p></li>
@@ -412,7 +421,7 @@
 </ul>
 </section>
 <section id="id5">
-<h2>Статус возможностей<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<h2>Статус возможностей<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Возможность</p></th>
@@ -437,7 +446,7 @@
 <td><p><a class="reference internal" href="modules/estimators/iterative/iterative.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></span></a></p></td>
 <td><p>Готово</p></td>
 </tr>
-<tr class="row-even"><td><p>Удаление вырожденных компонент (<code class="docutils literal notranslate"><span class="pre">PriorThresholdPruner</span></code>)</p></td>
+<tr class="row-even"><td><p>Удаление компонент с малым весом (<code class="docutils literal notranslate"><span class="pre">PriorThresholdPruner</span></code>)</p></td>
 <td><p><a class="reference internal" href="modules/estimators/iterative/iterative.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></span></a></p></td>
 <td><p>Готово</p></td>
 </tr>
@@ -475,18 +484,18 @@
 <div class="prev-next-area">
     <a class="left-prev"
        href="../user_guide/results.html"
-       title="previous page">
+       title="предыдущая страница">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-subtitle">назад</p>
         <p class="prev-next-title">Результат и история</p>
       </div>
     </a>
     <a class="right-next"
        href="domain.html"
-       title="next page">
+       title="следующая страница">
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-subtitle">вперёд</p>
         <p class="prev-next-title">Предметная область и сценарии</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
@@ -506,7 +515,7 @@
 <div
     id="pst-page-navigation-heading-2"
     class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+    <i class="fa-solid fa-list"></i> На этой странице
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
@@ -543,7 +552,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      © Копирайт 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>
@@ -552,7 +561,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Создано с использованием <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>
@@ -566,7 +575,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Собрано с использованием темы <a href=\"https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html\">PyData Sphinx</a> 0.16.1.
 </p></div>
       
     </div>

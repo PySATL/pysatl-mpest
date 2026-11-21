@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="ru" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Модель смеси &#8212; Mpest 1.0 documentation</title>
+    <title>Модель смеси &#8212; документация pysatl-mpest 1.0</title>
   
   
   
@@ -41,20 +41,21 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/documentation_options.js?v=9ca2116e"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=cd1d70c9"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'math/mixture_model';</script>
     <script src="../_static/navigation-early.js?v=3315ea9b"></script>
     <script defer="defer" src="../_static/navigation.js?v=60fd207b"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="index" title="Алфавитный указатель" href="../genindex.html" />
+    <link rel="search" title="Поиск" href="../search.html" />
     <link rel="next" title="EM-подобные алгоритмы" href="algorithms/index.html" />
     <link rel="prev" title="Math" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:language" content="ru"/>
   <meta name="docsearch:version" content="" />
   </head>
   
@@ -63,7 +64,7 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Перейти к основному содержанию</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -97,7 +98,7 @@
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Навигация по сайту">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -117,7 +118,7 @@
   
   
   
-    <p class="title logo__title">Mpest 1.0 documentation</p>
+    <p class="title logo__title">документация pysatl-mpest 1.0</p>
   
 </a></div>
     
@@ -176,9 +177,9 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
         </div>
@@ -187,8 +188,8 @@
         <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
@@ -199,16 +200,16 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
     </div>
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="На этой странице">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -285,8 +286,8 @@
           <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
@@ -297,8 +298,8 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 <nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+     aria-label="В этом разделе">
+  <p class="bd-links__title" role="heading" aria-level="1">В этом разделе</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Модель смеси</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="algorithms/index.html">EM-подобные алгоритмы</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -345,11 +346,11 @@
       
         <div class="header-article-item">
 
-<nav aria-label="Breadcrumb" class="d-print-none">
+<nav aria-label="Хлебная крошка" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../index.html" class="nav-link" aria-label="Home">
+      <a href="../index.html" class="nav-link" aria-label="Главная">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
@@ -374,10 +375,10 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>Модель смеси<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<h1>Модель смеси<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">#</a></h1>
 <p><strong>Назначение:</strong> ввести обозначения и величины, на которых строятся все алгоритмы библиотеки: плотность смеси, правдоподобие, апостериорные вероятности принадлежности компонентам и Q-функцию, а также показать, где каждая из них вычисляется в коде.</p>
 <section id="id2">
-<h2>Обозначения<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<h2>Обозначения<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">#</a></h2>
 <p>Выборка состоит из независимых одинаково распределённых наблюдений. Индексы на всех страницах раздела означают одно и то же:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(i = 1, \dots, n\)</span> — номер наблюдения;</p></li>
@@ -414,7 +415,7 @@
 </tr>
 <tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\Psi^{(t)}\)</span></p></td>
 <td><p>параметры на итерации <span class="math notranslate nohighlight">\(t\)</span></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">state.curr_mixture</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">state.curr_mixture</span></code> в начале итерации (его же хранит <code class="docutils literal notranslate"><span class="pre">state.prev_mixture</span></code>)</p></td>
 </tr>
 <tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\ln f_j(x_i \mid \theta_j)\)</span></p></td>
 <td><p>матрица логарифмов плотностей компонент размера <span class="math notranslate nohighlight">\(n \times k\)</span></p></td>
@@ -429,13 +430,13 @@
 </div>
 </section>
 <section id="math-mixture-density">
-<span id="id3"></span><h2>Плотность смеси<a class="headerlink" href="#math-mixture-density" title="Link to this heading">#</a></h2>
+<span id="id3"></span><h2>Плотность смеси<a class="headerlink" href="#math-mixture-density" title="Ссылка на этот заголовок">#</a></h2>
 <div class="proof definition admonition" id="def-mixture">
-<p class="admonition-title"><span class="caption-number">Definition 1 </span> (Конечная смесь распределений)</p>
+<p class="admonition-title"><span class="caption-number">Определение 1 </span> (Конечная смесь распределений)</p>
 <section class="definition-content" id="proof-content">
 <p>Плотность конечной смеси из <span class="math notranslate nohighlight">\(k\)</span> компонент равна</p>
 <div class="math notranslate nohighlight" id="equation-eq-mixture-density">
-<span class="eqno">(1)<a class="headerlink" href="#equation-eq-mixture-density" title="Link to this equation">#</a></span>\[
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-mixture-density" title="Ссылка на эту формулу">#</a></span>\[
 f(x \mid \Psi) = \sum_{j=1}^{k} \omega_j \, f_j(x \mid \theta_j),
 \]</div>
 <p>где веса неотрицательны и в сумме дают единицу:</p>
@@ -453,17 +454,17 @@ f(x \mid \Psi) = \sum_{j=1}^{k} \omega_j \, f_j(x \mid \theta_j),
 <p>Так сумма малых плотностей не обнуляется в арифметике с плавающей точкой.</p>
 </section>
 <section id="math-observed-loglik">
-<span id="id4"></span><h2>Правдоподобие наблюдаемых данных<a class="headerlink" href="#math-observed-loglik" title="Link to this heading">#</a></h2>
+<span id="id4"></span><h2>Правдоподобие наблюдаемых данных<a class="headerlink" href="#math-observed-loglik" title="Ссылка на этот заголовок">#</a></h2>
 <p>Наблюдения независимы, поэтому правдоподобие смеси по выборке — произведение плотностей <a class="reference internal" href="#equation-eq-mixture-density">(1)</a>, а его логарифм — сумма:</p>
 <div class="math notranslate nohighlight" id="equation-eq-observed-loglik">
-<span class="eqno">(2)<a class="headerlink" href="#equation-eq-observed-loglik" title="Link to this equation">#</a></span>\[
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-observed-loglik" title="Ссылка на эту формулу">#</a></span>\[
 \ln L(\Psi \mid x) = \sum_{i=1}^{n} \ln \sum_{j=1}^{k} \omega_j \, f_j(x_i \mid \theta_j).
 \]</div>
 <p>Оценка максимального правдоподобия — параметры, при которых <a class="reference internal" href="#equation-eq-observed-loglik">(2)</a> максимально. Найти их напрямую трудно. Логарифм стоит перед суммой по компонентам, поэтому <a class="reference internal" href="#equation-eq-observed-loglik">(2)</a> не распадается на слагаемые по отдельным компонентам, и условие экстремума по параметрам одной компоненты зависит от параметров всех остальных.</p>
 <p>В коде <a class="reference internal" href="#equation-eq-observed-loglik">(2)</a> считает <code class="docutils literal notranslate"><span class="pre">MixtureModel.loglikelihood</span></code>. Это же значение записывается в историю итераций и проверяется критериями остановки по правдоподобию.</p>
 </section>
 <section id="math-complete-data">
-<span id="id5"></span><h2>Скрытые переменные и полные данные<a class="headerlink" href="#math-complete-data" title="Link to this heading">#</a></h2>
+<span id="id5"></span><h2>Скрытые переменные и полные данные<a class="headerlink" href="#math-complete-data" title="Ссылка на этот заголовок">#</a></h2>
 <p>EM-подход <a class="footnote-reference brackets" href="#footcite-dempster1977em" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> дополняет каждое наблюдение ненаблюдаемой меткой — номером компоненты, которая его породила. Метку записывают индикаторами:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -485,17 +486,18 @@ L_c(\Psi \mid x, z) = \prod_{i=1}^{n} \prod_{j=1}^{k} \bigl(\omega_j \, f_j(x_i 
 \]</div>
 <p>Его логарифм уже не содержит логарифма суммы <a class="footnote-reference brackets" href="#footcite-mclachlan2000finite" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, формула (2.26):</p>
 <div class="math notranslate nohighlight" id="equation-eq-complete-loglik">
-<span class="eqno">(3)<a class="headerlink" href="#equation-eq-complete-loglik" title="Link to this equation">#</a></span>\[
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-complete-loglik" title="Ссылка на эту формулу">#</a></span>\[
 \ln L_c(\Psi \mid x, z) = \sum_{i=1}^{n} \sum_{j=1}^{k} z_{ij} \bigl(\ln \omega_j + \ln f_j(x_i \mid \theta_j)\bigr).
 \]</div>
 </section>
 <section id="math-responsibilities">
-<span id="id8"></span><h2>Апостериорные вероятности<a class="headerlink" href="#math-responsibilities" title="Link to this heading">#</a></h2>
-<p>Метки неизвестны. Обозначим через <span class="math notranslate nohighlight">\(Z_{ij}\)</span> случайные величины, значения которых — индикаторы <span class="math notranslate nohighlight">\(z_{ij}\)</span>, и заменим каждый индикатор условным математическим ожиданием при текущих параметрах. Величина <span class="math notranslate nohighlight">\(Z_{ij}\)</span> принимает значения 0 и 1, поэтому её ожидание равно вероятности единицы, а она по формуле Байеса равна</p>
+<span id="id8"></span><h2>Апостериорные вероятности<a class="headerlink" href="#math-responsibilities" title="Ссылка на этот заголовок">#</a></h2>
+<p>Метки неизвестны. Обозначим через <span class="math notranslate nohighlight">\(Z_{ij}\)</span> случайные величины, значения которых — индикаторы <span class="math notranslate nohighlight">\(z_{ij}\)</span>, и заменим каждый индикатор условным математическим ожиданием при текущих параметрах. Так как <span class="math notranslate nohighlight">\(Z_{ij}\)</span> принимает только значения 0 и 1, её условное ожидание равно вероятности единицы. По формуле Байеса эта вероятность равна</p>
 <div class="math notranslate nohighlight" id="equation-eq-responsibilities">
-<span class="eqno">(4)<a class="headerlink" href="#equation-eq-responsibilities" title="Link to this equation">#</a></span>\[
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-responsibilities" title="Ссылка на эту формулу">#</a></span>\[
 \gamma_{ij}^{(t)} = \mathbb{E}\bigl[Z_{ij} \mid x, \Psi^{(t)}\bigr] = P\bigl(Z_{ij} = 1 \mid x_i, \Psi^{(t)}\bigr) = \frac{\omega_j^{(t)} \, f_j(x_i \mid \theta_j^{(t)})}{\sum_{l=1}^{k} \omega_l^{(t)} \, f_l(x_i \mid \theta_l^{(t)})}.
 \]</div>
+<p>Та же формула для произвольных параметров <span class="math notranslate nohighlight">\(\Psi\)</span> вместо <span class="math notranslate nohighlight">\(\Psi^{(t)}\)</span> задаёт <span class="math notranslate nohighlight">\(\gamma_{ij}(\Psi)\)</span>, так что <span class="math notranslate nohighlight">\(\gamma_{ij}^{(t)} = \gamma_{ij}(\Psi^{(t)})\)</span>.</p>
 <p>Матрицу <a class="reference internal" href="../glossary.html#term-1"><span class="xref std std-term">ответственностей</span></a> размера <span class="math notranslate nohighlight">\(n \times k\)</span> на <a class="reference internal" href="../glossary.html#term-E"><span class="xref std std-term">E-шаге</span></a> вычисляет <code class="docutils literal notranslate"><span class="pre">ExpectationStep</span></code> и записывает в <code class="docutils literal notranslate"><span class="pre">state.H</span></code>. Числитель и знаменатель <a class="reference internal" href="#equation-eq-responsibilities">(4)</a> считаются в логарифмах: из каждой строки логарифмов взвешенных плотностей вычитается её <code class="docutils literal notranslate"><span class="pre">logsumexp</span></code>, и результат возводится в экспоненту.</p>
 <p>У этого вычисления есть две особенности, которых нет в формуле:</p>
 <ul class="simple">
@@ -504,10 +506,10 @@ L_c(\Psi \mid x, z) = \prod_{i=1}^{n} \prod_{j=1}^{k} \bigl(\omega_j \, f_j(x_i 
 </ul>
 </section>
 <section id="q">
-<span id="math-q-function"></span><h2>Q-функция<a class="headerlink" href="#q" title="Link to this heading">#</a></h2>
+<span id="math-q-function"></span><h2>Q-функция<a class="headerlink" href="#q" title="Ссылка на этот заголовок">#</a></h2>
 <p>Подставим ответственности вместо неизвестных индикаторов в логарифм правдоподобия полных данных <a class="reference internal" href="#equation-eq-complete-loglik">(3)</a>. Формально это математическое ожидание <a class="reference internal" href="#equation-eq-complete-loglik">(3)</a> по распределению меток при текущих параметрах.</p>
 <div class="proof definition admonition" id="def-q-function">
-<p class="admonition-title"><span class="caption-number">Definition 2 </span> (Q-функция)</p>
+<p class="admonition-title"><span class="caption-number">Определение 2 </span> (Q-функция)</p>
 <section class="definition-content" id="proof-content">
 <div class="math notranslate nohighlight">
 \[
@@ -516,13 +518,13 @@ Q(\Psi \mid \Psi^{(t)}) = \mathbb{E}_{Z \mid x, \Psi^{(t)}}\bigl[\ln L_c(\Psi \m
 </section>
 </div><p>Логарифм правдоподобия полных данных <a class="reference internal" href="#equation-eq-complete-loglik">(3)</a> линеен по <span class="math notranslate nohighlight">\(Z_{ij}\)</span>. Поэтому математическое ожидание проходит внутрь суммы и заменяет каждую <span class="math notranslate nohighlight">\(Z_{ij}\)</span> ответственностью <a class="reference internal" href="#equation-eq-responsibilities">(4)</a> <a class="footnote-reference brackets" href="#footcite-mclachlan2000finite" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, формула (2.27):</p>
 <div class="math notranslate nohighlight" id="equation-eq-q-function">
-<span class="eqno">(5)<a class="headerlink" href="#equation-eq-q-function" title="Link to this equation">#</a></span>\[
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-q-function" title="Ссылка на эту формулу">#</a></span>\[
 Q(\Psi \mid \Psi^{(t)}) = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} \bigl(\ln \omega_j + \ln f_j(x_i \mid \theta_j)\bigr).
 \]</div>
 <p>В отличие от <a class="reference internal" href="#equation-eq-observed-loglik">(2)</a>, в <a class="reference internal" href="#equation-eq-q-function">(5)</a> нет логарифма суммы. Ответственности фиксированы на текущей итерации, а параметры входят в отдельные слагаемые. На этом свойстве строятся <a class="reference internal" href="../glossary.html#term-9"><span class="xref std std-term">M-шаги</span></a> библиотеки. Связь между ростом Q-функции и ростом правдоподобия <a class="reference internal" href="#equation-eq-observed-loglik">(2)</a> доказали Dempster <em>et al.</em><a class="footnote-reference brackets" href="#footcite-dempster1977em" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 </section>
 <section id="id11">
-<h2>Литература<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<h2>Литература<a class="headerlink" href="#id11" title="Ссылка на этот заголовок">#</a></h2>
 <div class="docutils container" id="id12">
 </div>
 </section>
@@ -553,18 +555,18 @@ Q(\Psi \mid \Psi^{(t)}) = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} \bigl(
 <div class="prev-next-area">
     <a class="left-prev"
        href="index.html"
-       title="previous page">
+       title="предыдущая страница">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-subtitle">назад</p>
         <p class="prev-next-title">Math</p>
       </div>
     </a>
     <a class="right-next"
        href="algorithms/index.html"
-       title="next page">
+       title="следующая страница">
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-subtitle">вперёд</p>
         <p class="prev-next-title">EM-подобные алгоритмы</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
@@ -584,7 +586,7 @@ Q(\Psi \mid \Psi^{(t)}) = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} \bigl(
 <div
     id="pst-page-navigation-heading-2"
     class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+    <i class="fa-solid fa-list"></i> На этой странице
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
@@ -623,7 +625,7 @@ Q(\Psi \mid \Psi^{(t)}) = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} \bigl(
 
   <p class="copyright">
     
-      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      © Копирайт 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>
@@ -632,7 +634,7 @@ Q(\Psi \mid \Psi^{(t)}) = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} \bigl(
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Создано с использованием <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>
@@ -646,7 +648,7 @@ Q(\Psi \mid \Psi^{(t)}) = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} \bigl(
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Собрано с использованием темы <a href=\"https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html\">PyData Sphinx</a> 0.16.1.
 </p></div>
       
     </div>

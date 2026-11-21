@@ -1,16 +1,10 @@
 .. _api.estimators.direct:
 
-#######################
-mpest.estimators.direct
-#######################
+##############################
+pysatl_mpest.estimators.direct
+##############################
 
 .. automodule:: pysatl_mpest.estimators.direct
    :no-members:
 
-Implementations
-================
-
-.. autosummary::
-   :toctree: generated
-   :nosignatures:
-   :template: class.rst
+Planned: direct (non-iterative) estimators. The package is empty for now.

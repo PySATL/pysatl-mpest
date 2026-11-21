@@ -11,7 +11,7 @@ direct/direct
 
 ## Состав модуля
 
-Модуль экспортирует [`BaseEstimator`, `EM`, `ECM` и `ECME`](../../../api/estimators/index.rst) и содержит два подпакета:
+Модуль экспортирует [`BaseEstimator`, `EM`, `ECM` и `ECME`](../../../api/estimators/index.rst) и содержит файлы и два подпакета:
 
 - `base_estimator.py` — абстрактный `BaseEstimator` с единственным методом `fit(X, mixture)`.
 - `em.py`, `ecm.py`, `ecme.py` — готовые оценщики, далее фасады.

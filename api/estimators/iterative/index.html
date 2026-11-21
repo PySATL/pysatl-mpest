@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="ru" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>mpest.estimators.iterative &#8212; Mpest 1.0 documentation</title>
+    <title>pysatl_mpest.estimators.iterative &#8212; документация pysatl-mpest 1.0</title>
   
   
   
@@ -41,18 +41,19 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/documentation_options.js?v=9ca2116e"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/translations.js?v=cd1d70c9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/estimators/iterative/index';</script>
     <script src="../../../_static/navigation-early.js?v=3315ea9b"></script>
     <script defer="defer" src="../../../_static/navigation.js?v=60fd207b"></script>
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" />
     <link rel="next" title="Pipeline" href="generated/pysatl_mpest.estimators.iterative.Pipeline.html" />
-    <link rel="prev" title="mpest.estimators.direct" href="../direct/index.html" />
+    <link rel="prev" title="pysatl_mpest.estimators.direct" href="../direct/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:language" content="ru"/>
   <meta name="docsearch:version" content="" />
   </head>
   
@@ -61,7 +62,7 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Перейти к основному содержанию</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -95,7 +96,7 @@
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Навигация по сайту">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -115,7 +116,7 @@
   
   
   
-    <p class="title logo__title">Mpest 1.0 documentation</p>
+    <p class="title logo__title">документация pysatl-mpest 1.0</p>
   
 </a></div>
     
@@ -174,9 +175,9 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
         </div>
@@ -185,8 +186,8 @@
         <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
@@ -197,16 +198,16 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn search-button-field search-button__button pst-js-only" title="Поиск" aria-label="Поиск" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
+ <span class="search-button__default-text">Поиск</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
     </div>
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="На этой странице">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -283,8 +284,8 @@
           <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="светлая"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="темная"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
@@ -295,25 +296,27 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 <nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+     aria-label="В этом разделе">
+  <p class="bd-links__title" role="heading" aria-level="1">В этом разделе</p>
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../core/index.html">mpest.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../core/index.html">pysatl_mpest.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../core/generated/pysatl_mpest.core.MixtureModel.html">MixtureModel</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">mpest.estimators</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../direct/index.html">mpest.estimators.direct</a></li>
-<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">mpest.estimators.iterative</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">pysatl_mpest.estimators</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../direct/index.html">pysatl_mpest.estimators.direct</a></li>
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">pysatl_mpest.estimators.iterative</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.Pipeline.html">Pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PipelineStep.html">PipelineStep</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PipelineState.html">PipelineState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PipelineStep.html">PipelineStep</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.Breakpointer.html">Breakpointer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.Pruner.html">Pruner</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.ExpectationStep.html">ExpectationStep</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.WeightsStep.html">WeightsStep</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.MaximizationStep.html">MaximizationStep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.OptimizationBlock.html">OptimizationBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.MaximizationStrategy.html">MaximizationStrategy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.StepBreakpointer.html">StepBreakpointer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.LikelihoodBreakpointer.html">LikelihoodBreakpointer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PriorThresholdPruner.html">PriorThresholdPruner</a></li>
@@ -328,7 +331,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/pysatl_mpest.estimators.BaseEstimator.html">BaseEstimator</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../optimizers/index.html">mpest.optimizers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../optimizers/index.html">pysatl_mpest.optimizers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../optimizers/generated/pysatl_mpest.optimizers.Optimizer.html">Optimizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimizers/generated/pysatl_mpest.optimizers.ScipyNelderMead.html">ScipyNelderMead</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimizers/generated/pysatl_mpest.optimizers.ScipyPowell.html">ScipyPowell</a></li>
@@ -366,11 +369,11 @@
       
         <div class="header-article-item">
 
-<nav aria-label="Breadcrumb" class="d-print-none">
+<nav aria-label="Хлебная крошка" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../../index.html" class="nav-link" aria-label="Home">
+      <a href="../../../index.html" class="nav-link" aria-label="Главная">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
@@ -378,9 +381,9 @@
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">API Reference</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">mpest.estimators</a></li>
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">pysatl_mpest.estimators</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mpest.estimators.iterative</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pysatl_mpest.estimators.iterative</span></li>
   </ul>
 </nav>
 </div>
@@ -398,20 +401,28 @@
                 <article class="bd-article">
                   
   <section id="module-pysatl_mpest.estimators.iterative">
-<span id="mpest-estimators-iterative"></span><span id="api-estimators-iterative"></span><h1>mpest.estimators.iterative<a class="headerlink" href="#module-pysatl_mpest.estimators.iterative" title="Link to this heading">#</a></h1>
+<span id="pysatl-mpest-estimators-iterative"></span><span id="api-estimators-iterative"></span><h1>pysatl_mpest.estimators.iterative<a class="headerlink" href="#module-pysatl_mpest.estimators.iterative" title="Ссылка на этот заголовок">#</a></h1>
 <p>Iterative estimation pipeline, steps, stopping criteria, and pruners.</p>
-<section id="abstract-classes">
-<h2>Abstract Classes<a class="headerlink" href="#abstract-classes" title="Link to this heading">#</a></h2>
+<section id="pipeline">
+<h2>Pipeline<a class="headerlink" href="#pipeline" title="Ссылка на этот заголовок">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.Pipeline.html#pysatl_mpest.estimators.iterative.Pipeline" title="pysatl_mpest.estimators.iterative.Pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pipeline</span></code></a></p></td>
 <td><p>Iterative mixture model parameter estimator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PipelineStep.html#pysatl_mpest.estimators.iterative.PipelineStep" title="pysatl_mpest.estimators.iterative.PipelineStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipelineStep</span></code></a></p></td>
-<td><p>Abstract base class for a single processing step in an iterative pipeline.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PipelineState.html#pysatl_mpest.estimators.iterative.PipelineState" title="pysatl_mpest.estimators.iterative.PipelineState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipelineState</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PipelineState.html#pysatl_mpest.estimators.iterative.PipelineState" title="pysatl_mpest.estimators.iterative.PipelineState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipelineState</span></code></a></p></td>
 <td><p>State container passed between pipeline steps and pruners.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="base-classes">
+<h2>Base Classes<a class="headerlink" href="#base-classes" title="Ссылка на этот заголовок">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PipelineStep.html#pysatl_mpest.estimators.iterative.PipelineStep" title="pysatl_mpest.estimators.iterative.PipelineStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipelineStep</span></code></a></p></td>
+<td><p>Abstract base class for a single processing step in an iterative pipeline.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.Breakpointer.html#pysatl_mpest.estimators.iterative.Breakpointer" title="pysatl_mpest.estimators.iterative.Breakpointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Breakpointer</span></code></a></p></td>
 <td><p>Abstract base class for pipeline stopping conditions.</p></td>
@@ -422,12 +433,12 @@
 </tbody>
 </table>
 </div>
-<section id="available-implementations">
-<h3>Available Implementations<a class="headerlink" href="#available-implementations" title="Link to this heading">#</a></h3>
-<p>The concrete implementations of the base classes, available for use when
-building a pipeline, will be listed below.</p>
+</section>
+<section id="implementations">
+<h2>Implementations<a class="headerlink" href="#implementations" title="Ссылка на этот заголовок">#</a></h2>
+<p>Concrete steps, stopping criteria and pruners for building a pipeline.</p>
 <section id="steps-pipelinestep">
-<h4>Steps (<cite>PipelineStep</cite>):<a class="headerlink" href="#steps-pipelinestep" title="Link to this heading">#</a></h4>
+<h3>Steps (<cite>PipelineStep</cite>):<a class="headerlink" href="#steps-pipelinestep" title="Ссылка на этот заголовок">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.ExpectationStep.html#pysatl_mpest.estimators.iterative.ExpectationStep" title="pysatl_mpest.estimators.iterative.ExpectationStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExpectationStep</span></code></a></p></td>
@@ -443,8 +454,22 @@ building a pipeline, will be listed below.</p>
 </table>
 </div>
 </section>
+<section id="m-step-configuration-maximizationstep">
+<h3>M-step configuration (<cite>MaximizationStep</cite>):<a class="headerlink" href="#m-step-configuration-maximizationstep" title="Ссылка на этот заголовок">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.OptimizationBlock.html#pysatl_mpest.estimators.iterative.OptimizationBlock" title="pysatl_mpest.estimators.iterative.OptimizationBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizationBlock</span></code></a></p></td>
+<td><p>Configuration task for optimizing a mixture component in <a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.MaximizationStep.html#pysatl_mpest.estimators.iterative.MaximizationStep" title="pysatl_mpest.estimators.iterative.MaximizationStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaximizationStep</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.MaximizationStrategy.html#pysatl_mpest.estimators.iterative.MaximizationStrategy" title="pysatl_mpest.estimators.iterative.MaximizationStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaximizationStrategy</span></code></a></p></td>
+<td><p>Available parameter update strategies for <a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.MaximizationStep.html#pysatl_mpest.estimators.iterative.MaximizationStep" title="pysatl_mpest.estimators.iterative.MaximizationStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaximizationStep</span></code></a>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="breakpointers-breakpointer">
-<h4>Breakpointers (<cite>Breakpointer</cite>):<a class="headerlink" href="#breakpointers-breakpointer" title="Link to this heading">#</a></h4>
+<h3>Breakpointers (<cite>Breakpointer</cite>):<a class="headerlink" href="#breakpointers-breakpointer" title="Ссылка на этот заголовок">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.StepBreakpointer.html#pysatl_mpest.estimators.iterative.StepBreakpointer" title="pysatl_mpest.estimators.iterative.StepBreakpointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepBreakpointer</span></code></a></p></td>
@@ -458,7 +483,7 @@ building a pipeline, will be listed below.</p>
 </div>
 </section>
 <section id="pruners-pruner">
-<h4>Pruners (<cite>Pruner</cite>):<a class="headerlink" href="#pruners-pruner" title="Link to this heading">#</a></h4>
+<h3>Pruners (<cite>Pruner</cite>):<a class="headerlink" href="#pruners-pruner" title="Ссылка на этот заголовок">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/pysatl_mpest.estimators.iterative.PriorThresholdPruner.html#pysatl_mpest.estimators.iterative.PriorThresholdPruner" title="pysatl_mpest.estimators.iterative.PriorThresholdPruner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PriorThresholdPruner</span></code></a></p></td>
@@ -467,10 +492,6 @@ building a pipeline, will be listed below.</p>
 </tbody>
 </table>
 </div>
-</section>
-</section>
-<section id="usage-example">
-<h3>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading">#</a></h3>
 </section>
 </section>
 </section>
@@ -487,18 +508,18 @@ building a pipeline, will be listed below.</p>
 <div class="prev-next-area">
     <a class="left-prev"
        href="../direct/index.html"
-       title="previous page">
+       title="предыдущая страница">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">mpest.estimators.direct</p>
+        <p class="prev-next-subtitle">назад</p>
+        <p class="prev-next-title">pysatl_mpest.estimators.direct</p>
       </div>
     </a>
     <a class="right-next"
        href="generated/pysatl_mpest.estimators.iterative.Pipeline.html"
-       title="next page">
+       title="следующая страница">
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-subtitle">вперёд</p>
         <p class="prev-next-title">Pipeline</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
@@ -518,18 +539,17 @@ building a pipeline, will be listed below.</p>
 <div
     id="pst-page-navigation-heading-2"
     class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+    <i class="fa-solid fa-list"></i> На этой странице
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abstract-classes">Abstract Classes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#available-implementations">Available Implementations</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-pipelinestep">Steps (<cite>PipelineStep</cite>):</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#breakpointers-breakpointer">Breakpointers (<cite>Breakpointer</cite>):</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pruners-pruner">Pruners (<cite>Pruner</cite>):</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-example">Usage Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline">Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#base-classes">Base Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementations">Implementations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-pipelinestep">Steps (<cite>PipelineStep</cite>):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-step-configuration-maximizationstep">M-step configuration (<cite>MaximizationStep</cite>):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#breakpointers-breakpointer">Breakpointers (<cite>Breakpointer</cite>):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pruners-pruner">Pruners (<cite>Pruner</cite>):</a></li>
 </ul>
 </li>
 </ul>
@@ -560,7 +580,7 @@ building a pipeline, will be listed below.</p>
 
   <p class="copyright">
     
-      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      © Копирайт 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>
@@ -569,7 +589,7 @@ building a pipeline, will be listed below.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Создано с использованием <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>
@@ -583,7 +603,7 @@ building a pipeline, will be listed below.</p>
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Собрано с использованием темы <a href=\"https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html\">PyData Sphinx</a> 0.16.1.
 </p></div>
       
     </div>

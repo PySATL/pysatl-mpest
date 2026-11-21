@@ -172,7 +172,8 @@ $$
 | Понятие | В коде |
 |---|---|
 | итерация $t \to t + 1$ | один проход цикла `Pipeline.fit` |
-| $\Psi^{(t)}$, $\Psi^{(t+1)}$ | `state.prev_mixture`, `state.curr_mixture` |
+| $\Psi^{(t)}$ | `state.curr_mixture` в начале итерации; в начале итерации он же копируется в `state.prev_mixture` |
+| $\Psi^{(t+1)}$ | `state.curr_mixture` после M-шага и удаления компонент |
 | E-шаг | `ExpectationStep` |
 | M-шаг для весов {eq}`eq-em-weights` | `WeightsStep` |
 | M-шаг для $\theta_j$ {eq}`eq-em-component` | блок `OptimizationBlock(j, None, MaximizationStrategy.QFUNCTION)` в `MaximizationStep` |
