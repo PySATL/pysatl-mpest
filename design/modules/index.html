@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Модули архитектуры pysatl-mpest &#8212; Mpest 1.0 documentation</title>
+    <title>Модули &#8212; Mpest 1.0 documentation</title>
   
   
   
@@ -31,6 +31,9 @@
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/navigation.css?v=e90a59ed" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -42,10 +45,12 @@
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'design/modules/index';</script>
+    <script src="../../_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="../../_static/navigation.js?v=60fd207b"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Core" href="core.html" />
-    <link rel="prev" title="Use-case диаграмма" href="../usecase.html" />
+    <link rel="next" title="Модуль core" href="core/core.html" />
+    <link rel="prev" title="Поведение" href="../behavior.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -139,8 +144,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -232,8 +251,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -264,24 +297,20 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Design:</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../tree.html">Дерево алгоритмов</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usecase.html">Use-case диаграмма</a></li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Модули архитектуры pysatl-mpest</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distributions.html">Distributions</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="estimators/index.html">Estimators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="estimators/direct.html">Direct</a></li>
-<li class="toctree-l3"><a class="reference internal" href="estimators/iterative.html">Iterative</a></li>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../domain.html">Предметная область и сценарии</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Архитектура</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../behavior.html">Поведение</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Модули</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/core.html">Модуль <code class="docutils literal notranslate"><span class="pre">core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimizers/optimizers.html">Модуль <code class="docutils literal notranslate"><span class="pre">optimizers</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="estimators/index.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="estimators/iterative/iterative.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="estimators/direct/direct.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators.direct</span></code></a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="components_number/index.html">Components number</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
-</ul>
-</details></li>
-<li class="toctree-l2"><a class="reference internal" href="initializers.html">Initializers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimizers.html">Optimizers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initializers/initializers.html">Модуль <code class="docutils literal notranslate"><span class="pre">initializers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="structure_selection/structure_selection.html">Модуль <code class="docutils literal notranslate"><span class="pre">structure_selection</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -327,7 +356,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Design</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Модули архитектуры pysatl-mpest</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Модули</span></li>
   </ul>
 </nav>
 </div>
@@ -344,32 +373,58 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="pysatl-mpest">
-<h1>Модули архитектуры pysatl-mpest<a class="headerlink" href="#pysatl-mpest" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>Модули<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p><strong>Назначение:</strong> показать, из каких модулей состоит библиотека, что делает каждый и где о нём читать.</p>
 <div class="toctree-wrapper compound">
 </div>
-<p>На следующей диаграмме представлена высокоуровневая диаграмма архитектуры pysatl-mpest:</p>
-<a class="reference internal image-reference" href="../../_images/highlevel-module.png"><img alt="Select Parameters" class="align-center" src="../../_images/highlevel-module.png" style="width: 900px;" />
-</a>
-<ul class="simple">
-<li><p><strong>Ядро (Core):</strong> Центральный модуль, который содержит основные классы для построения смеси и распределения. Ключевые компоненты:</p>
-<ul>
-<li><p><strong>MixtureModel</strong> — класс, представляющий саму модель смеси, который управляет компонентами и их весами.</p></li>
-<li><p><strong>Parameter</strong> — дескриптор для удобного определения и валидации параметров в классах распределений.</p></li>
-</ul>
-</li>
-<li><p><strong>Распределения (Distributions):</strong> Модуль содержит конкретные реализации непрерывных вероятностных распределений (например, нормальное, экспоненциальное и т.д.), которые могут быть компонентами смеси. Каждый класс в этом модуле наследуется от <code class="docutils literal notranslate"><span class="pre">ContinuousDistribution</span></code> и реализует его методы.</p></li>
-<li><p><strong>Оценщики (Estimators):</strong> Модуль, содержащий алгоритмы для оценки параметров смешанной модели. Это основной интерфейс для пользователя. Оценщики делятся на два типа:</p>
-<ul>
-<li><p><strong>Итеративные (Iterative):</strong> Реализуют пошаговые алгоритмы, такие как EM. Ключевым классом здесь является <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>, который позволяет гибко конструировать процесс оценки из отдельных шагов (<code class="docutils literal notranslate"><span class="pre">PipelineStep</span></code>), критериев останова (<code class="docutils literal notranslate"><span class="pre">Breakpointer</span></code>) и стратегий удаления компонент (<code class="docutils literal notranslate"><span class="pre">Pruner</span></code>).</p></li>
-<li><p><strong>Прямые (Direct):</strong> Реализуют неитеративные методы оценки, например, основанные на методе моментов для всей смеси сразу.</p></li>
-</ul>
-</li>
-<li><p><strong>Стратегии (Strategies):</strong> Определяют конкретную логику вычисления параметров для <em>отдельной компоненты</em> в рамках одного шага итеративного алгоритма (например, М-шага). Благодаря использованию механизма <code class="docutils literal notranslate"><span class="pre">&#64;singledispatch</span></code>, для каждой компоненты можно задать свою, наиболее эффективную аналитическую или численную стратегию оценки (например, через Q-функцию или метод моментов), что делает систему легко расширяемой.</p></li>
-<li><p><strong>Оптимизаторы (Optimizers):</strong> Предоставляют общие численные методы оптимизации. Они используются стратегиями в тех случаях, когда для оценки параметров компоненты нет аналитического решения. Также могут использоваться напрямую некоторыми оценщиками (например, в <strong>MLE</strong> для прямой максимизации правдоподобия всей смеси).</p></li>
-<li><p><strong>Инициализаторы (Initializers):</strong> Вспомогательный модуль, который отвечает за начальную инициализацию параметров смеси перед запуском основного алгоритма оценки. Качественная инициализация может значительно ускорить сходимость и улучшить итоговый результат.</p></li>
-<li><p><strong>Выбор числа компонент (Component Number):</strong> Модуль, предоставляющий инструменты для одной из самых важных задач в моделировании смесей — определения оптимального количества компонент.</p></li>
-</ul>
+<section id="id2">
+<h2>Список модулей<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Модуль</p></th>
+<th class="head"><p>Что делает</p></th>
+<th class="head"><p>Статус</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="core/core.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">core</span></code></span></a></p></td>
+<td><p>Модель смеси <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code> поверх распределений <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="optimizers/optimizers.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">optimizers</span></code></span></a></p></td>
+<td><p>Численные оптимизаторы для M-шага</p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="estimators/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators</span></code></span></a></p></td>
+<td><p>Готовые оценщики <code class="docutils literal notranslate"><span class="pre">EM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECME</span></code></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="estimators/iterative/iterative.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></span></a></p></td>
+<td><p>Итерационный конвейер: шаги, критерии остановки, удаление компонент, история</p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="estimators/direct/direct.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.direct</span></code></span></a></p></td>
+<td><p>Неитерационные оценщики</p></td>
+<td><p>Запланировано</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="initializers/initializers.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">initializers</span></code></span></a></p></td>
+<td><p>Подбор начальных параметров по выборке</p></td>
+<td><p>Запланировано</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="structure_selection/structure_selection.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">structure_selection</span></code></span></a></p></td>
+<td><p>Выбор числа компонент и их семейств</p></td>
+<td><p>Запланировано</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Зависимости между модулями показаны на странице <a class="reference internal" href="../architecture.html"><span class="std std-doc">«Архитектура»</span></a>. Читать удобно в порядке зависимостей: <code class="docutils literal notranslate"><span class="pre">core</span></code>, <code class="docutils literal notranslate"><span class="pre">optimizers</span></code>, <code class="docutils literal notranslate"><span class="pre">estimators</span></code>, <code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code>.</p>
+</section>
+<section id="id3">
+<h2>Устройство страниц<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>Страница реализованного модуля состоит из одних и тех же разделов: состав модуля, диаграмма классов, устройство его механизмов, как расширить модуль и ограничения. Сигнатуры и параметры на страницах не повторяются — они в <a class="reference internal" href="../../api/index.html"><span class="std std-doc">справочнике API</span></a>. Страницы запланированных модулей содержат только назначение.</p>
+</section>
 </section>
 
 
@@ -383,20 +438,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../usecase.html"
+       href="../behavior.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Use-case диаграмма</p>
+        <p class="prev-next-title">Поведение</p>
       </div>
     </a>
     <a class="right-next"
-       href="core.html"
+       href="core/core.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Core</p>
+        <p class="prev-next-title">Модуль <code class="docutils literal notranslate"><span class="pre">core</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -412,13 +467,17 @@
 
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/design/modules/index.md.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Список модулей</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Устройство страниц</a></li>
+</ul>
+  </nav></div>
 
 </div></div>
               
@@ -445,7 +504,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Danil Totmyanin, Anton Kazancev.
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>

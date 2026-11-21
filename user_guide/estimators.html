@@ -1,0 +1,619 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Выбор и настройка оценщика &#8212; Mpest 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/navigation.css?v=e90a59ed" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/estimators';</script>
+    <script src="../_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="../_static/navigation.js?v=60fd207b"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Результат и история" href="results.html" />
+    <link rel="prev" title="Компоненты и смеси" href="mixtures.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Mpest 1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Быстрый старт</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mixtures.html">Компоненты и смеси</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Выбор и настройка оценщика</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Результат и история</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Выбор и настройка оценщика</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>Выбор и настройка оценщика<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p><strong>Назначение:</strong> помочь выбрать между <code class="docutils literal notranslate"><span class="pre">EM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECM</span></code> и <code class="docutils literal notranslate"><span class="pre">ECME</span></code> и настроить критерии остановки, удаление компонент и оптимизатор.</p>
+<p>Примеры продолжают <a class="reference internal" href="quickstart.html"><span class="std std-doc">быстрый старт</span></a>: используются его импорты, функция <code class="docutils literal notranslate"><span class="pre">show</span></code>, выборка <code class="docutils literal notranslate"><span class="pre">X</span></code> и начальная смесь <code class="docutils literal notranslate"><span class="pre">start</span></code>.</p>
+<section id="id2">
+<h2>Общие аргументы<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>Все три оценщика создаются с одними и теми же аргументами:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">breakpointers</span></code> — <a class="reference internal" href="../glossary.html#term-7"><span class="xref std std-term">критерии остановки</span></a>. Оценка останавливается, когда срабатывает хотя бы один. Список не может быть пустым.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pruners</span></code> — правила <a class="reference internal" href="../glossary.html#term-13"><span class="xref std std-term">удаления компонент</span></a>. Может быть пустым.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer</span></code> — численный оптимизатор для параметров без решения в явном виде.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">mixture)</span></code> принимает одномерную выборку и начальную смесь и возвращает оценённую смесь. Число компонент и их семейства задаёт начальная смесь: оценщик их не подбирает (кроме удаления компонент правилами <code class="docutils literal notranslate"><span class="pre">pruners</span></code>).</p>
+</section>
+<section id="id3">
+<h2>Какой оценщик выбрать<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Оценщик</p></th>
+<th class="head"><p>Что делает</p></th>
+<th class="head"><p>Когда выбирать</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EM</span></code></p></td>
+<td><p>обновляет все свободные параметры компоненты за один шаг по <a class="reference internal" href="../glossary.html#term-Q"><span class="xref std std-term">Q-функции</span></a></p></td>
+<td><p>по умолчанию</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECM</span></code></p></td>
+<td><p>обновляет параметры компоненты группами по очереди, каждую группу — по Q-функции</p></td>
+<td><p>совместная максимизация трудна, а по группам проще: меньше параметров на один вызов оптимизатора</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECME</span></code></p></td>
+<td><p>для выбранных компонент максимизирует не Q-функцию, а само правдоподобие</p></td>
+<td><p>нужно меньше итераций; шаг по правдоподобию всегда численный и дороже</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Все три алгоритма не уменьшают правдоподобие от итерации к итерации, если оптимизатор не возвращает точку хуже стартовой. Доказательства и оговорки — в разделе <a class="reference internal" href="../math/algorithms/index.html"><span class="std std-doc">EM-подобные алгоритмы</span></a>.</p>
+<section id="ecm">
+<h3><code class="docutils literal notranslate"><span class="pre">ECM</span></code>: группы параметров<a class="headerlink" href="#ecm" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">parameter_groups</span></code> сопоставляет номеру компоненты упорядоченный список групп. Группы должны быть непустыми, не пересекаться и вместе покрывать все свободные параметры компоненты:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysatl_mpest.estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ECM</span>
+
+<span class="n">ecm</span> <span class="o">=</span> <span class="n">ECM</span><span class="p">([</span><span class="n">LikelihoodBreakpointer</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">),</span> <span class="n">StepBreakpointer</span><span class="p">(</span><span class="mi">200</span><span class="p">)],</span> <span class="p">[],</span> <span class="n">ScipyNelderMead</span><span class="p">())</span>
+<span class="n">show</span><span class="p">(</span><span class="n">ecm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">parameter_groups</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"sigma"</span><span class="p">},</span> <span class="p">{</span><span class="s2">"mu"</span><span class="p">}]}))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>weight=0.405  {'mu': -0.052, 'sigma': 0.972}
+weight=0.595  {'mu': 5.978, 'sigma': 1.495}
+</pre></div>
+</div>
+<p>Здесь у компоненты 0 сначала обновляется <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, затем <code class="docutils literal notranslate"><span class="pre">mu</span></code>; компонента 1 обновляется целиком, как в <code class="docutils literal notranslate"><span class="pre">EM</span></code>. Без <code class="docutils literal notranslate"><span class="pre">parameter_groups</span></code> <code class="docutils literal notranslate"><span class="pre">ECM</span></code> делает то же, что <code class="docutils literal notranslate"><span class="pre">EM</span></code>. Порядок групп влияет на путь итераций: пример для нормальной компоненты разобран на странице <a class="reference internal" href="../math/algorithms/ecm.html"><span class="std std-doc">ECM</span></a>.</p>
+</section>
+<section id="ecme">
+<h3><code class="docutils literal notranslate"><span class="pre">ECME</span></code>: выбор стратегии по компонентам<a class="headerlink" href="#ecme" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">ECME.fit</span></code> принимает номера компонент для каждой стратегии: <code class="docutils literal notranslate"><span class="pre">q_indices_raw</span></code> — шаги по Q-функции, <code class="docutils literal notranslate"><span class="pre">odl_indices_raw</span></code> — шаги по правдоподобию наблюдаемых данных. Остальные компоненты получают <code class="docutils literal notranslate"><span class="pre">default_strategy</span></code> из конструктора, по умолчанию <code class="docutils literal notranslate"><span class="pre">&quot;odl&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">parameter_groups</span></code> работает так же, как в <code class="docutils literal notranslate"><span class="pre">ECM</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysatl_mpest.estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ECME</span>
+
+<span class="n">ecme</span> <span class="o">=</span> <span class="n">ECME</span><span class="p">([</span><span class="n">LikelihoodBreakpointer</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">),</span> <span class="n">StepBreakpointer</span><span class="p">(</span><span class="mi">200</span><span class="p">)],</span> <span class="p">[],</span> <span class="n">ScipyNelderMead</span><span class="p">())</span>
+<span class="n">show</span><span class="p">(</span><span class="n">ecme</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">q_indices_raw</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ecme</span><span class="o">.</span><span class="n">history</span><span class="p">))</span>
+
+<span class="n">show</span><span class="p">(</span><span class="n">ecme</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">start</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ecme</span><span class="o">.</span><span class="n">history</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>weight=0.405  {'mu': -0.052, 'sigma': 0.972}
+weight=0.595  {'mu': 5.978, 'sigma': 1.495}
+11
+weight=0.405  {'mu': -0.052, 'sigma': 0.972}
+weight=0.595  {'mu': 5.978, 'sigma': 1.495}
+6
+</pre></div>
+</div>
+<p>Результат тот же, что у <code class="docutils literal notranslate"><span class="pre">EM</span></code>, но итераций меньше: 11, когда шаг по правдоподобию делает только компонента 0, и 6, когда его делают обе (у <code class="docutils literal notranslate"><span class="pre">EM</span></code> было 14). Каждая итерация при этом может быть дороже: у шага по правдоподобию нет решения в явном виде, его всегда ищет оптимизатор.</p>
+<p>Компонента не может получить обе стратегии: если номер есть и в <code class="docutils literal notranslate"><span class="pre">q_indices_raw</span></code>, и в <code class="docutils literal notranslate"><span class="pre">odl_indices_raw</span></code>, <code class="docutils literal notranslate"><span class="pre">fit</span></code> бросает <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+</section>
+</section>
+<section id="id4">
+<h2>Критерии остановки<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">StepBreakpointer(max_steps)</span></code> останавливает оценку после <code class="docutils literal notranslate"><span class="pre">max_steps</span></code> итераций.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LikelihoodBreakpointer(threshold)</span></code> останавливает оценку, когда логарифм правдоподобия за итерацию меняется меньше чем на <code class="docutils literal notranslate"><span class="pre">threshold</span></code>.</p></li>
+</ul>
+<p>Обычно их задают вместе, как в примерах: <code class="docutils literal notranslate"><span class="pre">LikelihoodBreakpointer</span></code> останавливает сошедшуюся оценку, <code class="docutils literal notranslate"><span class="pre">StepBreakpointer</span></code> ограничивает время, если сходимость медленная.</p>
+</section>
+<section id="id5">
+<h2>Удаление компонент<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PriorThresholdPruner(threshold)</span></code> удаляет компоненты, вес которых упал ниже <code class="docutils literal notranslate"><span class="pre">threshold</span></code>, и перенормирует веса остальных. Хотя бы одна компонента всегда остаётся. Правило полезно, когда число компонент задано с запасом:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysatl_mpest.estimators.iterative</span><span class="w"> </span><span class="kn">import</span> <span class="n">PriorThresholdPruner</span>
+
+<span class="n">extra</span> <span class="o">=</span> <span class="n">MixtureModel</span><span class="p">([</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)])</span>
+<span class="n">em_pruning</span> <span class="o">=</span> <span class="n">EM</span><span class="p">([</span><span class="n">LikelihoodBreakpointer</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">),</span> <span class="n">StepBreakpointer</span><span class="p">(</span><span class="mi">200</span><span class="p">)],</span> <span class="p">[</span><span class="n">PriorThresholdPruner</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)],</span> <span class="n">ScipyNelderMead</span><span class="p">())</span>
+<span class="n">show</span><span class="p">(</span><span class="n">em_pruning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">extra</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>weight=0.405  {'mu': -0.052, 'sigma': 0.972}
+weight=0.595  {'mu': 5.978, 'sigma': 1.495}
+</pre></div>
+</div>
+<p>Компонента с центром 20 далеко от данных, её вес на первой же итерации падает ниже 0.05, и она удаляется. На итерации с удалением правдоподобие может уменьшиться.</p>
+</section>
+<section id="id6">
+<h2>Оптимизатор<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ScipyNelderMead</span></code> и <code class="docutils literal notranslate"><span class="pre">ScipyPowell</span></code> вызывают <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code> с методами Nelder–Mead и Powell. Оптимизатор используется только там, где нет решения в явном виде: в шагах по правдоподобию <code class="docutils literal notranslate"><span class="pre">ECME</span></code> и в шагах по Q-функции для семейств и параметризаций, кроме (<code class="docutils literal notranslate"><span class="pre">Normal</span></code>, <code class="docutils literal notranslate"><span class="pre">meanStd</span></code>) и (<code class="docutils literal notranslate"><span class="pre">Exponential</span></code>, <code class="docutils literal notranslate"><span class="pre">rate</span></code>).</p>
+<p>Выбирайте <code class="docutils literal notranslate"><span class="pre">ScipyNelderMead</span></code>, если важна монотонность: он никогда не возвращает точку хуже стартовой, и на этом держатся гарантии роста правдоподобия. Для <code class="docutils literal notranslate"><span class="pre">ScipyPowell</span></code> это не проверено.</p>
+</section>
+<section id="id7">
+<h2>Свой конвейер<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>Оценщики — фасады над <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>. Если нужна комбинация шагов, которой нет в фасадах, конвейер собирают вручную. Например, стратегия <code class="docutils literal notranslate"><span class="pre">MOMENTS</span></code> (метод моментов вместо максимизации) доступна только так:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysatl_mpest.estimators.iterative</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ExpectationStep</span><span class="p">,</span>
+    <span class="n">MaximizationStep</span><span class="p">,</span>
+    <span class="n">MaximizationStrategy</span><span class="p">,</span>
+    <span class="n">OptimizationBlock</span><span class="p">,</span>
+    <span class="n">Pipeline</span><span class="p">,</span>
+    <span class="n">WeightsStep</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">OptimizationBlock</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">MaximizationStrategy</span><span class="o">.</span><span class="n">MOMENTS</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="n">n_components</span><span class="p">)]</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">ExpectationStep</span><span class="p">(),</span> <span class="n">WeightsStep</span><span class="p">(),</span> <span class="n">MaximizationStep</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="n">ScipyNelderMead</span><span class="p">())],</span>
+    <span class="p">[</span><span class="n">LikelihoodBreakpointer</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">),</span> <span class="n">StepBreakpointer</span><span class="p">(</span><span class="mi">200</span><span class="p">)],</span>
+<span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">start</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>weight=0.405  {'mu': -0.052, 'sigma': 0.972}
+weight=0.595  {'mu': 5.978, 'sigma': 1.495}
+</pre></div>
+</div>
+<p>У метода моментов нет гарантии роста правдоподобия; подробности — на странице <a class="reference internal" href="../math/strategies/moments.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">moments</span></code></span></a>. Как устроен конвейер и как добавить свой шаг — на странице модуля <a class="reference internal" href="../design/modules/estimators/iterative/iterative.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">iterative</span></code></span></a>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="mixtures.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Компоненты и смеси</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="results.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Результат и история</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Общие аргументы</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Какой оценщик выбрать</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecm"><code class="docutils literal notranslate"><span class="pre">ECM</span></code>: группы параметров</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecme"><code class="docutils literal notranslate"><span class="pre">ECME</span></code>: выбор стратегии по компонентам</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Критерии остановки</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Удаление компонент</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Оптимизатор</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Свой конвейер</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

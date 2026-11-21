@@ -31,6 +31,9 @@
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="_static/navigation.css?v=e90a59ed" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -42,6 +45,8 @@
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script src="_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="_static/navigation.js?v=60fd207b"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="User Guide" href="user_guide/index.html" />
@@ -138,8 +143,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -186,10 +205,6 @@
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
-  
 </div>
 
     </header>
@@ -233,8 +248,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -293,7 +322,11 @@
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="user_guide/index.html">User Guide</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="user_guide/index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/quickstart.html">Быстрый старт</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/mixtures.html">Компоненты и смеси</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/estimators.html">Выбор и настройка оценщика</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/results.html">Результат и история</a></li>
 </ul>
 </li>
 </ul>
@@ -301,7 +334,24 @@
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Design</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="design/index.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/index.html">Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="design/domain.html">Предметная область и сценарии</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design/architecture.html">Архитектура</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design/behavior.html">Поведение</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design/modules/index.html">Модули</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Math</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="math/index.html">Math</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="math/mixture_model.html">Модель смеси</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/algorithms/index.html">EM-подобные алгоритмы</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/strategies/index.html">Стратегии M-шага</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -313,6 +363,12 @@
 <li class="toctree-l2"><a class="reference internal" href="api/optimizers/index.html">mpest.optimizers</a></li>
 </ul>
 </li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Глоссарий</a></li>
 </ul>
 </div>
 </section>
@@ -343,21 +399,6 @@
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
-
-</div></div>
-              
             
           </div>
           <footer class="bd-footer-content">
@@ -381,7 +422,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Danil Totmyanin, Anton Kazancev.
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>

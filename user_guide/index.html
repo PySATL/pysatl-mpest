@@ -31,6 +31,9 @@
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/navigation.css?v=e90a59ed" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -42,9 +45,11 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/index';</script>
+    <script src="../_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="../_static/navigation.js?v=60fd207b"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Design" href="../design/index.html" />
+    <link rel="next" title="Быстрый старт" href="quickstart.html" />
     <link rel="prev" title="Mpest documentation" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -139,8 +144,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -232,8 +251,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -264,7 +297,13 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"></div>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Быстрый старт</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mixtures.html">Компоненты и смеси</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estimators.html">Выбор и настройка оценщика</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Результат и история</a></li>
+</ul>
+</div>
 </nav></div>
     </div>
   
@@ -320,10 +359,21 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="user-guide">
+  <section class="tex2jax_ignore mathjax_ignore" id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
+<p><strong>Назначение:</strong> показать, как установить библиотеку, собрать начальную смесь, выбрать оценщик и прочитать результат оценки.</p>
 <div class="toctree-wrapper compound">
 </div>
+<section id="id1">
+<h2>Установка<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Библиотека разрабатывается с <a class="reference external" href="https://python-poetry.org/">Poetry</a> и пока устанавливается из репозитория:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/PySATL/pysatl-mpest.git
+<span class="nb">cd</span><span class="w"> </span>pysatl-mpest
+poetry<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Нужен Python 3.12 или 3.13. Зависимости — <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code> и <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>, из которого берутся распределения компонент.</p>
+</section>
 </section>
 
 
@@ -346,11 +396,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="../design/index.html"
+       href="quickstart.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Design</p>
+        <p class="prev-next-title">Быстрый старт</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -366,13 +416,16 @@
 
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/user_guide/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Установка</a></li>
+</ul>
+  </nav></div>
 
 </div></div>
               
@@ -399,7 +452,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Danil Totmyanin, Anton Kazancev.
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>

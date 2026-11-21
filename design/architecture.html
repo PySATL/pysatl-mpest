@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Архитектура &#8212; Mpest 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/navigation.css?v=e90a59ed" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'design/architecture';</script>
+    <script src="../_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="../_static/navigation.js?v=60fd207b"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Поведение" href="behavior.html" />
+    <link rel="prev" title="Предметная область и сценарии" href="domain.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Mpest 1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Предметная область и сценарии</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Архитектура</a></li>
+<li class="toctree-l1"><a class="reference internal" href="behavior.html">Поведение</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules/index.html">Модули</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/core/core.html">Модуль <code class="docutils literal notranslate"><span class="pre">core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/optimizers/optimizers.html">Модуль <code class="docutils literal notranslate"><span class="pre">optimizers</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="modules/estimators/index.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules/estimators/iterative/iterative.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules/estimators/direct/direct.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators.direct</span></code></a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/initializers/initializers.html">Модуль <code class="docutils literal notranslate"><span class="pre">initializers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/structure_selection/structure_selection.html">Модуль <code class="docutils literal notranslate"><span class="pre">structure_selection</span></code></a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Design</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Архитектура</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>Архитектура<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p><strong>Назначение:</strong> показать границы пакетов и путь от публичного оценщика до модели и оптимизатора.</p>
+<section id="id2">
+<h2>Модули и зависимости<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="mxgraph" style="max-width:100%;border:1px solid #e0e0e0;margin-bottom:1rem;" data-mxgraph="{&quot;highlight&quot;: &quot;#000000&quot;, &quot;nav&quot;: true, &quot;auto-fit&quot;: true, &quot;resize&quot;: false, &quot;toolbar&quot;: &quot;pages layers lightbox&quot;, &quot;toolbar-nohide&quot;: true, &quot;edit&quot;: null, &quot;page&quot;: 0, &quot;xml&quot;: &quot;&lt;mxfile host=\&quot;Electron\&quot; pages=\&quot;2\&quot;&gt;\n  &lt;diagram id=\&quot;overview\&quot; name=\&quot;Overview\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;1200\&quot; dy=\&quot;900\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;0\&quot; pageScale=\&quot;1\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot; background=\&quot;#ffffff\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;title\&quot; value=\&quot;pysatl-mpest: module architecture (overview)\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=0;fontSize=18;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;20\&quot; y=\&quot;20\&quot; width=\&quot;780\&quot; height=\&quot;24\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;structure_selection\&quot; value=\&quot;structure_selection\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;300\&quot; y=\&quot;90\&quot; width=\&quot;200\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;initializers\&quot; value=\&quot;initializers\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;20\&quot; y=\&quot;205\&quot; width=\&quot;170\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;estimators\&quot; value=\&quot;estimators\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;220\&quot; y=\&quot;190\&quot; width=\&quot;360\&quot; height=\&quot;120\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;iterative\&quot; value=\&quot;iterative\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;235\&quot; y=\&quot;235\&quot; width=\&quot;165\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;direct\&quot; value=\&quot;direct\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;415\&quot; y=\&quot;235\&quot; width=\&quot;150\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizers\&quot; value=\&quot;optimizers\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;640\&quot; y=\&quot;220\&quot; width=\&quot;150\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;core\&quot; value=\&quot;core\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;300\&quot; y=\&quot;380\&quot; width=\&quot;200\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;pysatl-core\&quot; value=\&quot;pysatl-core\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;300\&quot; y=\&quot;490\&quot; width=\&quot;200\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-opt\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1;exitY=0.5;entryX=0;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; target=\&quot;optimizers\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-core\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; target=\&quot;core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-core-ext\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;core\&quot; target=\&quot;pysatl-core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-ext\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.9;exitY=1;entryX=1;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; target=\&quot;pysatl-core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;544\&quot; y=\&quot;520\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-est\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; target=\&quot;estimators\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-init\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0;exitY=0.5;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; target=\&quot;initializers\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;105\&quot; y=\&quot;120\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-init-core\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0.5;exitY=1;entryX=0;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;initializers\&quot; target=\&quot;core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;105\&quot; y=\&quot;410\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n      &lt;mxCell id=\&quot;lg\&quot; value=\&quot;Legend\&quot; style=\&quot;swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;678\&quot; y=\&quot;392\&quot; width=\&quot;112\&quot; height=\&quot;96\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-0\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;688\&quot; y=\&quot;420\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-0\&quot; value=\&quot;implemented\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;718\&quot; y=\&quot;418\&quot; width=\&quot;62\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-1\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;688\&quot; y=\&quot;442\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-1\&quot; value=\&quot;planned\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;718\&quot; y=\&quot;440\&quot; width=\&quot;39\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-2\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;688\&quot; y=\&quot;464\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-2\&quot; value=\&quot;external\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;718\&quot; y=\&quot;462\&quot; width=\&quot;45\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n  &lt;diagram id=\&quot;detailed\&quot; name=\&quot;Detailed\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;1201\&quot; dy=\&quot;827\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;0\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;827\&quot; pageHeight=\&quot;1169\&quot; background=\&quot;#ffffff\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;title\&quot; parent=\&quot;1\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=0;fontSize=18;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;pysatl-mpest: module architecture (detailed)\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;24\&quot; width=\&quot;860\&quot; x=\&quot;20\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;structure_selection\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; value=\&quot;structure_selection\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;200\&quot; x=\&quot;200\&quot; y=\&quot;50\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;initializers\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; value=\&quot;initializers\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;680\&quot; y=\&quot;50\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;estimators\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;estimators\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;360\&quot; width=\&quot;560\&quot; x=\&quot;20\&quot; y=\&quot;140\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;base_estimator\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;BaseEstimator\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;145\&quot; y=\&quot;180\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;em\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;EM\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;100\&quot; x=\&quot;50\&quot; y=\&quot;285\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;ecm\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ECM\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;100\&quot; x=\&quot;170\&quot; y=\&quot;285\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;ecme\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ECME\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;100\&quot; x=\&quot;290\&quot; y=\&quot;285\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;iterative\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;iterative\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;60\&quot; width=\&quot;340\&quot; x=\&quot;50\&quot; y=\&quot;400\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;direct\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; value=\&quot;direct\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;60\&quot; width=\&quot;120\&quot; x=\&quot;430\&quot; y=\&quot;400\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizers\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;optimizers\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;150\&quot; width=\&quot;250\&quot; x=\&quot;630\&quot; y=\&quot;140\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizer\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;Optimizer\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;100\&quot; x=\&quot;720\&quot; y=\&quot;157\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;nelder\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ScipyNelderMead\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;130\&quot; x=\&quot;640\&quot; y=\&quot;240\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;powell\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ScipyPowell\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;85\&quot; x=\&quot;785\&quot; y=\&quot;240\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;core\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;core\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;90\&quot; width=\&quot;250\&quot; x=\&quot;630\&quot; y=\&quot;330\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;mixture\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;MixtureModel\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;130\&quot; x=\&quot;690\&quot; y=\&quot;365\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;pysatl-core\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;pysatl-core\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;60\&quot; width=\&quot;250\&quot; x=\&quot;630\&quot; y=\&quot;470\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-est\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.500;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;estimators\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-init\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=0.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;initializers\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-init-core\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;initializers\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=1.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;910\&quot; y=\&quot;85\&quot; /&gt;\n              &lt;mxPoint x=\&quot;910\&quot; y=\&quot;375\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-em-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;em\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; x=\&quot;0.1771\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;100\&quot; y=\&quot;260\&quot; /&gt;\n              &lt;mxPoint x=\&quot;220\&quot; y=\&quot;260\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecm-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecm\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecme-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecme\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; x=\&quot;0.0057\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;340\&quot; y=\&quot;260\&quot; /&gt;\n              &lt;mxPoint x=\&quot;220\&quot; y=\&quot;260\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-iter-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;iterative\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=1.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;410\&quot; y=\&quot;430\&quot; /&gt;\n              &lt;mxPoint x=\&quot;410\&quot; y=\&quot;205\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-em-iter\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;em\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.147;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;iterative\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecm-iter\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecm\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.500;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;iterative\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecme-iter\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecme\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.853;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;iterative\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-nelder-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;nelder\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;705\&quot; y=\&quot;227\&quot; /&gt;\n              &lt;mxPoint x=\&quot;770\&quot; y=\&quot;227\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-powell-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;powell\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.494;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;827\&quot; y=\&quot;227\&quot; /&gt;\n              &lt;mxPoint x=\&quot;770\&quot; y=\&quot;227\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.208;exitPerimeter=0;entryX=0.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;optimizers\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-core\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.653;exitPerimeter=0;entryX=0.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-ext\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.958;exitPerimeter=0;entryX=0.000;entryY=0.250;entryPerimeter=0;\&quot; target=\&quot;pysatl-core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-core-ext\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;core\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.500;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;pysatl-core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n      &lt;mxCell id=\&quot;lg\&quot; value=\&quot;Legend\&quot; style=\&quot;swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;10\&quot; y=\&quot;530\&quot; width=\&quot;276\&quot; height=\&quot;52\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-0\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;20\&quot; y=\&quot;558\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-0\&quot; value=\&quot;implemented\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;50\&quot; y=\&quot;556\&quot; width=\&quot;62\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-1\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;122\&quot; y=\&quot;558\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-1\&quot; value=\&quot;planned\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;152\&quot; y=\&quot;556\&quot; width=\&quot;39\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-2\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;201\&quot; y=\&quot;558\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-2\&quot; value=\&quot;external\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;231\&quot; y=\&quot;556\&quot; width=\&quot;45\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n&lt;/mxfile&gt;\n&quot;}"></div><p class="drawio-source"><a class="reference download internal" download="" href="../_downloads/b7b21a4d87337e279542f5b6a905fcd3/module-architecture.drawio"><span class="xref download myst">Исходник обзорной схемы</span></a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/core/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">core</span></code></span></a> хранит модель смеси в <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code> и использует распределения из <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>. Модель вычисляет плотность и правдоподобие, генерирует выборки и возвращает новые экземпляры при изменениях.</p></li>
+<li><p><a class="reference internal" href="../api/estimators/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators</span></code></span></a> принимает выборку и модель, а <code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code> обновляет веса и параметры модели по шагам. При численной оптимизации конвейер обращается к <code class="docutils literal notranslate"><span class="pre">optimizers</span></code>.</p></li>
+<li><p><a class="reference internal" href="../api/optimizers/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">optimizers</span></code></span></a> минимизирует переданную целевую функцию, используя методы Нелдера — Мида и Пауэлла из SciPy. Модель смеси и численные оптимизаторы независимы друг от друга.</p></li>
+</ul>
+<p>На схеме пунктиром обозначены запланированные модули. <code class="docutils literal notranslate"><span class="pre">initializers</span></code> подбирает начальные параметры, <code class="docutils literal notranslate"><span class="pre">structure_selection</span></code> определяет число компонентов и их семейства, а <code class="docutils literal notranslate"><span class="pre">estimators.direct</span></code> отведён под неитерационные оценщики.</p>
+</section>
+<section id="internal-structure">
+<span id="id3"></span><h2>Внутреннее устройство<a class="headerlink" href="#internal-structure" title="Link to this heading">#</a></h2>
+<div class="mxgraph" style="max-width:100%;border:1px solid #e0e0e0;margin-bottom:1rem;" data-mxgraph="{&quot;highlight&quot;: &quot;#000000&quot;, &quot;nav&quot;: true, &quot;auto-fit&quot;: true, &quot;resize&quot;: false, &quot;toolbar&quot;: &quot;pages layers lightbox&quot;, &quot;toolbar-nohide&quot;: true, &quot;edit&quot;: null, &quot;page&quot;: 1, &quot;xml&quot;: &quot;&lt;mxfile host=\&quot;Electron\&quot; pages=\&quot;2\&quot;&gt;\n  &lt;diagram id=\&quot;overview\&quot; name=\&quot;Overview\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;1200\&quot; dy=\&quot;900\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;0\&quot; pageScale=\&quot;1\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot; background=\&quot;#ffffff\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;title\&quot; value=\&quot;pysatl-mpest: module architecture (overview)\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=0;fontSize=18;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;20\&quot; y=\&quot;20\&quot; width=\&quot;780\&quot; height=\&quot;24\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;structure_selection\&quot; value=\&quot;structure_selection\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;300\&quot; y=\&quot;90\&quot; width=\&quot;200\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;initializers\&quot; value=\&quot;initializers\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;20\&quot; y=\&quot;205\&quot; width=\&quot;170\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;estimators\&quot; value=\&quot;estimators\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;220\&quot; y=\&quot;190\&quot; width=\&quot;360\&quot; height=\&quot;120\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;iterative\&quot; value=\&quot;iterative\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;235\&quot; y=\&quot;235\&quot; width=\&quot;165\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;direct\&quot; value=\&quot;direct\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;415\&quot; y=\&quot;235\&quot; width=\&quot;150\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizers\&quot; value=\&quot;optimizers\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;640\&quot; y=\&quot;220\&quot; width=\&quot;150\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;core\&quot; value=\&quot;core\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;300\&quot; y=\&quot;380\&quot; width=\&quot;200\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;pysatl-core\&quot; value=\&quot;pysatl-core\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;300\&quot; y=\&quot;490\&quot; width=\&quot;200\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-opt\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1;exitY=0.5;entryX=0;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; target=\&quot;optimizers\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-core\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; target=\&quot;core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-core-ext\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;core\&quot; target=\&quot;pysatl-core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-ext\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.9;exitY=1;entryX=1;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; target=\&quot;pysatl-core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;544\&quot; y=\&quot;520\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-est\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; target=\&quot;estimators\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-init\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0;exitY=0.5;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; target=\&quot;initializers\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;105\&quot; y=\&quot;120\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-init-core\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0.5;exitY=1;entryX=0;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;initializers\&quot; target=\&quot;core\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;105\&quot; y=\&quot;410\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n      &lt;mxCell id=\&quot;lg\&quot; value=\&quot;Legend\&quot; style=\&quot;swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;678\&quot; y=\&quot;392\&quot; width=\&quot;112\&quot; height=\&quot;96\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-0\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;688\&quot; y=\&quot;420\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-0\&quot; value=\&quot;implemented\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;718\&quot; y=\&quot;418\&quot; width=\&quot;62\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-1\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;688\&quot; y=\&quot;442\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-1\&quot; value=\&quot;planned\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;718\&quot; y=\&quot;440\&quot; width=\&quot;39\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-2\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;688\&quot; y=\&quot;464\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-2\&quot; value=\&quot;external\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;718\&quot; y=\&quot;462\&quot; width=\&quot;45\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n  &lt;diagram id=\&quot;detailed\&quot; name=\&quot;Detailed\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;1201\&quot; dy=\&quot;827\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;0\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;827\&quot; pageHeight=\&quot;1169\&quot; background=\&quot;#ffffff\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;title\&quot; parent=\&quot;1\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=0;fontSize=18;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;pysatl-mpest: module architecture (detailed)\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;24\&quot; width=\&quot;860\&quot; x=\&quot;20\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;structure_selection\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; value=\&quot;structure_selection\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;200\&quot; x=\&quot;200\&quot; y=\&quot;50\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;initializers\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; value=\&quot;initializers\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;680\&quot; y=\&quot;50\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;estimators\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;estimators\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;360\&quot; width=\&quot;560\&quot; x=\&quot;20\&quot; y=\&quot;140\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;base_estimator\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;BaseEstimator\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;145\&quot; y=\&quot;180\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;em\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;EM\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;100\&quot; x=\&quot;50\&quot; y=\&quot;285\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;ecm\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ECM\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;100\&quot; x=\&quot;170\&quot; y=\&quot;285\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;ecme\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ECME\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;50\&quot; width=\&quot;100\&quot; x=\&quot;290\&quot; y=\&quot;285\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;iterative\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;iterative\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;60\&quot; width=\&quot;340\&quot; x=\&quot;50\&quot; y=\&quot;400\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;direct\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; value=\&quot;direct\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;60\&quot; width=\&quot;120\&quot; x=\&quot;430\&quot; y=\&quot;400\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizers\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;optimizers\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;150\&quot; width=\&quot;250\&quot; x=\&quot;630\&quot; y=\&quot;140\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;optimizer\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;Optimizer\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;100\&quot; x=\&quot;720\&quot; y=\&quot;157\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;nelder\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ScipyNelderMead\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;130\&quot; x=\&quot;640\&quot; y=\&quot;240\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;powell\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;ScipyPowell\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;85\&quot; x=\&quot;785\&quot; y=\&quot;240\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;core\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;core\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;90\&quot; width=\&quot;250\&quot; x=\&quot;630\&quot; y=\&quot;330\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;mixture\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;MixtureModel\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;40\&quot; width=\&quot;130\&quot; x=\&quot;690\&quot; y=\&quot;365\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;pysatl-core\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; value=\&quot;pysatl-core\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry height=\&quot;60\&quot; width=\&quot;250\&quot; x=\&quot;630\&quot; y=\&quot;470\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-est\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.500;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;estimators\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ss-init\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;structure_selection\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=0.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;initializers\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-init-core\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;initializers\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=1.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;910\&quot; y=\&quot;85\&quot; /&gt;\n              &lt;mxPoint x=\&quot;910\&quot; y=\&quot;375\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-em-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;em\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; x=\&quot;0.1771\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;100\&quot; y=\&quot;260\&quot; /&gt;\n              &lt;mxPoint x=\&quot;220\&quot; y=\&quot;260\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecm-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecm\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecme-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecme\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; x=\&quot;0.0057\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;340\&quot; y=\&quot;260\&quot; /&gt;\n              &lt;mxPoint x=\&quot;220\&quot; y=\&quot;260\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-iter-base\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;iterative\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=1.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;base_estimator\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;410\&quot; y=\&quot;430\&quot; /&gt;\n              &lt;mxPoint x=\&quot;410\&quot; y=\&quot;205\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-em-iter\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;em\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.147;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;iterative\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecm-iter\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecm\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.500;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;iterative\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-ecme-iter\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ecme\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.853;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;iterative\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-nelder-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;nelder\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;705\&quot; y=\&quot;227\&quot; /&gt;\n              &lt;mxPoint x=\&quot;770\&quot; y=\&quot;227\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-powell-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;powell\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontColor=#000000;exitX=0.494;exitY=0.000;exitPerimeter=0;entryX=0.500;entryY=1.000;entryPerimeter=0;\&quot; target=\&quot;optimizer\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;827\&quot; y=\&quot;227\&quot; /&gt;\n              &lt;mxPoint x=\&quot;770\&quot; y=\&quot;227\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-opt\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.208;exitPerimeter=0;entryX=0.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;optimizers\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-core\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.653;exitPerimeter=0;entryX=0.000;entryY=0.500;entryPerimeter=0;\&quot; target=\&quot;core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-est-ext\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;estimators\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=1.000;exitY=0.958;exitPerimeter=0;entryX=0.000;entryY=0.250;entryPerimeter=0;\&quot; target=\&quot;pysatl-core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;e-core-ext\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;core\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;exitX=0.500;exitY=1.000;exitPerimeter=0;entryX=0.500;entryY=0.000;entryPerimeter=0;\&quot; target=\&quot;pysatl-core\&quot; value=\&quot;\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n      &lt;mxCell id=\&quot;lg\&quot; value=\&quot;Legend\&quot; style=\&quot;swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;10\&quot; y=\&quot;530\&quot; width=\&quot;276\&quot; height=\&quot;52\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-0\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;20\&quot; y=\&quot;558\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-0\&quot; value=\&quot;implemented\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;50\&quot; y=\&quot;556\&quot; width=\&quot;62\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-1\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;122\&quot; y=\&quot;558\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-1\&quot; value=\&quot;planned\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;152\&quot; y=\&quot;556\&quot; width=\&quot;39\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-2\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;201\&quot; y=\&quot;558\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-2\&quot; value=\&quot;external\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;231\&quot; y=\&quot;556\&quot; width=\&quot;45\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n&lt;/mxfile&gt;\n&quot;}"></div><p class="drawio-source"><a class="reference download internal" download="" href="../_downloads/b7b21a4d87337e279542f5b6a905fcd3/module-architecture.drawio"><span class="xref download myst">Исходник детальной схемы</span></a></p>
+<p><code class="docutils literal notranslate"><span class="pre">EM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECM</span></code> и <code class="docutils literal notranslate"><span class="pre">ECME</span></code> реализуют интерфейс <code class="docutils literal notranslate"><span class="pre">BaseEstimator</span></code> и делегируют вычисления конвейеру <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>. Готовые оценщики настраивают его сами. Для собственного конвейера <a class="reference internal" href="../api/estimators/iterative/index.html"><span class="std std-doc">API <code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></span></a> предоставляет шаги, критерии остановки и правила удаления компонентов. Порядок их работы описан на странице <a class="reference internal" href="behavior.html"><span class="std std-doc">«Поведение»</span></a>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="domain.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Предметная область и сценарии</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="behavior.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Поведение</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Модули и зависимости</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#internal-structure">Внутреннее устройство</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

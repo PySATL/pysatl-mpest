@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ECM &#8212; Mpest 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/navigation.css?v=e90a59ed" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'math/algorithms/ecm';</script>
+    <script src="../../_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="../../_static/navigation.js?v=60fd207b"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ECME" href="ecme.html" />
+    <link rel="prev" title="EM" href="em.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Mpest 1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mixture_model.html">Модель смеси</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">EM-подобные алгоритмы</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="em.html">EM</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">ECM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecme.html">ECME</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../strategies/index.html">Стратегии M-шага</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../strategies/q_function.html">Стратегия <code class="docutils literal notranslate"><span class="pre">q_function</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../strategies/observed_data_likelihood.html">Стратегия <code class="docutils literal notranslate"><span class="pre">observed_data_likelihood</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../strategies/moments.html">Стратегия <code class="docutils literal notranslate"><span class="pre">moments</span></code></a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Math</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">EM-подобные алгоритмы</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">ECM</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ecm">
+<h1>ECM<a class="headerlink" href="#ecm" title="Link to this heading">#</a></h1>
+<p><strong>Назначение:</strong> описать, как ECM заменяет M-шаг последовательностью условных максимизаций, показать, что итерация остаётся монотонной, и объяснить, как оценщик <code class="docutils literal notranslate"><span class="pre">ECM</span></code> строит CM-шаги из <code class="docutils literal notranslate"><span class="pre">parameter_groups</span></code>.</p>
+<section id="id1">
+<h2>Идея<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>В EM M-шаг <a class="reference internal" href="em.html#equation-eq-em-component">(10)</a> максимизирует <span class="math notranslate nohighlight">\(Q\)</span> сразу по всем параметрам компоненты. Если параметров много или совместный максимум не выражается в явном виде, эта задача трудна. ECM <a class="footnote-reference brackets" href="#footcite-meng1993ecm" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> заменяет её последовательностью <a class="reference internal" href="../../glossary.html#term-CM"><span class="xref std std-term">CM-шагов</span></a>: каждый максимизирует <span class="math notranslate nohighlight">\(Q\)</span> только по группе параметров, а остальные фиксирует на последних известных значениях. Каждая такая задача проще: в ней меньше параметров, и у неё чаще есть решение в явном виде.</p>
+</section>
+<section id="id3">
+<h2>Итерация<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>Разобьём параметры <span class="math notranslate nohighlight">\(j\)</span>-й компоненты на упорядоченные непересекающиеся группы:</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_j = \bigl(\theta_j^{[1]}, \dots, \theta_j^{[S_j]}\bigr).
+\]</div>
+<p>Итерация <span class="math notranslate nohighlight">\(t \to t + 1\)</span> состоит из таких шагов:</p>
+<ol class="arabic simple">
+<li><p><strong>E-шаг.</strong> Как в EM: по <span class="math notranslate nohighlight">\(\Psi^{(t)}\)</span> вычисляются ответственности <a class="reference internal" href="../mixture_model.html#equation-eq-responsibilities">(4)</a>.</p></li>
+<li><p><strong>CM-шаг для весов.</strong> Веса обновляются по <a class="reference internal" href="em.html#equation-eq-em-weights">(9)</a>. Это точный максимум <span class="math notranslate nohighlight">\(Q\)</span> по весам: слагаемое весов в <a class="reference internal" href="em.html#equation-eq-q-split">(7)</a> не зависит от параметров компонент.</p></li>
+<li><p><strong>CM-шаги для компонент.</strong> Для каждой компоненты <span class="math notranslate nohighlight">\(j\)</span> по порядку групп <span class="math notranslate nohighlight">\(s = 1, \dots, S_j\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight" id="equation-eq-ecm-cm-step">
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-ecm-cm-step" title="Link to this equation">#</a></span>\[
+\theta_j^{[s]} \leftarrow \arg\max_{\theta_j^{[s]}} \sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j\bigl(x_i \mid \theta_j^{[1]}, \dots, \theta_j^{[s]}, \dots, \theta_j^{[S_j]}\bigr).
+\]</div>
+<p>В <a class="reference internal" href="#equation-eq-ecm-cm-step">(12)</a> группы с номерами меньше <span class="math notranslate nohighlight">\(s\)</span> уже обновлены на этой итерации, а группы с номерами больше <span class="math notranslate nohighlight">\(s\)</span> ещё имеют значения с итерации <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>Все CM-шаги одной итерации максимизируют одну и ту же функцию <span class="math notranslate nohighlight">\(Q(\cdot \mid \Psi^{(t)})\)</span>: ответственности между CM-шагами не пересчитываются. По разложению <a class="reference internal" href="em.html#equation-eq-q-split">(7)</a> CM-шаги разных компонент решают независимые задачи, поэтому порядок важен только между группами одной компоненты. При <span class="math notranslate nohighlight">\(S_j = 1\)</span> CM-шаг совпадает с M-шагом EM <a class="reference internal" href="em.html#equation-eq-em-component">(10)</a>.</p>
+</section>
+<section id="id4">
+<h2>Свойства<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<div class="proof theorem admonition" id="thm-ecm-monotone">
+<p class="admonition-title"><span class="caption-number">Theorem 3 </span> (Монотонность ECM)</p>
+<section class="theorem-content" id="proof-content">
+<p>Итерация ECM — итерация <a class="reference internal" href="../../glossary.html#term-EM"><span class="xref std std-term">обобщённого EM</span></a>, поэтому она не уменьшает правдоподобие наблюдаемых данных.</p>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Пусть итерация состоит из <span class="math notranslate nohighlight">\(C\)</span> CM-шагов, и <span class="math notranslate nohighlight">\(\Psi^{(t, c)}\)</span> — параметры после <span class="math notranslate nohighlight">\(c\)</span>-го из них:</p>
+<div class="math notranslate nohighlight">
+\[
+\Psi^{(t, 0)} = \Psi^{(t)}, \qquad \Psi^{(t, C)} = \Psi^{(t+1)}.
+\]</div>
+<p>Каждый CM-шаг максимизирует <span class="math notranslate nohighlight">\(Q(\cdot \mid \Psi^{(t)})\)</span> по части параметров, а текущее значение этой части — одна из допустимых точек, поэтому</p>
+<div class="math notranslate nohighlight">
+\[
+Q(\Psi^{(t, c)} \mid \Psi^{(t)}) \ge Q(\Psi^{(t, c-1)} \mid \Psi^{(t)}), \qquad c = 1, \dots, C.
+\]</div>
+<p>Складывая неравенства по <span class="math notranslate nohighlight">\(c\)</span>, получаем</p>
+<div class="math notranslate nohighlight">
+\[
+Q(\Psi^{(t+1)} \mid \Psi^{(t)}) \ge Q(\Psi^{(t)} \mid \Psi^{(t)}),
+\]</div>
+<p>то есть определение <a class="reference internal" href="em.html#def-gem">Definition 3</a>. Монотонность правдоподобия следует из теоремы <a class="reference internal" href="em.html#thm-gem-monotone">Theorem 1</a>.</p>
+</div>
+<p>Доказательство использует только то, что каждый CM-шаг не уменьшает <span class="math notranslate nohighlight">\(Q\)</span>. Поэтому оно верно и для CM-шагов, которые находят не точный максимум, а лишь не ухудшают текущую точку. Meng and Rubin<a class="footnote-reference brackets" href="#footcite-meng1993ecm" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> показывают, что ECM сохраняет свойства сходимости EM, в том числе монотонный рост правдоподобия.</p>
+<section id="id6">
+<h3>Пример: нормальная компонента<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>Для нормальной компоненты с параметрами <span class="math notranslate nohighlight">\(\mu_j\)</span> и <span class="math notranslate nohighlight">\(\sigma_j\)</span> целевая функция CM-шага <a class="reference internal" href="#equation-eq-ecm-cm-step">(12)</a> с точностью до константы равна</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \mu_j, \sigma_j) = -n_j^{(t)} \ln \sigma_j - \frac{1}{2 \sigma_j^2} \sum_{i=1}^{n} \gamma_{ij}^{(t)} (x_i - \mu_j)^2 + \text{const}.
+\]</div>
+<p>Обозначим взвешенное среднее:</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{x}_j = \frac{1}{n_j^{(t)}} \sum_{i=1}^{n} \gamma_{ij}^{(t)} x_i.
+\]</div>
+<p>Приравнивая нулю частные производные, получаем условные максимумы (вывод — в разделе <a class="reference internal" href="../strategies/q_function.html#math-q-normal"><span class="std std-ref">Normal, параметризация meanStd</span></a>):</p>
+<div class="math notranslate nohighlight" id="equation-eq-ecm-normal">
+<span class="eqno">(13)<a class="headerlink" href="#equation-eq-ecm-normal" title="Link to this equation">#</a></span>\[
+\mu_j = \bar{x}_j \quad \text{при любом } \sigma_j, \qquad \sigma_j^2 = \frac{1}{n_j^{(t)}} \sum_{i=1}^{n} \gamma_{ij}^{(t)} (x_i - \mu_j)^2 \quad \text{при фиксированном } \mu_j.
+\]</div>
+<p>Порядок групп влияет на результат.</p>
+<p><strong>Группы <code class="docutils literal notranslate"><span class="pre">[{&quot;mu&quot;},</span> <span class="pre">{&quot;sigma&quot;}]</span></code>.</strong> Сначала <span class="math notranslate nohighlight">\(\mu_j = \bar{x}_j\)</span>, затем <span class="math notranslate nohighlight">\(\sigma_j^2\)</span> по <a class="reference internal" href="#equation-eq-ecm-normal">(13)</a> относительно нового <span class="math notranslate nohighlight">\(\mu_j\)</span>. Условный максимум по <span class="math notranslate nohighlight">\(\mu_j\)</span> не зависит от <span class="math notranslate nohighlight">\(\sigma_j\)</span>, поэтому результат совпадает с итерацией EM.</p>
+<p><strong>Группы <code class="docutils literal notranslate"><span class="pre">[{&quot;sigma&quot;},</span> <span class="pre">{&quot;mu&quot;}]</span></code>.</strong> Сначала <span class="math notranslate nohighlight">\(\sigma_j^2\)</span> вычисляется относительно старого <span class="math notranslate nohighlight">\(\mu_j^{(t)}\)</span>, затем <span class="math notranslate nohighlight">\(\mu_j = \bar{x}_j\)</span>. Из разложения суммы квадратов</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=1}^{n} \gamma_{ij}^{(t)} \bigl(x_i - \mu_j^{(t)}\bigr)^2 = \sum_{i=1}^{n} \gamma_{ij}^{(t)} (x_i - \bar{x}_j)^2 + n_j^{(t)} \bigl(\bar{x}_j - \mu_j^{(t)}\bigr)^2
+\]</div>
+<p>следует, что новая дисперсия больше, чем у EM:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma_{j, \text{ECM}}^2 = \sigma_{j, \text{EM}}^2 + \bigl(\bar{x}_j - \mu_j^{(t)}\bigr)^2.
+\]</div>
+<p>Итерация отличается от EM, но по теореме <a class="reference internal" href="#thm-ecm-monotone">Theorem 3</a> остаётся монотонной.</p>
+<p>Стратегия <code class="docutils literal notranslate"><span class="pre">QFUNCTION</span></code> для пары (<code class="docutils literal notranslate"><span class="pre">Normal</span></code>, <code class="docutils literal notranslate"><span class="pre">meanStd</span></code>) реализует ровно формулы <a class="reference internal" href="#equation-eq-ecm-normal">(13)</a>: если в блоке есть только <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, дисперсия считается относительно текущего <code class="docutils literal notranslate"><span class="pre">mu</span></code> компоненты.</p>
+</section>
+</section>
+<section id="id7">
+<h2>Реализация в библиотеке<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Понятие</p></th>
+<th class="head"><p>В коде</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>разбиение <span class="math notranslate nohighlight">\(\theta_j\)</span> на группы</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">parameter_groups[j]</span></code> — список множеств имён параметров в аргументе <code class="docutils literal notranslate"><span class="pre">ECM.fit</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>CM-шаг <a class="reference internal" href="#equation-eq-ecm-cm-step">(12)</a> для группы <span class="math notranslate nohighlight">\(s\)</span></p></td>
+<td><p>блок <code class="docutils literal notranslate"><span class="pre">OptimizationBlock(j,</span> <span class="pre">group,</span> <span class="pre">MaximizationStrategy.QFUNCTION)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>CM-шаг для весов</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">WeightsStep</span></code>, до всех CM-шагов компонент</p></td>
+</tr>
+<tr class="row-odd"><td><p>одна <span class="math notranslate nohighlight">\(Q(\cdot \mid \Psi^{(t)})\)</span> на итерацию</p></td>
+<td><p>одна <code class="docutils literal notranslate"><span class="pre">state.H</span></code> на все блоки <code class="docutils literal notranslate"><span class="pre">MaximizationStep</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>порядок CM-шагов</p></td>
+<td><p>порядок блоков: по компонентам, внутри компоненты — по порядку групп</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ECM.fit</span></code> строит блоки функцией <code class="docutils literal notranslate"><span class="pre">build_optimization_blocks</span></code>. Группы компоненты должны быть непустыми, не пересекаться и вместе покрывать все её свободные параметры; иначе <code class="docutils literal notranslate"><span class="pre">fit</span></code> бросает <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>. Компонента, которой нет в <code class="docutils literal notranslate"><span class="pre">parameter_groups</span></code>, получает один блок на все параметры, и для неё итерация совпадает с EM. Без <code class="docutils literal notranslate"><span class="pre">parameter_groups</span></code> <code class="docutils literal notranslate"><span class="pre">ECM</span></code> делает то же, что <code class="docutils literal notranslate"><span class="pre">EM</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MaximizationStep</span></code> выполняет блоки волнами. Блоки одной компоненты попадают в разные волны в порядке списка, поэтому каждый следующий CM-шаг видит параметры, обновлённые предыдущими, как в <a class="reference internal" href="#equation-eq-ecm-cm-step">(12)</a>. Блоки разных компонент со стратегией <code class="docutils literal notranslate"><span class="pre">QFUNCTION</span></code> независимы по <a class="reference internal" href="em.html#equation-eq-q-split">(7)</a> и могут выполняться в одной волне.</p>
+</section>
+<section id="id8">
+<h2>Отступления от теории<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p>Для ECM верны те же оговорки, что и для <a class="reference internal" href="em.html"><span class="std std-doc">EM</span></a>: численный CM-шаг сохраняет монотонность, только если оптимизатор не возвращает точку хуже стартовой, а <a class="reference internal" href="../../glossary.html#term-5"><span class="xref std std-term">жёсткий E-шаг</span></a> и <a class="reference internal" href="../../glossary.html#term-13"><span class="xref std std-term">удаление компонент</span></a> выводят итерацию за рамки теоремы. Подробно — в разделе <a class="reference internal" href="em.html#math-em-deviations"><span class="std std-ref">Отступления от теории</span></a>.</p>
+</section>
+<section id="id9">
+<h2>Литература<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id10">
+</div>
+</section>
+</section>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footcite-meng1993ecm" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<p>Xiao-Li Meng and Donald B. Rubin. Maximum likelihood estimation via the ECM algorithm: a general framework. <em>Biometrika</em>, 80(2):267–278, 1993. <a class="reference external" href="https://doi.org/10.1093/biomet/80.2.267">doi:10.1093/biomet/80.2.267</a>.</p>
+</aside>
+</aside>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="em.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">EM</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ecme.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ECME</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Идея</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Итерация</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Свойства</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Пример: нормальная компонента</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Реализация в библиотеке</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Отступления от теории</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Литература</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>EM &#8212; Mpest 1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/navigation.css?v=e90a59ed" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'math/algorithms/em';</script>
+    <script src="../../_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="../../_static/navigation.js?v=60fd207b"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ECM" href="ecm.html" />
+    <link rel="prev" title="EM-подобные алгоритмы" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Mpest 1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../design/index.html">
+    Design
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../glossary.html">
+    Глоссарий
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mixture_model.html">Модель смеси</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">EM-подобные алгоритмы</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">EM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecm.html">ECM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecme.html">ECME</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../strategies/index.html">Стратегии M-шага</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../strategies/q_function.html">Стратегия <code class="docutils literal notranslate"><span class="pre">q_function</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../strategies/observed_data_likelihood.html">Стратегия <code class="docutils literal notranslate"><span class="pre">observed_data_likelihood</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../strategies/moments.html">Стратегия <code class="docutils literal notranslate"><span class="pre">moments</span></code></a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Math</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">EM-подобные алгоритмы</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">EM</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="em">
+<h1>EM<a class="headerlink" href="#em" title="Link to this heading">#</a></h1>
+<p><strong>Назначение:</strong> описать итерацию EM для конечной смеси, доказать, что она не уменьшает правдоподобие, и показать, как оценщик <code class="docutils literal notranslate"><span class="pre">EM</span></code> реализует итерацию и где код отступает от условий теорем.</p>
+<section id="id1">
+<h2>Идея<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Максимизировать правдоподобие наблюдаемых данных <a class="reference internal" href="../mixture_model.html#equation-eq-observed-loglik">(2)</a> напрямую трудно: логарифм стоит перед суммой по компонентам. EM <a class="footnote-reference brackets" href="#footcite-dempster1977em" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> вместо этого на каждой итерации максимизирует <a class="reference internal" href="../../glossary.html#term-Q"><span class="xref std std-term">Q-функцию</span></a> <a class="reference internal" href="../mixture_model.html#equation-eq-q-function">(5)</a>. В ней нет логарифма суммы, и она распадается на независимые задачи. Рост <span class="math notranslate nohighlight">\(Q\)</span> гарантирует рост правдоподобия.</p>
+</section>
+<section id="math-em-iteration">
+<span id="id3"></span><h2>Итерация<a class="headerlink" href="#math-em-iteration" title="Link to this heading">#</a></h2>
+<p>Итерация <span class="math notranslate nohighlight">\(t \to t + 1\)</span> состоит из двух шагов:</p>
+<ol class="arabic simple">
+<li><p><strong>E-шаг.</strong> По текущим параметрам <span class="math notranslate nohighlight">\(\Psi^{(t)}\)</span> вычисляются ответственности <a class="reference internal" href="../mixture_model.html#equation-eq-responsibilities">(4)</a>, а значит, и функция <span class="math notranslate nohighlight">\(Q(\cdot \mid \Psi^{(t)})\)</span>.</p></li>
+<li><p><strong>M-шаг.</strong> Новые параметры — точка максимума <span class="math notranslate nohighlight">\(Q\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight" id="equation-eq-em-m-step">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-em-m-step" title="Link to this equation">#</a></span>\[
+\Psi^{(t+1)} = \arg\max_{\Psi} Q(\Psi \mid \Psi^{(t)}).
+\]</div>
+<p>Сгруппируем слагаемые <a class="reference internal" href="../mixture_model.html#equation-eq-q-function">(5)</a> по тому, от каких параметров они зависят:</p>
+<div class="math notranslate nohighlight" id="equation-eq-q-split">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eq-q-split" title="Link to this equation">#</a></span>\[
+Q(\Psi \mid \Psi^{(t)}) = \underbrace{\sum_{j=1}^{k} \Bigl(\sum_{i=1}^{n} \gamma_{ij}^{(t)}\Bigr) \ln \omega_j}_{\text{только веса}} + \sum_{j=1}^{k} \underbrace{\sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j)}_{\text{только } \theta_j}.
+\]</div>
+<p>Первое слагаемое зависит только от весов, каждое слагаемое второй суммы — только от параметров своей компоненты. Поэтому M-шаг <a class="reference internal" href="#equation-eq-em-m-step">(6)</a> распадается на <span class="math notranslate nohighlight">\(k + 1\)</span> независимых задач: одну для весов и по одной для каждой компоненты.</p>
+<section id="id4">
+<h3>Веса<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>Обозначим ожидаемое число наблюдений <span class="math notranslate nohighlight">\(j\)</span>-й компоненты:</p>
+<div class="math notranslate nohighlight" id="equation-eq-nj">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eq-nj" title="Link to this equation">#</a></span>\[
+n_j^{(t)} = \sum_{i=1}^{n} \gamma_{ij}^{(t)}.
+\]</div>
+<p>Слагаемое весов в <a class="reference internal" href="#equation-eq-q-split">(7)</a> максимизируется при ограничении на сумму весов:</p>
+<div class="math notranslate nohighlight">
+\[
+\max_{\omega} \sum_{j=1}^{k} n_j^{(t)} \ln \omega_j \quad \text{при} \quad \sum_{j=1}^{k} \omega_j = 1.
+\]</div>
+<p>Функция Лагранжа и условие её стационарности:</p>
+<div class="math notranslate nohighlight">
+\[
+\Lambda(\omega, \lambda) = \sum_{j=1}^{k} n_j^{(t)} \ln \omega_j - \lambda \Bigl(\sum_{j=1}^{k} \omega_j - 1\Bigr), \qquad \frac{\partial \Lambda}{\partial \omega_j} = \frac{n_j^{(t)}}{\omega_j} - \lambda = 0 \;\Longrightarrow\; \omega_j = \frac{n_j^{(t)}}{\lambda}.
+\]</div>
+<p>Сумма ответственностей в каждой строке равна единице, поэтому</p>
+<div class="math notranslate nohighlight">
+\[
+\lambda = \lambda \sum_{j=1}^{k} \omega_j = \sum_{j=1}^{k} n_j^{(t)} = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} = n,
+\]</div>
+<p>и новые веса равны</p>
+<div class="math notranslate nohighlight" id="equation-eq-em-weights">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eq-em-weights" title="Link to this equation">#</a></span>\[
+\omega_j^{(t+1)} = \frac{n_j^{(t)}}{n} = \frac{1}{n} \sum_{i=1}^{n} \gamma_{ij}^{(t)}.
+\]</div>
+</section>
+<section id="id5">
+<h3>Параметры компонент<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>Для <span class="math notranslate nohighlight">\(j\)</span>-й компоненты остаётся задача</p>
+<div class="math notranslate nohighlight" id="equation-eq-em-component">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-em-component" title="Link to this equation">#</a></span>\[
+\theta_j^{(t+1)} = \arg\max_{\theta_j} \sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j).
+\]</div>
+<p>Это оценка максимального правдоподобия для одного распределения, в которой наблюдение <span class="math notranslate nohighlight">\(x_i\)</span> входит с весом <span class="math notranslate nohighlight">\(\gamma_{ij}^{(t)}\)</span>. Для некоторых семейств и параметризаций у <a class="reference internal" href="#equation-eq-em-component">(10)</a> есть решение в явном виде, для остальных её решает численный оптимизатор. Какие пары семейства и параметризации решаются в явном виде и как, описано на странице стратегии <a class="reference internal" href="../strategies/q_function.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">q_function</span></code></span></a>.</p>
+</section>
+</section>
+<section id="id6">
+<h2>Свойства<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>Для монотонности не нужен точный максимум <a class="reference internal" href="#equation-eq-em-m-step">(6)</a>: достаточно, чтобы M-шаг не уменьшал <span class="math notranslate nohighlight">\(Q\)</span>.</p>
+<div class="proof definition admonition" id="def-gem">
+<p class="admonition-title"><span class="caption-number">Definition 3 </span> (Обобщённый EM)</p>
+<section class="definition-content" id="proof-content">
+<p>Итерация называется итерацией обобщённого EM (GEM), если</p>
+<div class="math notranslate nohighlight">
+\[
+Q(\Psi^{(t+1)} \mid \Psi^{(t)}) \ge Q(\Psi^{(t)} \mid \Psi^{(t)}).
+\]</div>
+</section>
+</div><p>Итерация EM <a class="reference internal" href="#equation-eq-em-m-step">(6)</a> — частный случай GEM. К GEM относятся и <a class="reference internal" href="../../glossary.html#term-CM"><span class="xref std std-term">CM-шаги</span></a> <code class="docutils literal notranslate"><span class="pre">ECM</span></code>: каждый из них максимизирует <span class="math notranslate nohighlight">\(Q\)</span> по части параметров и потому её не уменьшает.</p>
+<div class="proof theorem admonition" id="thm-gem-monotone">
+<p class="admonition-title"><span class="caption-number">Theorem 1 </span> (Монотонность GEM)</p>
+<section class="theorem-content" id="proof-content">
+<p>Если итерация <span class="math notranslate nohighlight">\(\Psi^{(t)} \to \Psi^{(t+1)}\)</span> — итерация обобщённого EM, то</p>
+<div class="math notranslate nohighlight">
+\[
+\ln L(\Psi^{(t+1)} \mid x) \ge \ln L(\Psi^{(t)} \mid x).
+\]</div>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. По определению ответственностей <a class="reference internal" href="../mixture_model.html#equation-eq-responsibilities">(4)</a> для любых параметров <span class="math notranslate nohighlight">\(\Psi\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\ln f(x_i \mid \Psi) = \ln \omega_j + \ln f_j(x_i \mid \theta_j) - \ln \gamma_{ij}(\Psi) \qquad \text{при } \gamma_{ij}(\Psi) &gt; 0.
+\]</div>
+<p>Левая часть от <span class="math notranslate nohighlight">\(j\)</span> не зависит. Умножим равенство на <span class="math notranslate nohighlight">\(\gamma_{ij}^{(t)}\)</span> и сложим по <span class="math notranslate nohighlight">\(j\)</span> и по <span class="math notranslate nohighlight">\(i\)</span>. Так как</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{j=1}^{k} \gamma_{ij}^{(t)} = 1,
+\]</div>
+<p>получаем</p>
+<div class="math notranslate nohighlight" id="equation-eq-loglik-q-r">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-loglik-q-r" title="Link to this equation">#</a></span>\[
+\ln L(\Psi \mid x) = Q(\Psi \mid \Psi^{(t)}) - R(\Psi \mid \Psi^{(t)}), \qquad R(\Psi \mid \Psi^{(t)}) = \sum_{i=1}^{n} \sum_{j=1}^{k} \gamma_{ij}^{(t)} \ln \gamma_{ij}(\Psi).
+\]</div>
+<p>Строки <span class="math notranslate nohighlight">\(\gamma_i^{(t)}\)</span> и <span class="math notranslate nohighlight">\(\gamma_i(\Psi)\)</span> — распределения вероятностей на <span class="math notranslate nohighlight">\(\{1, \dots, k\}\)</span>. По неравенству Гиббса для любых распределений <span class="math notranslate nohighlight">\(p\)</span> и <span class="math notranslate nohighlight">\(q\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{j=1}^{k} p_j \ln q_j \le \sum_{j=1}^{k} p_j \ln p_j,
+\]</div>
+<p>поэтому при любом <span class="math notranslate nohighlight">\(\Psi\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+R(\Psi \mid \Psi^{(t)}) \le R(\Psi^{(t)} \mid \Psi^{(t)}).
+\]</div>
+<p>Вычитая <a class="reference internal" href="#equation-eq-loglik-q-r">(11)</a> при <span class="math notranslate nohighlight">\(\Psi = \Psi^{(t)}\)</span> из <a class="reference internal" href="#equation-eq-loglik-q-r">(11)</a> при <span class="math notranslate nohighlight">\(\Psi = \Psi^{(t+1)}\)</span>, получаем</p>
+<div class="math notranslate nohighlight">
+\[
+\ln L(\Psi^{(t+1)} \mid x) - \ln L(\Psi^{(t)} \mid x) = \underbrace{\bigl[Q(\Psi^{(t+1)} \mid \Psi^{(t)}) - Q(\Psi^{(t)} \mid \Psi^{(t)})\bigr]}_{\ge 0 \text{ по условию}} - \underbrace{\bigl[R(\Psi^{(t+1)} \mid \Psi^{(t)}) - R(\Psi^{(t)} \mid \Psi^{(t)})\bigr]}_{\le 0} \ge 0.
+\]</div>
+</div>
+<p>Теорема <a class="reference internal" href="#thm-gem-monotone">Theorem 1</a> доказана в Dempster <em>et al.</em><a class="footnote-reference brackets" href="#footcite-dempster1977em" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>; здесь доказательство записано для смеси, где <span class="math notranslate nohighlight">\(R\)</span> выражается через ответственности явно. Монотонность ещё не означает сходимости к точке максимума. Условия сходимости дал Wu<a class="footnote-reference brackets" href="#footcite-wu1983convergence" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<div class="proof theorem admonition" id="thm-em-convergence">
+<p class="admonition-title"><span class="caption-number">Theorem 2 </span> (Сходимость EM)</p>
+<section class="theorem-content" id="proof-content">
+<p>Обозначим множество параметров, при которых правдоподобие не меньше начального:</p>
+<div class="math notranslate nohighlight">
+\[
+\Omega_0 = \bigl\{\Psi : L(\Psi \mid x) \ge L(\Psi^{(0)} \mid x)\bigr\}.
+\]</div>
+<p>Пусть выполнены условия:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\Omega_0\)</span> компактно;</p></li>
+<li><p><span class="math notranslate nohighlight">\(L\)</span> непрерывна на <span class="math notranslate nohighlight">\(\Omega_0\)</span> и дифференцируема внутри пространства параметров;</p></li>
+<li><p><span class="math notranslate nohighlight">\(Q(\Psi \mid \Phi)\)</span> непрерывна по обоим аргументам.</p></li>
+</ol>
+<p>Тогда каждая предельная точка <span class="math notranslate nohighlight">\(\Psi^*\)</span> последовательности EM — стационарная точка правдоподобия, и для некоторой такой точки</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla L(\Psi^* \mid x) = 0, \qquad L(\Psi^{(t)} \mid x) \nearrow L(\Psi^* \mid x) \quad \text{при} \quad t \to \infty.
+\]</div>
+</section>
+</div><p>Формулировка приведена по Wu<a class="footnote-reference brackets" href="#footcite-wu1983convergence" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> и McLachlan and Krishnan<a class="footnote-reference brackets" href="#footcite-mclachlan2008em" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>; доказательство опирается на теорему Зангвилла о глобальной сходимости и здесь не повторяется. Из теоремы следуют два практических вывода.</p>
+<p><strong>Зависимость от начальной точки.</strong> Стационарная точка может быть локальным максимумом или седловой точкой, поэтому результат EM зависит от начальной смеси, которую передают в <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+<p><strong>Вырождение.</strong> Условие компактности для смесей обычно не выполняется. Например, правдоподобие смеси нормальных распределений неограниченно <a class="footnote-reference brackets" href="#footcite-mclachlan2000finite" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_j = x_i, \quad \sigma_j \to 0 \quad \Longrightarrow \quad \ln L(\Psi \mid x) \to +\infty.
+\]</div>
+<p>Последовательность EM может уйти к такому вырожденному решению.</p>
+</section>
+<section id="id12">
+<h2>Реализация в библиотеке<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Понятие</p></th>
+<th class="head"><p>В коде</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>итерация <span class="math notranslate nohighlight">\(t \to t + 1\)</span></p></td>
+<td><p>один проход цикла <code class="docutils literal notranslate"><span class="pre">Pipeline.fit</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\Psi^{(t)}\)</span>, <span class="math notranslate nohighlight">\(\Psi^{(t+1)}\)</span></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">state.prev_mixture</span></code>, <code class="docutils literal notranslate"><span class="pre">state.curr_mixture</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>E-шаг</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExpectationStep</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>M-шаг для весов <a class="reference internal" href="#equation-eq-em-weights">(9)</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">WeightsStep</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>M-шаг для <span class="math notranslate nohighlight">\(\theta_j\)</span> <a class="reference internal" href="#equation-eq-em-component">(10)</a></p></td>
+<td><p>блок <code class="docutils literal notranslate"><span class="pre">OptimizationBlock(j,</span> <span class="pre">None,</span> <span class="pre">MaximizationStrategy.QFUNCTION)</span></code> в <code class="docutils literal notranslate"><span class="pre">MaximizationStep</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>остановка</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">breakpointers</span></code>, например <code class="docutils literal notranslate"><span class="pre">LikelihoodBreakpointer</span></code> по изменению <span class="math notranslate nohighlight">\(\ln L\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Оценщик <code class="docutils literal notranslate"><span class="pre">EM</span></code> строит по одному блоку на компоненту. Блок без имён параметров обновляет все свободные параметры компоненты; параметры, зафиксированные через <code class="docutils literal notranslate"><span class="pre">family.view(...)</span></code>, не меняются. Блоки разных компонент решают независимые задачи из разложения <a class="reference internal" href="#equation-eq-q-split">(7)</a>, поэтому <code class="docutils literal notranslate"><span class="pre">MaximizationStep</span></code> вычисляет их в одной волне из одного снимка смеси.</p>
+<p><code class="docutils literal notranslate"><span class="pre">WeightsStep</span></code> вычисляет <a class="reference internal" href="#equation-eq-em-weights">(9)</a> и передаёт логарифмы весов в <code class="docutils literal notranslate"><span class="pre">MixtureModel.with_log_weights</span></code>, который их нормирует. Нормировка совпадает с <a class="reference internal" href="#equation-eq-em-weights">(9)</a>, когда все строки <code class="docutils literal notranslate"><span class="pre">state.H</span></code> дают в сумме единицу. Если у наблюдения строка нулевая, потому что оно вне носителя всех компонент, то фактически</p>
+<div class="math notranslate nohighlight">
+\[
+\omega_j^{(t+1)} = \frac{n_j^{(t)}}{n'}, \qquad n' = \#\bigl\{i : \textstyle\sum_{j} \gamma_{ij}^{(t)} = 1\bigr\},
+\]</div>
+<p>то есть такие наблюдения просто исключаются из оценки весов.</p>
+</section>
+<section id="math-em-deviations">
+<span id="id13"></span><h2>Отступления от теории<a class="headerlink" href="#math-em-deviations" title="Link to this heading">#</a></h2>
+<p>Теорема <a class="reference internal" href="#thm-gem-monotone">Theorem 1</a> верна для итерации, которая точно следует определению <a class="reference internal" href="#def-gem">Definition 3</a>. В коде есть места, где это условие выполняется только при оговорках или не выполняется совсем.</p>
+<p><strong>Численный M-шаг.</strong> Если для пары «семейство, параметризация» нет решения в явном виде, задачу <a class="reference internal" href="#equation-eq-em-component">(10)</a> решает оптимизатор из <code class="docutils literal notranslate"><span class="pre">optimizer</span></code>, начиная с <span class="math notranslate nohighlight">\(\theta_j^{(t)}\)</span>. Он находит не точный максимум, и итерация остаётся итерацией GEM, только если найденная точка не хуже стартовой:</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j^{(t+1)}) \ge \sum_{i=1}^{n} \gamma_{ij}^{(t)} \ln f_j(x_i \mid \theta_j^{(t)}).
+\]</div>
+<p>Контракт <code class="docutils literal notranslate"><span class="pre">Optimizer</span></code> требует вернуть лучшую найденную точку. Для <code class="docutils literal notranslate"><span class="pre">ScipyNelderMead</span></code> условие выполняется: стартовая точка входит в начальный симплекс, а метод возвращает лучшую его вершину. Для <code class="docutils literal notranslate"><span class="pre">ScipyPowell</span></code> выполнение условия не проверено.</p>
+<p><strong>Защита от вырождения.</strong> В вырожденных случаях решения в явном виде оставляют параметры прежними; условия перечислены в таблице <a class="reference internal" href="../strategies/q_function.html#math-q-guards"><span class="std std-ref">Защита от вырождения</span></a>. Оставить параметры прежними — значит не уменьшить <span class="math notranslate nohighlight">\(Q\)</span>, поэтому итерация остаётся итерацией GEM. Цель защиты — не дать последовательности уйти к вырожденному решению с <span class="math notranslate nohighlight">\(\sigma_j \to 0\)</span>.</p>
+<p><strong><a class="reference internal" href="../../glossary.html#term-5"><span class="xref std std-term">Жёсткий E-шаг</span></a>.</strong> При <code class="docutils literal notranslate"><span class="pre">ExpectationStep(is_soft=False)</span></code> строки <code class="docutils literal notranslate"><span class="pre">state.H</span></code> — индикаторы, а не апостериорные вероятности, и тождество <a class="reference internal" href="#equation-eq-loglik-q-r">(11)</a> не выполняется. Такой вариант известен как классификационный EM <a class="footnote-reference brackets" href="#footcite-celeux1992cem" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>; теорема <a class="reference internal" href="#thm-gem-monotone">Theorem 1</a> для него рост правдоподобия не гарантирует.</p>
+<p><strong><a class="reference internal" href="../../glossary.html#term-13"><span class="xref std std-term">Удаление компонент</span></a>.</strong> Правила <code class="docutils literal notranslate"><span class="pre">pruners</span></code> срабатывают после M-шага. Удалённая компонента исчезает из смеси, веса остальных перенормируются, и правдоподобие может уменьшиться. Монотонность гарантирована только для итераций, в которых ни одна компонента не удалена.</p>
+</section>
+<section id="id15">
+<h2>Литература<a class="headerlink" href="#id15" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id16">
+</div>
+</section>
+</section>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footcite-dempster1977em" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>A. P. Dempster, N. M. Laird, and D. B. Rubin. Maximum likelihood from incomplete data via the EM algorithm. <em>Journal of the Royal Statistical Society: Series B (Methodological)</em>, 39(1):1–22, 1977. <a class="reference external" href="https://doi.org/10.1111/j.2517-6161.1977.tb01600.x">doi:10.1111/j.2517-6161.1977.tb01600.x</a>.</p>
+</aside>
+<aside class="footnote brackets" id="footcite-wu1983convergence" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id8">1</a>,<a role="doc-backlink" href="#id9">2</a>)</span>
+<p>C. F. Jeff Wu. On the convergence properties of the EM algorithm. <em>The Annals of Statistics</em>, 11(1):95–103, 1983. <a class="reference external" href="https://doi.org/10.1214/aos/1176346060">doi:10.1214/aos/1176346060</a>.</p>
+</aside>
+<aside class="footnote brackets" id="footcite-mclachlan2008em" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">3</a><span class="fn-bracket">]</span></span>
+<p>Geoffrey J. McLachlan and Thriyambakam Krishnan. <em>The EM Algorithm and Extensions</em>. Wiley Series in Probability and Statistics. John Wiley &amp; Sons, Hoboken, NJ, 2 edition, 2008. ISBN 978-0-471-20170-0. <a class="reference external" href="https://doi.org/10.1002/9780470191613">doi:10.1002/9780470191613</a>.</p>
+</aside>
+<aside class="footnote brackets" id="footcite-mclachlan2000finite" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">4</a><span class="fn-bracket">]</span></span>
+<p>Geoffrey J. McLachlan and David Peel. <em>Finite Mixture Models</em>. Wiley Series in Probability and Statistics. John Wiley &amp; Sons, New York, 2000. ISBN 978-0-471-00626-8. <a class="reference external" href="https://doi.org/10.1002/0471721182">doi:10.1002/0471721182</a>.</p>
+</aside>
+<aside class="footnote brackets" id="footcite-celeux1992cem" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">5</a><span class="fn-bracket">]</span></span>
+<p>Gilles Celeux and Gérard Govaert. A classification EM algorithm for clustering and two stochastic versions. <em>Computational Statistics &amp; Data Analysis</em>, 14(3):315–332, 1992. <a class="reference external" href="https://doi.org/10.1016/0167-9473(92)90042-E">doi:10.1016/0167-9473(92)90042-E</a>.</p>
+</aside>
+</aside>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">EM-подобные алгоритмы</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ecm.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ECM</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Идея</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-em-iteration">Итерация</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Веса</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Параметры компонент</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Свойства</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Реализация в библиотеке</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-em-deviations">Отступления от теории</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Литература</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

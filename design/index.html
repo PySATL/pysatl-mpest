@@ -31,6 +31,9 @@
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/drawio-viewer.css?v=fefc087d" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/navigation.css?v=e90a59ed" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -41,13 +44,14 @@
     <script src="../_static/documentation_options.js?v=f2a433a1"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'design/index';</script>
+    <script src="../_static/navigation-early.js?v=3315ea9b"></script>
+    <script defer="defer" src="../_static/navigation.js?v=60fd207b"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Дерево алгоритмов" href="tree.html" />
-    <link rel="prev" title="User Guide" href="../user_guide/index.html" />
+    <link rel="next" title="Предметная область и сценарии" href="domain.html" />
+    <link rel="prev" title="Результат и история" href="../user_guide/results.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -141,8 +145,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -234,8 +252,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../math/index.html">
+    Math
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api/index.html">
     API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../glossary.html">
+    Глоссарий
   </a>
 </li>
 
@@ -266,24 +298,20 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Design:</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tree.html">Дерево алгоритмов</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usecase.html">Use-case диаграмма</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="modules/index.html">Модули архитектуры pysatl-mpest</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules/core.html">Core</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/distributions.html">Distributions</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="modules/estimators/index.html">Estimators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules/estimators/direct.html">Direct</a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules/estimators/iterative.html">Iterative</a></li>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Предметная область и сценарии</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Архитектура</a></li>
+<li class="toctree-l1"><a class="reference internal" href="behavior.html">Поведение</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules/index.html">Модули</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/core/core.html">Модуль <code class="docutils literal notranslate"><span class="pre">core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/optimizers/optimizers.html">Модуль <code class="docutils literal notranslate"><span class="pre">optimizers</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="modules/estimators/index.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators</span></code></a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules/estimators/iterative/iterative.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules/estimators/direct/direct.html">Модуль <code class="docutils literal notranslate"><span class="pre">estimators.direct</span></code></a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="modules/components_number/index.html">Components number</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
-</ul>
-</details></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/initializers.html">Initializers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/optimizers.html">Optimizers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/initializers/initializers.html">Модуль <code class="docutils literal notranslate"><span class="pre">initializers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/structure_selection/structure_selection.html">Модуль <code class="docutils literal notranslate"><span class="pre">structure_selection</span></code></a></li>
 </ul>
 </details></li>
 </ul>
@@ -345,142 +373,93 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="design">
 <h1>Design<a class="headerlink" href="#design" title="Link to this heading">#</a></h1>
+<p><strong>Назначение:</strong> дать разработчику общее представление об устройстве библиотеки, используемом стеке, статусе возможностей и навигации по архитектурной документации.</p>
 <div class="toctree-wrapper compound">
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pysatl-mpest</span></code> — это Python-библиотека, предназначенная для оценки параметров смесей вероятностных распределений.</p>
-<p>Ключевой особенностью библиотеки является гибкая и расширяемая архитектура, позволяющая пользователям конструировать итеративные алгоритмы оценки путем комбинирования различных шагов (например, шагов максимизации, вычисления моментов и т.д.).</p>
-<br>
-<p>На данный момент система позволяет:</p>
-<ol class="arabic simple">
-<li><p>Описывать непрерывные распределения и их смеси, а так же работать с ними как с объектами теории вероятностей <em>(Готово)</em></p></li>
-<li><p>Выполнять предобработку данных:</p>
-<ul class="simple">
-<li><p>Оценивать количество компонент <em>(В разработке)</em></p></li>
-<li><p>Проводить инициализацию начального приближения путем кластеризации <em>(В разработке)</em></p></li>
-</ul>
-</li>
-<li><p>Конфигурировать и запускать сложные итеративные алгоритмы оценки параметров смеси:</p>
-<ul class="simple">
-<li><p>Комбинировать различные шаги алгоритма, например E шаг + LMoments шаг или E шаг + ВашЭкзотическийШаг <em>(Готово)</em></p></li>
-<li><p>Настраивать условие остановки алгоритма <em>(Готово)</em></p></li>
-<li><p>Настраивать удаление лишних компонент <em>(Готово)</em></p></li>
-</ul>
-</li>
-<li><p>Для удобства API система предоставляет “Фасады”, с помощью которых можно легко сконфигурировать типовые алгоритмы, например EM или ELM алгоритмы. <em>(В разработке)</em></p></li>
-<li><p>Запускать “прямые” неитеративные алгоритмы оценки параметров смеси. <em>(В разработке)</em></p></li>
-</ol>
-<br>
-<p>В дальнейшем планируется поддержка:</p>
-<ol class="arabic simple">
-<li><p>Дискретных и многомерных распределения</p></li>
-<li><p>Поддержка большего числа алгоритмов.</p></li>
-<li><p>Реализация бенчмаркинга и его внедрение в <code class="docutils literal notranslate"><span class="pre">pysatl-experiment</span></code>.</p></li>
-</ol>
-<br>
 <section id="id1">
-<h2>Глоссарий<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<h2>Что делает библиотека<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pysatl-mpest</span></code> оценивает параметры конечных смесей распределений по выборке EM-подобными алгоритмами; компоненты смеси — параметрические распределения из <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>.</p>
+</section>
 <section id="id2">
-<h3>Плотность распределения<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<p>Представьте, что вы стреляете в мишень. Плотность вероятности в данном случае — это функция, которая описывает, в какие области мишени вы попадаете чаще всего. Там, где плотность выше, — там больше попаданий. Аналогично, для любой случайной величины, будь то рост человека или время ожидания автобуса, плотность вероятности показывает, какие значения являются более вероятными. Геометрически, вероятность того, что случайная величина примет значение из некоторого интервала, равна площади под графиком плотности на этом интервале.</p>
-<p>Введём формальное определение:</p>
-<p>Пусть <span class="math notranslate nohighlight">\((\mathcal{X}, \mathcal{A},P)\)</span> <span class="math notranslate nohighlight">\(-\)</span> вероятностное пространство, <span class="math notranslate nohighlight">\(\mathcal{X} \subseteq \mathbb{R}\)</span>. Случайная величина <span class="math notranslate nohighlight">\(X\)</span> называется абсолютно непрерывной, если существует такая неотрицательная интегрируемая по Лебегу функция <span class="math notranslate nohighlight">\(f: \mathcal{X} \to \mathbb{R}_{\ge 0}\)</span> называемая плотностью вероятности, если для любого борелевского множества <span class="math notranslate nohighlight">\(A \in \mathcal{A}\)</span> выполняется:</p>
-<div class="math notranslate nohighlight">
-\[P(X \in A) = \int_A f(x)dx\]</div>
-<p>Функция плотности <span class="math notranslate nohighlight">\(f(x)\)</span> должна удовлетворять следующим свойствам:</p>
-<ol class="arabic simple">
-<li><p><strong>Неотрицательность</strong>: <span class="math notranslate nohighlight">\(f(x) \ge 0, ~ \forall x \in \mathcal{X}\)</span></p></li>
-<li><p><strong>Нормировка</strong>: <span class="math notranslate nohighlight">\(\int_{\mathcal{X}} f(x)dx = 1\)</span></p></li>
-</ol>
-<blockquote>
-<div><p>Под борелевским множеством мы подразумеваем “хорошие множества”, например интервал <span class="math notranslate nohighlight">\([-1, 1]\)</span></p>
-</div></blockquote>
-<br>
+<h2>Карта раздела<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="domain.html"><span class="std std-doc">Предметная область и сценарии</span></a> — методы оценки и сценарий работы с библиотекой.</p></li>
+<li><p><a class="reference internal" href="architecture.html"><span class="std std-doc">Архитектура</span></a> — модули и их зависимости.</p></li>
+<li><p><a class="reference internal" href="behavior.html"><span class="std std-doc">Поведение</span></a> — что происходит при вызове <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><a class="reference internal" href="modules/index.html"><span class="std std-doc">Модули</span></a> — устройство каждого модуля, его расширение и ограничения.</p></li>
+</ul>
 </section>
 <section id="id3">
-<h3>Смесь распределений<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
-<p>Часто данные, с которыми мы работаем, неоднородны. Они могут происходить из нескольких скрытых, или <em>латентных</em>, подгрупп. Представьте, что вы анализируете данные о росте взрослых людей в городе. Скорее всего, вы заметите, что распределение роста имеет не один пик, а два: один соответствует среднему росту женщин, а другой — мужчин. Описать такие данные одной простой функцией плотности (например, одним нормальным распределением) будет некорректно. Гораздо естественнее смоделировать их как <em>смесь</em> двух нормальных распределений, где каждое распределение описывает свою подгруппу, а их веса в смеси отражают долю каждой подгруппы в общей популяции.</p>
-<p>Формально, <strong>смесь вероятностных распределений</strong> — это вероятностное распределение, плотность которого является взвешенной суммой плотностей других распределений (компонент). Плотность смеси задается следующим образом:</p>
-<div class="math notranslate nohighlight">
-\[f(x ~ | ~ F, \Theta, \Omega) = \sum_{k=1}^n \omega_k \cdot f_k(x ~ | ~ \theta_k)\]</div>
-<p>где:</p>
+<h2>Контекст системы<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>Лист System context показывает место библиотеки в окружении, форматы входных и выходных данных, а также внешние зависимости.</p>
+<div class="mxgraph" style="max-width:100%;border:1px solid #e0e0e0;margin-bottom:1rem;" data-mxgraph="{&quot;highlight&quot;: &quot;#000000&quot;, &quot;nav&quot;: true, &quot;auto-fit&quot;: true, &quot;resize&quot;: false, &quot;toolbar&quot;: &quot;pages layers lightbox&quot;, &quot;toolbar-nohide&quot;: true, &quot;edit&quot;: null, &quot;page&quot;: 0, &quot;xml&quot;: &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;mxfile host=\&quot;drawio\&quot;&gt;&lt;diagram id=\&quot;system-context\&quot; name=\&quot;System context\&quot;&gt;&lt;mxGraphModel dx=\&quot;880\&quot; dy=\&quot;540\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;0\&quot; pageScale=\&quot;1\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot; background=\&quot;#ffffff\&quot;&gt;&lt;root&gt;&lt;mxCell id=\&quot;0\&quot;/&gt;&lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot;/&gt;&lt;mxCell id=\&quot;title\&quot; value=\&quot;pysatl-mpest: system context\&quot; style=\&quot;text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=0;fontSize=18;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;20\&quot; y=\&quot;20\&quot; width=\&quot;600\&quot; height=\&quot;24\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;researcher\&quot; value=\&quot;Researcher\&quot; style=\&quot;shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;45\&quot; y=\&quot;150\&quot; width=\&quot;30\&quot; height=\&quot;55\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;system\&quot; value=\&quot;pysatl-mpest\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;380\&quot; y=\&quot;70\&quot; width=\&quot;480\&quot; height=\&quot;220\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;pysatl-core\&quot; value=\&quot;pysatl-core\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;385.0\&quot; y=\&quot;420\&quot; width=\&quot;150\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;numpy\&quot; value=\&quot;numpy\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;545.0\&quot; y=\&quot;420\&quot; width=\&quot;150\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;scipy\&quot; value=\&quot;scipy\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;705.0\&quot; y=\&quot;420\&quot; width=\&quot;150\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-fit\&quot; value=\&quot;\&quot; style=\&quot;endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;110\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;110\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-fit\&quot; value=\&quot;EM(breakpointers, pruners, optimizer)&amp;lt;br&amp;gt;.fit(X: ArrayLike, mixture: MixtureModel)\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;74\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-families\&quot; value=\&quot;\&quot; style=\&quot;dashed=1;endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#666666;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;165\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;165\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-families\&quot; value=\&quot;X, families without parameters&amp;lt;br&amp;gt;via initializers\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;129\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-sample-only\&quot; value=\&quot;\&quot; style=\&quot;dashed=1;endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#666666;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;220\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;220\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-sample-only\&quot; value=\&quot;X only&amp;lt;br&amp;gt;via structure_selection\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;184\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-result\&quot; value=\&quot;\&quot; style=\&quot;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;380\&quot; y=\&quot;260\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;mxPoint x=\&quot;115\&quot; y=\&quot;260\&quot; as=\&quot;targetPoint\&quot;/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-result\&quot; value=\&quot;fitted MixtureModel&amp;lt;br&amp;gt;.history: IterationsHistory\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;120\&quot; y=\&quot;266\&quot; width=\&quot;255\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-components\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;entryX=0;entryY=0.5;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; target=\&quot;pysatl-core\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;mxPoint x=\&quot;60\&quot; y=\&quot;235\&quot; as=\&quot;sourcePoint\&quot;/&gt;&lt;Array as=\&quot;points\&quot;&gt;&lt;mxPoint x=\&quot;60\&quot; y=\&quot;445\&quot;/&gt;&lt;/Array&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-components\&quot; value=\&quot;components:&amp;lt;br&amp;gt;ParametricFamilyDistribution&amp;lt;br&amp;gt;&amp;lt;font color=&amp;quot;#666666&amp;quot;&amp;gt;families: ParametricFamily&amp;lt;/font&amp;gt;\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;68\&quot; y=\&quot;322\&quot; width=\&quot;175\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-pysatl-core\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;exitX=0.1667;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;system\&quot; target=\&quot;pysatl-core\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-pysatl-core\&quot; value=\&quot;ParametricFamily,&amp;lt;br&amp;gt;FiniteMixtureDistribution,&amp;lt;br&amp;gt;SamplingStrategy\&quot; style=\&quot;text;html=1;align=right;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;287\&quot; y=\&quot;331.0\&quot; width=\&quot;165\&quot; height=\&quot;48\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-numpy\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;system\&quot; target=\&quot;numpy\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-numpy\&quot; value=\&quot;arrays\&quot; style=\&quot;text;html=1;align=right;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;571\&quot; y=\&quot;347.0\&quot; width=\&quot;41\&quot; height=\&quot;16\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;e-scipy\&quot; value=\&quot;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=10;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;exitX=0.8333;exitY=1;entryX=0.5;entryY=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;system\&quot; target=\&quot;scipy\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;l-scipy\&quot; value=\&quot;optimize.minimize,&amp;lt;br&amp;gt;special.logsumexp\&quot; style=\&quot;text;html=1;align=right;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;656\&quot; y=\&quot;339.0\&quot; width=\&quot;116\&quot; height=\&quot;32\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg\&quot; value=\&quot;Legend\&quot; style=\&quot;swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;584\&quot; y=\&quot;493\&quot; width=\&quot;276\&quot; height=\&quot;52\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-0\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;594\&quot; y=\&quot;521\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-0\&quot; value=\&quot;implemented\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;624\&quot; y=\&quot;519\&quot; width=\&quot;62\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-1\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;fontSize=14;fontFamily=Helvetica;fontColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;696\&quot; y=\&quot;521\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-1\&quot; value=\&quot;planned\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;726\&quot; y=\&quot;519\&quot; width=\&quot;39\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-swatch-2\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;775\&quot; y=\&quot;521\&quot; width=\&quot;24\&quot; height=\&quot;14\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;lg-caption-2\&quot; value=\&quot;external\&quot; style=\&quot;text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;805\&quot; y=\&quot;519\&quot; width=\&quot;45\&quot; height=\&quot;18\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;/root&gt;&lt;/mxGraphModel&gt;&lt;/diagram&gt;&lt;/mxfile&gt;\n&quot;}"></div><p class="drawio-source"><a class="reference download internal" download="" href="../_downloads/3e7259b08d00c95fc12573c40c2512ea/full-architecture.drawio"><span class="xref download myst">Исходник схемы контекста</span></a></p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(n\)</span> <span class="math notranslate nohighlight">\(-\)</span> количество компонент смеси.</p></li>
-<li><p><span class="math notranslate nohighlight">\(F = \{f_1, \dots, f_n \}\)</span> <span class="math notranslate nohighlight">\(-\)</span> множество плотностей компонент. Каждая компонента принадлежит определенному параметрическому семейству распределений (например, семейству нормальных или экспоненциальных распределений).</p></li>
-<li><p><span class="math notranslate nohighlight">\(\Theta = \{\Theta_1, \dots, \Theta_n\}\)</span> <span class="math notranslate nohighlight">\(-\)</span> множество допустимых параметров компонент, то есть <span class="math notranslate nohighlight">\(\Theta_k\)</span> означает, что для <span class="math notranslate nohighlight">\(k\)</span>-ой компоненты параметр <span class="math notranslate nohighlight">\(\theta_k \in \Theta_k\)</span>​.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\Omega = \{\omega_1, \dots, \omega_n \}\)</span> <span class="math notranslate nohighlight">\(-\)</span> множество весов компонент, удовлетворяющих условиям:</p>
-<ul>
-<li><p><strong>Неотрицательность</strong>: <span class="math notranslate nohighlight">\(\omega_k \ge 0 ~~~\forall k\)</span></p></li>
-<li><p><strong>Нормировка</strong>: <span class="math notranslate nohighlight">\(\sum_{k=1}^n \omega_k = 1\)</span>, для того, чтобы итоговая функция плотности <span class="math notranslate nohighlight">\(f(x ~|~ F, \Theta, \Omega)\)</span> была корректной.</p></li>
+<li><p>Сейчас пользователь подаёт выборку <code class="docutils literal notranslate"><span class="pre">X</span></code> и начальную <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code>, которую сам собирает из компонент <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> (<code class="docutils literal notranslate"><span class="pre">ParametricFamilyDistribution</span></code>), выбирает оценщик (<code class="docutils literal notranslate"><span class="pre">EM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECME</span></code>) с критериями остановки (<code class="docutils literal notranslate"><span class="pre">breakpointers</span></code>), правилами удаления компонент (<code class="docutils literal notranslate"><span class="pre">pruners</span></code>) и оптимизатором, вызывает <code class="docutils literal notranslate"><span class="pre">fit</span></code> и получает обученную <code class="docutils literal notranslate"><span class="pre">MixtureModel</span></code>; историю итераций даёт свойство <code class="docutils literal notranslate"><span class="pre">history</span></code> (<code class="docutils literal notranslate"><span class="pre">IterationsHistory</span></code>).</p></li>
+<li><p>На листе на входе написан <code class="docutils literal notranslate"><span class="pre">EM(...)</span></code>; <code class="docutils literal notranslate"><span class="pre">ECM</span></code> и <code class="docutils literal notranslate"><span class="pre">ECME</span></code> принимают ту же базовую конфигурацию и дополнительно поддерживают разбиение параметров на группы.</p></li>
+<li><p>Два серых пути на листе запланированы: «<code class="docutils literal notranslate"><span class="pre">X</span></code> + семейства без параметров» (начальные параметры подбирает модуль <code class="docutils literal notranslate"><span class="pre">initializers</span></code>) и «только <code class="docutils literal notranslate"><span class="pre">X</span></code>» (модуль <code class="docutils literal notranslate"><span class="pre">structure_selection</span></code> подбирает число компонент и их семейства, затем начальные параметры) — Запланировано.</p></li>
+<li><p>Из зависимостей берутся: <code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code> — параметрические семейства и распределения (компонентой может быть любое из них), стратегия сэмплирования и конечная смесь <code class="docutils literal notranslate"><span class="pre">FiniteMixtureDistribution</span></code> только для экспорта через <code class="docutils literal notranslate"><span class="pre">to_core_mixture</span></code>; <code class="docutils literal notranslate"><span class="pre">scipy</span></code> — <code class="docutils literal notranslate"><span class="pre">optimize.minimize</span></code> (методы Nelder–Mead и Powell в <code class="docutils literal notranslate"><span class="pre">optimizers</span></code>) и <code class="docutils literal notranslate"><span class="pre">special.logsumexp</span></code>/<code class="docutils literal notranslate"><span class="pre">softmax</span></code>; <code class="docutils literal notranslate"><span class="pre">numpy</span></code> — массивы.</p></li>
 </ul>
-</li>
-</ul>
-<p>Пример плотности смеси распределений с двумя нормальными компонентами:</p>
-<a class="reference internal image-reference" href="../_images/mixture.png"><img alt="Select Parameters" class="align-center" src="../_images/mixture.png" style="width: 600px;" />
-</a>
-<br>
 </section>
 <section id="id4">
-<h3>Выборка<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
-<p>Представьте, что вы хотите узнать средний рост всех жителей города. Эта гипотетическая полная совокупность всех жителей называется <strong>генеральной совокупностью</strong>. Опросить абсолютно каждого человека практически невозможно. Вместо этого вы измеряете рост, скажем, 1000 случайно выбранных людей. Этот набор из 1000 измерений и есть <strong>выборка</strong>. Основная идея статистики заключается в том, чтобы по свойствам этой выборки (например, по среднему росту в ней) сделать обоснованные выводы о свойствах всей генеральной совокупности.</p>
-<p>В контексте анализа данных, выборка — это тот набор данных, который у вас есть на руках (например, файл с измерениями), и на основе которого вы будете строить и оценивать модель.</p>
-<p>Формально, <strong>случайная выборка</strong> объема <span class="math notranslate nohighlight">\(n\)</span> из распределения с плотностью <span class="math notranslate nohighlight">\(f(x~|~\theta)\)</span> <span class="math notranslate nohighlight">\(-\)</span> это набор из <span class="math notranslate nohighlight">\(n\)</span> случайных величин <span class="math notranslate nohighlight">\(\{X_1, \dots, X_n\}\)</span> удовлетворяющий следующим условиям:</p>
+<h2>Стек<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Независимость</strong>: Результат одного наблюдения не влияет на результаты других. (Значение роста одного случайно выбранного человека не зависит от роста другого).</p></li>
-<li><p><strong>Одинаковая распределённость</strong>: Все наблюдения <span class="math notranslate nohighlight">\(X_i\)</span> подчиняются одному и тому же закону распределения с
-плотностью <span class="math notranslate nohighlight">\(f(x ~|~ \theta)\)</span>.</p></li>
+<li><p>Python: <code class="docutils literal notranslate"><span class="pre">&gt;=3.12,&lt;3.14</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pysatl-core</span></code>: <code class="docutils literal notranslate"><span class="pre">0.1.0a0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code>: <code class="docutils literal notranslate"><span class="pre">&gt;=2.2.3,&lt;3.0.0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code>: <code class="docutils literal notranslate"><span class="pre">&gt;=1.15.2,&lt;2.0.0</span></code></p></li>
+<li><p>Документация: Sphinx + MyST (тема <code class="docutils literal notranslate"><span class="pre">pydata-sphinx-theme</span></code>)</p></li>
+<li><p>Диаграммы: draw.io</p></li>
 </ul>
-<p>Такое предположение часто называют <span class="math notranslate nohighlight">\(i.i.d\)</span>, будем писать что данные <span class="math notranslate nohighlight">\(X\)</span> подчиняются закону распределения (например нормальному с параметрами <span class="math notranslate nohighlight">\(\mu, \sigma^2\)</span>) так:</p>
-<div class="math notranslate nohighlight">
-\[X \overset{i.i.d}{\sim} \mathcal{N}(\mu, \sigma^2)\]</div>
-<p>На практике под выборкой чаще всего понимают <strong>реализацию</strong> этих случайных величин — то есть конкретный набор наблюдаемых числовых данных <span class="math notranslate nohighlight">\(\{x_1, \dots, x_n\}\)</span>​, который используется для оценки неизвестных параметров модели. Именно такая выборка передаётся в оценщики библиотеки <code class="docutils literal notranslate"><span class="pre">pysatl-mpest</span></code>.</p>
-<br>
 </section>
 <section id="id5">
-<h3>Функция правдоподобия<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
-<p>Представьте, что вы нашли на земле монету и хотите понять, является ли она “честной”. Вы подбрасываете ее 100 раз и получаете результат: 70 орлов и 30 решек. Возникает вопрос: какая степень “нечестности” монеты лучше всего объясняет такой исход?</p>
-<p><strong>Функция правдоподобия</strong> как раз и отвечает на этот вопрос. Она переворачивает стандартную логику вероятности. Вместо того чтобы, зная параметры модели (например, вероятность выпадения орла <span class="math notranslate nohighlight">\(p = 0.5\)</span>) предсказывать исход, мы, наоборот, используем уже наблюдаемый исход (70 орлов, 30 решек), чтобы оценить, какие параметры модели (<span class="math notranslate nohighlight">\(p\)</span>) являются наиболее “правдоподобными”.</p>
-<p>Формально, пусть <span class="math notranslate nohighlight">\(X \overset{i.i.d}{\sim} f(x~|~\theta)\)</span>. Тогда функцией правдоподобия называется функция от параметра <span class="math notranslate nohighlight">\(\theta\)</span>, рассматриваемая при фиксированных данных <span class="math notranslate nohighlight">\(X\)</span>:</p>
-<div class="math notranslate nohighlight">
-\[\mathcal{L}(\theta ~|~ x_1, \dots,x_n) = \prod_{i=1}^n f(x_i ~|~\theta)\]</div>
-<p>На практике мы будем работать с логарифмом функции правдоподобия: <span class="math notranslate nohighlight">\(\log \mathcal{L}(\theta ~|~ x_1, \dots,x_n)\ \)</span>, поскольку тогда мы будем работать не с произведением, а с суммой.</p>
-<br>
-</section>
-<section id="q">
-<h3>Q-функция<a class="headerlink" href="#q" title="Link to this heading">#</a></h3>
-<p>Представим нашу задачу с ростом людей, который мы моделируем как смесь двух нормальных распределений (мужчин и женщин). Если бы для каждого человека в выборке мы бы точно знали, к какой группе он относится (мужчина или женщина), задача оценки была бы простой: мы бы разделили данные на две группы и оценили параметры для каждой отдельно.</p>
-<p>Но у нас нет этой информации — принадлежность к группе является <strong>скрытой (латентной) переменной</strong>. Алгоритм EM (Expectation-Maximization), центральной частью которого является Q-функция, элегантно решает эту проблему.</p>
-<p>Идея EM-алгоритма в следующем:</p>
-<ol class="arabic simple">
-<li><p><strong>E-шаг (Expectation):</strong> Имея текущие оценки параметров (например, средний рост и дисперсию для мужчин и женщин), мы вычисляем <em>вероятностную</em> принадлежность каждого наблюдения к каждой компоненте. Например, для человека ростом 175 см мы можем вычислить, что он с вероятностью 70% относится к группе мужчин и с 30% — к группе женщин.</p></li>
-<li><p><strong>M-шаг (Maximization):</strong> Мы хотим обновить параметры модели. Но как это сделать, если принадлежность нечеткая? Здесь и появляется <strong>Q-функция</strong>. Она представляет собой “ожидаемое” значение логарифма правдоподобия, если бы мы знали скрытые переменные. Это ожидание вычисляется с использованием тех самых вероятностей, которые мы получили на E-шаге.</p></li>
-</ol>
-<p>Проще говоря, Q-функция — это суррогатная, более простая функция, которую мы максимизируем на M-шаге вместо истинного, но слишком сложного логарифма правдоподобия.</p>
-<p>Более формально, пусть:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(X\)</span> <span class="math notranslate nohighlight">\(-\)</span> наблюдаемые данные.</p></li>
-<li><p><span class="math notranslate nohighlight">\(Z\)</span> <span class="math notranslate nohighlight">\(-\)</span> скрытые переменные.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\Omega^{(t)}, \Theta^{(t)}\)</span> <span class="math notranslate nohighlight">\(-\)</span> параметры смеси на шаге <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
-</ul>
-<p>Тогда Q-функция определяется как условное математическое ожидание логарифма правдоподобия <em>полных данных</em>:</p>
-<div class="math notranslate nohighlight">
-\[Q(\theta, \theta^{(t)}) = \mathbb{E}_{Z~|~X, \theta^{(t)}}[\log \mathcal{L}(\theta ~|~ X, Z)]\]</div>
-<br>
-</section>
-</section>
-<section id="id6">
-<h2>Технологический стек<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><strong>Язык:</strong> Python 3.11+</p></li>
-<li><p><strong>Основные библиотеки:</strong></p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code>: для всех численных вычислений и работы с многомерными массивами (<code class="docutils literal notranslate"><span class="pre">ndarray</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code>: для численных методов (оптимизация, решение систем уравнений, нахождение нулей функции).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sklearn</span></code>: для кластеризации.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">+</span> <span class="pre">pytest-mock</span> <span class="pre">+</span> <span class="pre">hypothesis</span></code>: фреймворки для тестирования.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sphinx</span></code>: для генерации документации.</p></li>
-</ul>
-</li>
-</ul>
+<h2>Статус возможностей<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Возможность</p></th>
+<th class="head"><p>Модуль</p></th>
+<th class="head"><p>Статус</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Смесь распределений: плотность, логарифм правдоподобия, генерация выборки</p></td>
+<td><p><a class="reference internal" href="modules/core/core.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">core</span></code></span></a></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-odd"><td><p>Готовые оценщики <code class="docutils literal notranslate"><span class="pre">EM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECM</span></code>, <code class="docutils literal notranslate"><span class="pre">ECME</span></code></p></td>
+<td><p><a class="reference internal" href="modules/estimators/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators</span></code></span></a></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-even"><td><p>Собственный итеративный конвейер из шагов (<code class="docutils literal notranslate"><span class="pre">Pipeline</span></code>, <code class="docutils literal notranslate"><span class="pre">ExpectationStep</span></code>, <code class="docutils literal notranslate"><span class="pre">WeightsStep</span></code>, <code class="docutils literal notranslate"><span class="pre">MaximizationStep</span></code>)</p></td>
+<td><p><a class="reference internal" href="modules/estimators/iterative/iterative.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></span></a></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-odd"><td><p>Критерии остановки (<code class="docutils literal notranslate"><span class="pre">StepBreakpointer</span></code>, <code class="docutils literal notranslate"><span class="pre">LikelihoodBreakpointer</span></code>)</p></td>
+<td><p><a class="reference internal" href="modules/estimators/iterative/iterative.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></span></a></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-even"><td><p>Удаление вырожденных компонент (<code class="docutils literal notranslate"><span class="pre">PriorThresholdPruner</span></code>)</p></td>
+<td><p><a class="reference internal" href="modules/estimators/iterative/iterative.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.iterative</span></code></span></a></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-odd"><td><p>Численные оптимизаторы (<code class="docutils literal notranslate"><span class="pre">ScipyNelderMead</span></code>, <code class="docutils literal notranslate"><span class="pre">ScipyPowell</span></code>)</p></td>
+<td><p><a class="reference internal" href="modules/optimizers/optimizers.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">optimizers</span></code></span></a></p></td>
+<td><p>Готово</p></td>
+</tr>
+<tr class="row-even"><td><p>Прямые (неитеративные) методы оценки</p></td>
+<td><p><a class="reference internal" href="modules/estimators/direct/direct.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">estimators.direct</span></code></span></a></p></td>
+<td><p>Запланировано</p></td>
+</tr>
+<tr class="row-odd"><td><p>Подбор начального приближения</p></td>
+<td><p><a class="reference internal" href="modules/initializers/initializers.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">initializers</span></code></span></a></p></td>
+<td><p>Запланировано</p></td>
+</tr>
+<tr class="row-even"><td><p>Выбор структуры смеси (число компонент и семейства)</p></td>
+<td><p><a class="reference internal" href="modules/structure_selection/structure_selection.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">structure_selection</span></code></span></a></p></td>
+<td><p>Запланировано</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 
@@ -495,20 +474,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../user_guide/index.html"
+       href="../user_guide/results.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">User Guide</p>
+        <p class="prev-next-title">Результат и история</p>
       </div>
     </a>
     <a class="right-next"
-       href="tree.html"
+       href="domain.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Дерево алгоритмов</p>
+        <p class="prev-next-title">Предметная область и сценарии</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -531,26 +510,13 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Глоссарий</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Плотность распределения</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Смесь распределений</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Выборка</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Функция правдоподобия</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q">Q-функция</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Технологический стек</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Что делает библиотека</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Карта раздела</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Контекст системы</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Стек</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Статус возможностей</a></li>
 </ul>
   </nav></div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/design/index.md.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               
@@ -577,7 +543,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Danil Totmyanin, Anton Kazancev.
+      © Copyright 2025–2026, Danil Totmyanin, Anton Kazancev.
       <br/>
     
   </p>

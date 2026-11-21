@@ -10,17 +10,35 @@ Mpest documentation
 .. toctree::
    :maxdepth: 2
    :caption: Quick Start
+   :titlesonly:
+   :includehidden:
 
    user_guide/index
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Design
+   :titlesonly:
+   :includehidden:
 
    design/index
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Math
+   :titlesonly:
+   :includehidden:
+
+   math/index
 
 .. toctree::
    :maxdepth: 2
    :caption: API
 
    api/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Glossary
+
+   glossary
