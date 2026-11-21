@@ -10,6 +10,8 @@ Mpest documentation
 .. toctree::
    :maxdepth: 2
    :caption: Quick Start
+   :titlesonly:
+   :includehidden:
 
    user_guide/index
 
