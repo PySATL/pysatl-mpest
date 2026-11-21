@@ -12,16 +12,18 @@ poetry install
 
 ## Abstract
 
-This package contains realization of EM-type algorithms for solving the parameter estimation of mixture distribution problem:
+This package implements EM-type algorithms for estimating the parameters of a finite mixture of distributions:
 
-$$p(x | \Omega, F, \Theta) = \sum_{j=1}^k \omega_j f_j(x | \theta_j)$$
+$$f(x \mid \Psi) = \sum_{j=1}^k \omega_j f_j(x \mid \theta_j)$$
 
-- $p(x | \Omega, F, \Theta)$ - mixture distribution
-- $f_j(x | \theta_j) \in F$ - $j$ distribution
-- $\omega_j \in \Omega$ - prior probability of $j$ distribution
-- $\theta_j \in \Theta$ - parameters of $j$ distribution
+- $f(x \mid \Psi)$ - the mixture density
+- $k$ - the number of components
+- $f_j(x \mid \theta_j)$ - the density of the $j$-th component
+- $\omega_j$ - the weight (prior probability) of the $j$-th component
+- $\theta_j$ - the parameters of the $j$-th component
+- $\Psi = (\omega_1, \dots, \omega_k, \theta_1, \dots, \theta_k)$ - all parameters of the mixture
 
-The problem is to find $\Omega$ and $\Theta$ params of custom mixture distribution with known (or guessed) $k$, $F$ and guessed or randomized initial approximation.
+The problem is to estimate $\Psi$ from a sample when $k$ and the families of the components are known (or guessed) and a user-provided initial approximation is given.
 
 The components of a mixture are distributions of [pysatl-core](https://github.com/PySATL/pysatl-core), so the package works with any family registered there, and a mixture may consist of different families, for example Gaussian and exponential ones. The package itself is concerned with the estimation algorithms and the optimizers they use.
 
@@ -32,8 +34,8 @@ A component is created from a family that is registered in `pysatl-core`: `norma
 The estimators fit a `MixtureModel` to a sample starting from an initial approximation:
 
 - `EM` fits the mixture by the classic Expectation-Maximization algorithm: the E-step computes the responsibilities of the observations and the M-step updates the weights and every free parameter of each component by maximizing the Q-function.
-- `ECM` maximizes the expected complete-data log-likelihood (the Q-function) separately for every component.
-- `ECME` can maximize the observed data likelihood directly instead, for the components you choose.
+- `ECM` replaces the joint M-step of a component with conditional steps: the Q-function is maximized over ordered groups of the component's parameters, given by `parameter_groups` in `fit`, for example `parameter_groups={0: [{"sigma"}, {"mu"}]}`. Without `parameter_groups`, `ECM` is identical to `EM`.
+- `ECME` chooses for every component whether to maximize the Q-function or the observed data likelihood directly. By default (`default_strategy="odl"`) every component maximizes the observed data likelihood; `q_indices_raw` and `odl_indices_raw` in `fit` choose the strategy per component.
 
 All three take the same arguments:
 
@@ -41,7 +43,7 @@ All three take the same arguments:
 - `pruners` - strategies that remove components during the fit. `PriorThresholdPruner(threshold)` removes the components whose weight falls below the threshold. May be empty.
 - `optimizer` - a numerical optimizer for the parameters that have no closed-form estimate: `ScipyNelderMead` or `ScipyPowell`. For the normal (`meanStd`) and exponential (`rate`) parametrizations the estimates are computed analytically.
 
-Note: the current `ECM` implementation performs the same component-wise Q-function updates as `EM`.
+See the [estimator guide](docs/source/user_guide/estimators.md) for how to choose and configure an estimator.
 
 ### Code example
 

@@ -7,7 +7,7 @@ poetry run make -C docs html                      # сборка, как в CI
 poetry run python docs/tools/export_diagrams.py   # PNG из всех листов .drawio
 ```
 
-Вне Sphinx лежат исходные материалы: `math/` — выводы стратегий M-шага (LaTeX и PDF), `review/` — обзор литературы, `requirements_dashbard.html` и `usecases_dashboard.html` — дашборды требований и сценариев.
+Вне Sphinx лежат исходные материалы: `review/` — обзор литературы, `requirements_dashboard.html` и `usecases_dashboard.html` — дашборды требований и сценариев.
 
 ## Диаграммы
 
