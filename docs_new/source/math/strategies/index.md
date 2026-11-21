@@ -17,7 +17,7 @@ moments
 | Стратегия | Целевая функция | Что читает | Где используется | Гарантия монотонности |
 |---|---|---|---|---|
 | [`QFUNCTION`](q_function.md) | слагаемое $Q$ одной компоненты {eq}`eq-em-component` | свою компоненту и столбец $\gamma_{\cdot j}$ | `EM`, `ECM`, `ECME` | да, теорема {prf:ref}`thm-gem-monotone` |
-| [`OBSERVED_DATA_LIKELIHOOD`](observed_data_likelihood.md) | $\ln L$ {eq}`eq-observed-loglik` по параметрам одной компоненты | все компоненты и веса | `ECME` | отдельный шаг не уменьшает $\ln L$; итерация ECME в целом — отдельный вопрос |
+| [`OBSERVED_DATA_LIKELIHOOD`](observed_data_likelihood.md) | $\ln L$ {eq}`eq-observed-loglik` по параметрам одной компоненты | все компоненты и веса | `ECME` | отдельный шаг не уменьшает $\ln L$; итерация ECME — при Q-шагах раньше L-шагов, теорема {prf:ref}`thm-ecme-monotone` |
 | [`MOMENTS`](moments.md) | равенство взвешенных и теоретических моментов, эвристика | свою компоненту и столбец $\gamma_{\cdot j}$ | ни один оценщик; только в `Pipeline`, собранном вручную | нет в общем случае |
 
 ## Выбор реализации по семейству
