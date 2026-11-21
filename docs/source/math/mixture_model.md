@@ -16,7 +16,7 @@
 | $\omega_j$ | вес $j$-й компоненты | `MixtureModel.weights`, логарифмы — `MixtureModel.log_weights` |
 | $f_j(\cdot \mid \theta_j)$ | плотность $j$-й компоненты с параметрами $\theta_j$ | `MixtureModel.components[j]`, распределение `pysatl-core` |
 | $\Psi$ | все параметры смеси: веса и параметры компонент | `MixtureModel` целиком |
-| $\Psi^{(t)}$ | параметры на итерации $t$ | `state.curr_mixture` |
+| $\Psi^{(t)}$ | параметры на итерации $t$ | `state.curr_mixture` в начале итерации (его же хранит `state.prev_mixture`) |
 | $\ln f_j(x_i \mid \theta_j)$ | матрица логарифмов плотностей компонент размера $n \times k$ | `MixtureModel.component_lpdf_matrix(X)` |
 | $\gamma_{ij}^{(t)}$ | апостериорная вероятность того, что $x_i$ порождено $j$-й компонентой | `state.H[i, j]` |
 
