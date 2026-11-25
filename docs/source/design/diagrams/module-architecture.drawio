@@ -57,6 +57,13 @@
             </Array>
           </mxGeometry>
         </mxCell>
+        <mxCell id="e-init-ext" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0.25;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="initializers" target="pysatl-core">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="62.5" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
         <mxCell id="e-init-core" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="initializers" target="core">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
@@ -129,11 +136,19 @@
         <mxCell id="e-ss-init" edge="1" parent="1" source="structure_selection" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=0.000;entryY=0.500;entryPerimeter=0;" target="initializers" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-init-core" edge="1" parent="1" source="initializers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.500;exitPerimeter=0;entryX=1.000;entryY=0.500;entryPerimeter=0;" target="core" value="">
+        <mxCell id="e-init-ext" edge="1" parent="1" source="initializers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.300;exitPerimeter=0;entryX=1.000;entryY=0.500;entryPerimeter=0;" target="pysatl-core" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="910" y="85" />
-              <mxPoint x="910" y="375" />
+              <mxPoint x="910" y="65" />
+              <mxPoint x="910" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-init-core" edge="1" parent="1" source="initializers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;exitX=1.000;exitY=0.700;exitPerimeter=0;entryX=1.000;entryY=0.500;entryPerimeter=0;" target="core" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="895" y="85" />
+              <mxPoint x="895" y="375" />
             </Array>
           </mxGeometry>
         </mxCell>
