@@ -125,7 +125,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="overview-RandomAssigner" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=13;fontStyle=1;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="RandomAssigner" vertex="1">
+        <mxCell id="overview-RandomAssigner" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=13;fontStyle=1;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="RandomCentersAssigner" vertex="1">
           <mxGeometry height="26" width="202" x="255" y="555" as="geometry" />
         </mxCell>
         <mxCell id="overview-gen-RandomAssigner" edge="1" parent="1" source="overview-RandomAssigner" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#ffffff;endArrow=block;endFill=0;endSize=12;exitX=0;exitY=0.5;exitPerimeter=0;entryX=0.0455;entryY=1;entryPerimeter=0;" target="overview-c23" value="">
@@ -154,7 +154,7 @@
         <mxCell id="overview-c26" parent="overview-c25" style="text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#666666;" value="&lt;i&gt;+ supports(family): bool&lt;/i&gt;&lt;br&gt;&lt;i&gt;+ estimate(X, h, family):&lt;/i&gt;&lt;br&gt;&lt;i&gt;&amp;nbsp;ParametricFamilyDistribution&lt;/i&gt;" vertex="1">
           <mxGeometry height="59" width="200" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="overview-MLEEstimator" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=13;fontStyle=1;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MLEEstimator" vertex="1">
+        <mxCell id="overview-MLEEstimator" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontStyle=1;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MLEComponentEstimator" vertex="1">
           <mxGeometry height="26" width="182" x="490" y="519" as="geometry" />
         </mxCell>
         <mxCell id="overview-gen-MLEEstimator" edge="1" parent="1" source="overview-MLEEstimator" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#ffffff;endArrow=block;endFill=0;endSize=12;exitX=0;exitY=0.5;exitPerimeter=0;entryX=0.05;entryY=1;entryPerimeter=0;" target="overview-c25" value="">
@@ -164,7 +164,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="overview-MomentsEstimator" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=13;fontStyle=1;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MomentsEstimator" vertex="1">
+        <mxCell id="overview-MomentsEstimator" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontStyle=1;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MomentsComponentEstimator" vertex="1">
           <mxGeometry height="26" width="182" x="490" y="555" as="geometry" />
         </mxCell>
         <mxCell id="overview-gen-MomentsEstimator" edge="1" parent="1" source="overview-MomentsEstimator" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#ffffff;endArrow=block;endFill=0;endSize=12;exitX=0;exitY=0.5;exitPerimeter=0;entryX=0.05;entryY=1;entryPerimeter=0;" target="overview-c25" value="">
@@ -174,7 +174,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="overview-EstimatorChain" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;startSize=26;horizontal=1;html=1;collapsible=0;fillColor=#ffffff;swimlaneFillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=13;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="EstimatorChain" vertex="1">
+        <mxCell id="overview-EstimatorChain" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;startSize=26;horizontal=1;html=1;collapsible=0;fillColor=#ffffff;swimlaneFillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="ComponentEstimatorChain" vertex="1">
           <mxGeometry height="68" width="182" x="490" y="591" as="geometry" />
         </mxCell>
         <mxCell id="overview-EstimatorChain-f" parent="overview-EstimatorChain" style="text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#666666;" value="+ estimators:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;list[ComponentEstimator]" vertex="1">
@@ -273,24 +273,24 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="overview-table" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;startSize=30;horizontal=1;html=1;collapsible=0;fillColor=#ffffff;swimlaneFillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=14;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="ComponentTable" vertex="1">
-          <mxGeometry height="156" width="200" x="232" y="216" as="geometry" />
+          <mxGeometry height="168" width="200" x="232" y="216" as="geometry" />
         </mxCell>
         <mxCell id="overview-table-f" parent="overview-table" style="text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#666666;" value="+ X, H: ndarray&lt;br&gt;+ families: list&lt;br&gt;- estimator: ComponentEstimator" vertex="1">
-          <mxGeometry height="59" width="200" y="30" as="geometry" />
+          <mxGeometry height="53" width="200" y="30" as="geometry" />
         </mxCell>
         <mxCell id="overview-table-l" parent="overview-table" style="line;html=1;strokeWidth=1.5;strokeColor=#666666;fillColor=none;dashed=1;" value="" vertex="1">
-          <mxGeometry height="8" width="200" y="89" as="geometry" />
+          <mxGeometry height="8" width="200" y="83" as="geometry" />
         </mxCell>
-        <mxCell id="overview-table-m" parent="overview-table" style="text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#666666;" value="+ component(j, c):&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;ParametricFamilyDistribution&lt;br&gt;+ loglikelihood(j, c): float" vertex="1">
-          <mxGeometry height="59" width="200" y="97" as="geometry" />
+        <mxCell id="overview-table-m" parent="overview-table" style="text;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=2;whiteSpace=wrap;fontSize=12;fontFamily=Helvetica;fontColor=#666666;" value="+ component(j, c):&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;ParametricFamilyDistribution&lt;br&gt;+ loglikelihood(j, c): float&lt;br&gt;+ groups(): list[list[int]]" vertex="1">
+          <mxGeometry height="77" width="200" y="91" as="geometry" />
         </mxCell>
         <mxCell id="overview-e-table" edge="1" parent="1" source="overview-c11" style="rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#ffffff;endArrow=open;endFill=0;endSize=10;dashed=1;exitX=0;exitY=0.4936;exitPerimeter=0;entryX=1;entryY=0.2949;entryPerimeter=0;" target="overview-table" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="overview-e-table-est" edge="1" parent="1" source="overview-table" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#ffffff;startArrow=diamondThin;startFill=0;startSize=16;endArrow=none;exitX=1;exitY=0.9103;exitPerimeter=0;entryX=0.1;entryY=0;entryPerimeter=0;" target="overview-c25" value="">
+        <mxCell id="overview-e-table-est" edge="1" parent="1" source="overview-table" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#ffffff;startArrow=diamondThin;startFill=0;startSize=16;endArrow=none;exitX=1;exitY=0.9286;exitPerimeter=0;entryX=0.1;entryY=0;entryPerimeter=0;" target="overview-c25" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="492" y="358" />
+              <mxPoint x="492" y="372" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -321,74 +321,74 @@
         <mxCell id="seq-initialize-e1" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="50" y="90" as="sourcePoint" />
-            <mxPoint x="50" y="760" as="targetPoint" />
+            <mxPoint x="50" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-c2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;" value="User" vertex="1">
           <mxGeometry height="40" width="80" x="10" y="50" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;" value="User" vertex="1">
-          <mxGeometry height="40" width="80" x="10" y="760" as="geometry" />
+          <mxGeometry height="40" width="80" x="10" y="790" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e4" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="165" y="90" as="sourcePoint" />
-            <mxPoint x="165" y="760" as="targetPoint" />
+            <mxPoint x="165" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-c5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="ClusterInitializer" vertex="1">
           <mxGeometry height="40" width="130" x="100" y="50" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="ClusterInitializer" vertex="1">
-          <mxGeometry height="40" width="130" x="100" y="760" as="geometry" />
+          <mxGeometry height="40" width="130" x="100" y="790" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e7" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="300" y="90" as="sourcePoint" />
-            <mxPoint x="300" y="760" as="targetPoint" />
+            <mxPoint x="300" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-initialize-c8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="SklearnAssigner" vertex="1">
+        <mxCell id="seq-initialize-c8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="KMeansAssigner" vertex="1">
           <mxGeometry height="40" width="125" x="237.5" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="seq-initialize-c9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="SklearnAssigner" vertex="1">
-          <mxGeometry height="40" width="125" x="237.5" y="760" as="geometry" />
+        <mxCell id="seq-initialize-c9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="KMeansAssigner" vertex="1">
+          <mxGeometry height="40" width="125" x="237.5" y="790" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e10" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="415" y="90" as="sourcePoint" />
-            <mxPoint x="415" y="760" as="targetPoint" />
+            <mxPoint x="415" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-initialize-c11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;" value="KMeans" vertex="1">
+        <mxCell id="seq-initialize-c11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;" value="kmeans2" vertex="1">
           <mxGeometry height="40" width="90" x="370" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="seq-initialize-c12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;" value="KMeans" vertex="1">
-          <mxGeometry height="40" width="90" x="370" y="760" as="geometry" />
+        <mxCell id="seq-initialize-c12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#000000;" value="kmeans2" vertex="1">
+          <mxGeometry height="40" width="90" x="370" y="790" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e13" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="535" y="90" as="sourcePoint" />
-            <mxPoint x="535" y="760" as="targetPoint" />
+            <mxPoint x="535" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-c14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="HungarianMatcher" vertex="1">
           <mxGeometry height="40" width="130" x="470" y="50" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="HungarianMatcher" vertex="1">
-          <mxGeometry height="40" width="130" x="470" y="760" as="geometry" />
+          <mxGeometry height="40" width="130" x="470" y="790" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e16" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="680" y="90" as="sourcePoint" />
-            <mxPoint x="680" y="760" as="targetPoint" />
+            <mxPoint x="680" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-c17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="ComponentTable" vertex="1">
-          <mxGeometry height="40" width="130" x="615" y="50" as="geometry" />
+          <mxGeometry height="40" width="115" x="622.5" y="50" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="ComponentTable" vertex="1">
-          <mxGeometry height="40" width="130" x="615" y="760" as="geometry" />
+          <mxGeometry height="40" width="115" x="622.5" y="790" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e19" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="initialize(X, families, random_state)">
           <mxGeometry relative="1" as="geometry">
@@ -398,17 +398,17 @@
         </mxCell>
         <mxCell id="seq-initialize-e20" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="assign(X, k, rng)">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="165" y="170" as="sourcePoint" />
-            <mxPoint x="300" y="170" as="targetPoint" />
+            <mxPoint x="165" y="195" as="sourcePoint" />
+            <mxPoint x="300" y="195" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-initialize-e21" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="fit_predict(X[:, None])">
+        <mxCell id="seq-initialize-e21" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="kmeans2(X, k, iter, minit=&quot;++&quot;, missing=&quot;raise&quot;)">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="300" y="225" as="sourcePoint" />
             <mxPoint x="415" y="225" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-initialize-e22" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="labels">
+        <mxCell id="seq-initialize-e22" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="(centroids, labels)">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="415" y="250" as="sourcePoint" />
             <mxPoint x="300" y="250" as="targetPoint" />
@@ -443,8 +443,8 @@
             <mxPoint x="165" y="330" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-initialize-c27" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="validate H (one-hot, no empty columns); sort columns by mean" vertex="1">
-          <mxGeometry height="18" width="370" x="199" y="312" as="geometry" />
+        <mxCell id="seq-initialize-c27" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="validate H (one-hot, cluster sizes ≥ min_cluster_size); sort columns by mean" vertex="1">
+          <mxGeometry height="18" width="440" x="199" y="312" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e28" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="match(table)">
           <mxGeometry relative="1" as="geometry">
@@ -464,38 +464,38 @@
             <mxPoint x="165" y="452" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="seq-initialize-perm-e" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="165" y="465" as="sourcePoint" />
+            <mxPoint x="165" y="483" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="193" y="465" />
+              <mxPoint x="193" y="483" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="seq-initialize-perm-t" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="check: assignment is a permutation of 0 .. k-1" vertex="1">
+          <mxGeometry height="18" width="260" x="199" y="465" as="geometry" />
+        </mxCell>
         <mxCell id="seq-initialize-c32" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#000000;strokeWidth=1.2;fontSize=11;fontStyle=1;width=48;height=20;fontFamily=Helvetica;fontColor=#000000;" value="loop" vertex="1">
-          <mxGeometry height="153" width="790" x="95" y="465" as="geometry" />
+          <mxGeometry height="153" width="790" x="95" y="495" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c33" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[j = 0 .. k-1;  c = assignment[j],  f = families[j]]" vertex="1">
-          <mxGeometry height="16" width="730" x="151" y="467" as="geometry" />
+          <mxGeometry height="16" width="730" x="151" y="497" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e34" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="component(j, c)">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="165" y="505" as="sourcePoint" />
-            <mxPoint x="680" y="505" as="targetPoint" />
+            <mxPoint x="165" y="535" as="sourcePoint" />
+            <mxPoint x="680" y="535" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-e35" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="component_j">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="680" y="605" as="sourcePoint" />
-            <mxPoint x="165" y="605" as="targetPoint" />
+            <mxPoint x="680" y="635" as="sourcePoint" />
+            <mxPoint x="165" y="635" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-e36" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="193" y="630" />
-              <mxPoint x="193" y="648" />
-            </Array>
-            <mxPoint x="165" y="630" as="sourcePoint" />
-            <mxPoint x="165" y="648" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="seq-initialize-c37" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="weights = H.mean(axis=0)[assignment]" vertex="1">
-          <mxGeometry height="18" width="230" x="199" y="630" as="geometry" />
-        </mxCell>
-        <mxCell id="seq-initialize-e38" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="193" y="660" />
@@ -505,35 +505,48 @@
             <mxPoint x="165" y="678" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="seq-initialize-c37" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="weights = H.mean(axis=0)[assignment]" vertex="1">
+          <mxGeometry height="18" width="230" x="199" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="seq-initialize-e38" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="193" y="690" />
+              <mxPoint x="193" y="708" />
+            </Array>
+            <mxPoint x="165" y="690" as="sourcePoint" />
+            <mxPoint x="165" y="708" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="seq-initialize-c39" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="MixtureModel(components, weights)" vertex="1">
-          <mxGeometry height="18" width="210" x="199" y="660" as="geometry" />
+          <mxGeometry height="18" width="210" x="199" y="690" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e40" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="mixture">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="165" y="735" as="sourcePoint" />
-            <mxPoint x="50" y="735" as="targetPoint" />
+            <mxPoint x="165" y="765" as="sourcePoint" />
+            <mxPoint x="50" y="765" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-lg" parent="1" style="swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;" value="Legend" vertex="1">
-          <mxGeometry height="90" width="110" x="10" y="815" as="geometry" />
+          <mxGeometry height="90" width="110" x="10" y="845" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;dashed=1;" value="" vertex="1">
-          <mxGeometry height="14" width="24" x="20" y="841" as="geometry" />
+          <mxGeometry height="14" width="24" x="20" y="871" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c42" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;" value="planned" vertex="1">
-          <mxGeometry height="18" width="66" x="50" y="839" as="geometry" />
+          <mxGeometry height="18" width="66" x="50" y="869" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;" value="" vertex="1">
-          <mxGeometry height="14" width="24" x="20" y="863" as="geometry" />
+          <mxGeometry height="14" width="24" x="20" y="893" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c44" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;" value="implemented" vertex="1">
-          <mxGeometry height="18" width="66" x="50" y="861" as="geometry" />
+          <mxGeometry height="18" width="66" x="50" y="891" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c45" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#000000;strokeWidth=1.5;" value="" vertex="1">
-          <mxGeometry height="14" width="24" x="20" y="885" as="geometry" />
+          <mxGeometry height="14" width="24" x="20" y="915" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-c46" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=10;fontFamily=Helvetica;fontColor=#000000;" value="external" vertex="1">
-          <mxGeometry height="18" width="66" x="50" y="883" as="geometry" />
+          <mxGeometry height="18" width="66" x="50" y="913" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e-create" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="«create» ComponentTable(X, H, families, estimator)">
           <mxGeometry relative="1" as="geometry">
@@ -544,71 +557,58 @@
         <mxCell id="seq-initialize-est-line" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="815" y="90" as="sourcePoint" />
-            <mxPoint x="815" y="760" as="targetPoint" />
+            <mxPoint x="815" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-initialize-est-top" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MLEEstimator" vertex="1">
-          <mxGeometry height="40" width="120" x="755" y="50" as="geometry" />
+        <mxCell id="seq-initialize-est-top" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MLEComponentEstimator" vertex="1">
+          <mxGeometry height="40" width="150" x="740" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="seq-initialize-est-bottom" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MLEEstimator" vertex="1">
-          <mxGeometry height="40" width="120" x="755" y="760" as="geometry" />
+        <mxCell id="seq-initialize-est-bottom" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=1.5;fontSize=12;fontFamily=Helvetica;fontColor=#666666;dashed=1;" value="MLEComponentEstimator" vertex="1">
+          <mxGeometry height="40" width="150" x="740" y="790" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-opt" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#000000;strokeWidth=1.2;fontSize=11;fontStyle=1;width=48;height=20;fontFamily=Helvetica;fontColor=#000000;" value="opt" vertex="1">
-          <mxGeometry height="70" width="275" x="600" y="518" as="geometry" />
+          <mxGeometry height="70" width="275" x="600" y="548" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-opt-g" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[pair not cached]" vertex="1">
-          <mxGeometry height="16" width="220" x="650" y="520" as="geometry" />
+          <mxGeometry height="16" width="220" x="650" y="550" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-e-est" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="estimate(X, H[:, c], f)">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="680" y="557" as="sourcePoint" />
-            <mxPoint x="815" y="557" as="targetPoint" />
+            <mxPoint x="680" y="587" as="sourcePoint" />
+            <mxPoint x="815" y="587" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-e-comp" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="component">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="815" y="579" as="sourcePoint" />
-            <mxPoint x="680" y="579" as="targetPoint" />
+            <mxPoint x="815" y="609" as="sourcePoint" />
+            <mxPoint x="680" y="609" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-check-in-e" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="165" y="125" as="sourcePoint" />
-            <mxPoint x="165" y="143" as="targetPoint" />
+            <mxPoint x="165" y="157" as="targetPoint" />
             <Array as="points">
               <mxPoint x="193" y="125" />
-              <mxPoint x="193" y="143" />
+              <mxPoint x="193" y="157" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-initialize-check-in-t" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="check input (n ≥ k, supports); rng = default_rng(random_state)" vertex="1">
-          <mxGeometry height="18" width="360" x="199" y="125" as="geometry" />
+        <mxCell id="seq-initialize-check-in-t" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="check input: X finite, n ≥ k · min_cluster_size, ≥ k distinct values, supports(f)&lt;br&gt;rng = default_rng(random_state)" vertex="1">
+          <mxGeometry height="32" width="480" x="199" y="125" as="geometry" />
         </mxCell>
         <mxCell id="seq-initialize-check-out-e" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="165" y="703" as="sourcePoint" />
-            <mxPoint x="165" y="721" as="targetPoint" />
+            <mxPoint x="165" y="733" as="sourcePoint" />
+            <mxPoint x="165" y="751" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="193" y="703" />
-              <mxPoint x="193" y="721" />
+              <mxPoint x="193" y="733" />
+              <mxPoint x="193" y="751" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-initialize-check-out-t" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="check: loglikelihood(X) &gt; −∞" vertex="1">
-          <mxGeometry height="18" width="200" x="199" y="703" as="geometry" />
-        </mxCell>
-        <mxCell id="seq-initialize-clone-e" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="300" y="183" as="sourcePoint" />
-            <mxPoint x="300" y="201" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="328" y="183" />
-              <mxPoint x="328" y="201" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="seq-initialize-clone-t" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="clone(clusterer).set_params(n_clusters=k, random_state=seed)" vertex="1">
-          <mxGeometry height="18" width="340" x="334" y="183" as="geometry" />
+          <mxGeometry height="18" width="200" x="199" y="733" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
@@ -687,23 +687,22 @@
             <mxPoint x="245" y="112" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-matching-e2" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
+        <mxCell id="seq-matching-e2" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="groups()">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="245" y="125" as="sourcePoint" />
-            <mxPoint x="245" y="143" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="273" y="125" />
-              <mxPoint x="273" y="143" />
-            </Array>
+            <mxPoint x="245" y="128" as="sourcePoint" />
+            <mxPoint x="410" y="128" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-matching-v3" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="group identical families" vertex="1">
-          <mxGeometry height="18" width="170" x="279" y="125" as="geometry" />
+        <mxCell id="seq-matching-e2r" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="groups">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="410" y="148" as="sourcePoint" />
+            <mxPoint x="245" y="148" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="seq-matching-alt" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#000000;strokeWidth=1.2;fontSize=11;fontStyle=1;width=40;height=20;fontFamily=Helvetica;fontColor=#000000;" value="alt" vertex="1">
           <mxGeometry height="623" width="860" x="10" y="155" as="geometry" />
         </mxCell>
-        <mxCell id="seq-matching-v4" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[one distinct family]" vertex="1">
+        <mxCell id="seq-matching-v4" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[one group]" vertex="1">
           <mxGeometry height="16" width="798" x="58" y="157" as="geometry" />
         </mxCell>
         <mxCell id="seq-matching-e5" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="identity">
@@ -724,10 +723,10 @@
         <mxCell id="seq-matching-loop" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#000000;strokeWidth=1.2;fontSize=11;fontStyle=1;width=40;height=20;fontFamily=Helvetica;fontColor=#000000;" value="loop" vertex="1">
           <mxGeometry height="290" width="680" x="165" y="232" as="geometry" />
         </mxCell>
-        <mxCell id="seq-matching-v8" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[each distinct family f, each column c of H]" vertex="1">
+        <mxCell id="seq-matching-v8" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[each group g of identical families, j = its first index; each column c of H]" vertex="1">
           <mxGeometry height="16" width="600" x="221" y="234" as="geometry" />
         </mxCell>
-        <mxCell id="seq-matching-e9" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="loglikelihood(f, c)">
+        <mxCell id="seq-matching-e9" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="loglikelihood(j, c)">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="245" y="272" as="sourcePoint" />
             <mxPoint x="410" y="272" as="targetPoint" />
@@ -739,7 +738,7 @@
         <mxCell id="seq-matching-v10" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[pair not cached]" vertex="1">
           <mxGeometry height="16" width="280" x="380" y="286" as="geometry" />
         </mxCell>
-        <mxCell id="seq-matching-e11" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="estimate(X, H[:, c], f)">
+        <mxCell id="seq-matching-e11" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="estimate(X, H[:, c], families[j])">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="410" y="318" as="sourcePoint" />
             <mxPoint x="580" y="318" as="targetPoint" />
@@ -782,10 +781,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-matching-v18" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="ℓ[f, c] = −∞" vertex="1">
+        <mxCell id="seq-matching-v18" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="ℓ[j, c] = −∞" vertex="1">
           <mxGeometry height="18" width="110" x="444" y="418" as="geometry" />
         </mxCell>
-        <mxCell id="seq-matching-e19" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="ℓ[f, c]">
+        <mxCell id="seq-matching-e19" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="ℓ[j, c]">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="410" y="478" as="sourcePoint" />
             <mxPoint x="245" y="478" as="targetPoint" />
@@ -801,7 +800,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-matching-v21" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="cost[f, c] = −ℓ[f, c]" vertex="1">
+        <mxCell id="seq-matching-v21" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="cost[g, c] = −ℓ[j, c]" vertex="1">
           <mxGeometry height="18" width="170" x="279" y="490" as="geometry" />
         </mxCell>
         <mxCell id="seq-matching-e22" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
@@ -814,8 +813,8 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-matching-v23" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="expand cost to k × k" vertex="1">
-          <mxGeometry height="18" width="150" x="279" y="536" as="geometry" />
+        <mxCell id="seq-matching-v23" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="solve_assignment(cost, groups): replace +∞ with M, expand to k × k" vertex="1">
+          <mxGeometry height="18" width="440" x="279" y="536" as="geometry" />
         </mxCell>
         <mxCell id="seq-matching-e24" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="linear_sum_assignment(cost)">
           <mxGeometry relative="1" as="geometry">
@@ -824,10 +823,10 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-matching-alt-result" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#000000;strokeWidth=1.2;fontSize=11;fontStyle=1;width=40;height=20;fontFamily=Helvetica;fontColor=#000000;" value="alt" vertex="1">
-          <mxGeometry height="172" width="820" x="30" y="594" as="geometry" />
+          <mxGeometry height="128" width="820" x="30" y="638" as="geometry" />
         </mxCell>
-        <mxCell id="seq-matching-v25" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[cost has a finite assignment]" vertex="1">
-          <mxGeometry height="16" width="760" x="78" y="596" as="geometry" />
+        <mxCell id="seq-matching-v25" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[no chosen pair is forbidden]" vertex="1">
+          <mxGeometry height="16" width="760" x="78" y="640" as="geometry" />
         </mxCell>
         <mxCell id="seq-matching-e26" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="rows, cols">
           <mxGeometry relative="1" as="geometry">
@@ -837,42 +836,36 @@
         </mxCell>
         <mxCell id="seq-matching-e27" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="245" y="642" as="sourcePoint" />
-            <mxPoint x="245" y="660" as="targetPoint" />
+            <mxPoint x="245" y="664" as="sourcePoint" />
+            <mxPoint x="245" y="682" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="273" y="642" />
-              <mxPoint x="273" y="660" />
+              <mxPoint x="273" y="664" />
+              <mxPoint x="273" y="682" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-matching-v28" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;spacingLeft=2;spacingRight=2;fontSize=11;fillColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="order columns within groups of identical families" vertex="1">
-          <mxGeometry height="18" width="330" x="279" y="642" as="geometry" />
+          <mxGeometry height="18" width="330" x="279" y="664" as="geometry" />
         </mxCell>
         <mxCell id="seq-matching-e29" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="assignment">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="245" y="682" as="sourcePoint" />
-            <mxPoint x="80" y="682" as="targetPoint" />
+            <mxPoint x="245" y="702" as="sourcePoint" />
+            <mxPoint x="80" y="702" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-matching-e30" edge="1" parent="1" style="html=1;rounded=0;dashed=1;endArrow=none;strokeColor=#000000;strokeWidth=1.2;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="30" y="694" as="sourcePoint" />
-            <mxPoint x="850" y="694" as="targetPoint" />
+            <mxPoint x="30" y="714" as="sourcePoint" />
+            <mxPoint x="850" y="714" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="seq-matching-v31" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[cost matrix is infeasible]" vertex="1">
-          <mxGeometry height="16" width="804" x="38" y="697" as="geometry" />
-        </mxCell>
-        <mxCell id="seq-matching-e32" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="ValueError">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="770" y="728" as="sourcePoint" />
-            <mxPoint x="245" y="728" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="seq-matching-v31" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontSize=11;fontFamily=Helvetica;fontColor=#000000;" value="[a chosen pair is forbidden: no assignment without them]" vertex="1">
+          <mxGeometry height="16" width="804" x="38" y="717" as="geometry" />
         </mxCell>
         <mxCell id="seq-matching-e33" edge="1" parent="1" style="dashed=1;endArrow=open;endFill=0;html=1;rounded=0;endSize=8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontFamily=Helvetica;fontColor=#000000;" value="InitializationError">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="245" y="754" as="sourcePoint" />
-            <mxPoint x="80" y="754" as="targetPoint" />
+            <mxPoint x="245" y="748" as="sourcePoint" />
+            <mxPoint x="80" y="748" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="seq-matching-v49" parent="1" style="swimlane;startSize=18;html=1;fontSize=10;fontStyle=1;align=left;spacingLeft=6;fillColor=none;swimlaneFillColor=#ffffff;strokeColor=#000000;strokeWidth=1;collapsible=0;fontFamily=Helvetica;fontColor=#000000;" value="Legend" vertex="1">
