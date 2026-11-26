@@ -319,7 +319,7 @@ poetry run pytest -o addopts= tests/unit/estimators/test_ecm.py -k "fit"
 
 Code coverage only shows which lines the tests execute, not whether they would notice a wrong result. Mutation testing checks that: [`mutmut`](https://github.com/boxed/mutmut) makes a small change to the code (flips a comparison, removes an argument, alters a constant), runs the tests, and reports the change as *killed* if a test fails or as *survived* if every test still passes. A survivor is either a missing test or a change that does not alter the behaviour (an *equivalent* mutant).
 
-It is run by hand and is not part of CI. The modules that are mutated are listed in the `[tool.mutmut]` section of `pyproject.toml`: the mixture model, the component helpers, the sample coverage check, the strategies of the maximization step, both steps of the iterative pipeline, the optimization block and the pipeline itself. A run takes about two minutes.
+It is run by hand and is not part of CI. The modules that are mutated are listed in the `[tool.mutmut]` section of `pyproject.toml`: the mixture model, the component helpers, the sample coverage check, the strategies of the maximization step, both steps of the iterative pipeline, the optimization block, the pipeline itself and the modules of the initializers package. A run takes about two minutes.
 
 ```bash
 poetry run mutmut run                       # generate and test the mutants
