@@ -7,7 +7,7 @@ __license__ = "SPDX-License-Identifier: MIT"
 import sys
 import warnings
 from collections.abc import Callable
-from typing import ClassVar
+from typing import ClassVar, NoReturn
 
 import numpy as np
 import pytest
@@ -52,6 +52,17 @@ class RequiredNClustersClusterer(ClusterMixin, BaseEstimator):
 
     def __init__(self, n_clusters: int) -> None:
         self.n_clusters = n_clusters
+
+
+class FeatureClusterer(ClusterMixin, BaseEstimator):
+    """Clusterer double that, like ``FeatureAgglomeration``, clusters features and cannot label points."""
+
+    def __init__(self, n_clusters: int = 2) -> None:
+        self.n_clusters = n_clusters
+
+    @property
+    def fit_predict(self) -> NoReturn:
+        raise AttributeError("fit_predict")
 
 
 class EpsOnlyClusterer(ClusterMixin, BaseEstimator):
@@ -116,6 +127,16 @@ class TestCreation:
             match=rf"^clusterer must be an instance of sklearn\.base\.ClusterMixin, got {type_name}\.$",
         ):
             SklearnPartitioner(make_clusterer())
+
+    def test_rejects_clusterer_that_cannot_label_points(self) -> None:
+        with pytest.raises(
+            TypeError,
+            match=(
+                r"^FeatureClusterer cannot label the points of a sample: "
+                r"SklearnPartitioner needs a clusterer with fit_predict\.$"
+            ),
+        ):
+            SklearnPartitioner(FeatureClusterer())
 
     def test_rejects_clusterer_without_number_of_clusters(self) -> None:
         with pytest.raises(

@@ -18,7 +18,7 @@ from pysatl_mpest.initializers.cluster.partitioners.sklearn_partitioner import S
 from pysatl_mpest.initializers.exceptions import InitializationError
 from pysatl_mpest.typings import UnivariateFloatArray
 from sklearn.base import ClusterMixin
-from sklearn.cluster import DBSCAN, AgglomerativeClustering, KMeans, MiniBatchKMeans
+from sklearn.cluster import DBSCAN, AgglomerativeClustering, FeatureAgglomeration, KMeans, MiniBatchKMeans
 from sklearn.mixture import GaussianMixture
 
 from tests.helpers.partitions import partition_inputs
@@ -82,6 +82,10 @@ class TestConfiguration:
     def test_rejects_clusterer_without_number_of_clusters(self) -> None:
         with pytest.raises(ValueError, match=r"^DBSCAN has no n_clusters parameter"):
             SklearnPartitioner(DBSCAN())
+
+    def test_rejects_clusterer_of_features(self) -> None:
+        with pytest.raises(TypeError, match=r"^FeatureAgglomeration cannot label the points of a sample"):
+            SklearnPartitioner(FeatureAgglomeration())
 
     def test_rejects_estimator_that_is_not_clusterer(self) -> None:
         with pytest.raises(TypeError, match=r"got GaussianMixture\.$"):

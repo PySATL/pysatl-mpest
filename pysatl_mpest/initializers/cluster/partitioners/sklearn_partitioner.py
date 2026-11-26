@@ -47,7 +47,8 @@ class SklearnPartitioner(Partitioner):
     ImportError
         scikit-learn is not installed.
     TypeError
-        ``clusterer`` is not an instance of ``ClusterMixin``.
+        ``clusterer`` is not an instance of ``ClusterMixin``, or it cannot label the points of a sample (it has
+        no ``fit_predict``, as ``FeatureAgglomeration``, which clusters features).
     ValueError
         ``clusterer`` has no ``n_clusters`` parameter.
 
@@ -81,6 +82,12 @@ class SklearnPartitioner(Partitioner):
         if not isinstance(clusterer, ClusterMixin):
             raise TypeError(
                 f"clusterer must be an instance of sklearn.base.ClusterMixin, got {type(clusterer).__name__}."
+            )
+
+        if not hasattr(clusterer, "fit_predict"):
+            raise TypeError(
+                f"{type(clusterer).__name__} cannot label the points of a sample: "
+                "SklearnPartitioner needs a clusterer with fit_predict."
             )
 
         params = clusterer.get_params()
