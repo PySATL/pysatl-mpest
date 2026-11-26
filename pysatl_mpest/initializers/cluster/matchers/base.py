@@ -55,8 +55,8 @@ class Matcher(ABC):
     def _match(self, table: ComponentTable) -> UnivariateIntArray:
         """Return the cluster assigned to every family.
 
-        The distribution of clusters within a group of identical families may be arbitrary because
-        :meth:`match` canonicalizes it afterwards.
+        The distribution of clusters within a group of identical families may be arbitrary when the
+        default ``_order`` is kept: :meth:`match` canonicalizes it afterwards.
 
         Parameters
         ----------
