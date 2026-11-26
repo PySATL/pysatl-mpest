@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from typing import final
 
 from ....typings import UnivariateIntArray
-from .._table.protocol import ComponentTable
+from ..table import ComponentTable
 from ._matching import order_identical
 
 

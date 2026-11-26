@@ -8,7 +8,7 @@ __license__ = "SPDX-License-Identifier: MIT"
 
 from typing import Protocol
 
-from ....typings import UnivariateFloatArray
+from ...typings import UnivariateFloatArray
 
 
 class ComponentTable(Protocol):
