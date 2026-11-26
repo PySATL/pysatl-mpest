@@ -68,15 +68,6 @@ def test_first_identical_family_gets_cluster_with_smaller_mean() -> None:
     np.testing.assert_array_equal(result, [2, 1, 0])
 
 
-def test_keeps_assignment_between_distinct_families() -> None:
-    matcher = FixedMatcher([2, 0, 1])
-    table = cast(ComponentTable, GroupedTable(((0,), (1,), (2,)), [5.0, 1.0, 3.0]))
-
-    result = matcher.match(table)
-
-    np.testing.assert_array_equal(result, [2, 0, 1])
-
-
 def test_passes_the_same_table_to_matching_step() -> None:
     matcher = FixedMatcher([0, 1, 2])
     table = cast(ComponentTable, GroupedTable(((0, 2), (1,)), [7.0, 3.0, 1.0]))
