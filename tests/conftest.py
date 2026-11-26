@@ -4,6 +4,12 @@ __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
+import os
+
+# mutmut forks the test process, and an OpenMP thread pool hangs in a forked child. The variable is set before
+# numpy and scikit-learn are imported: a library reads it once, when it is loaded.
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+
 import random
 
 import numpy as np

@@ -3,8 +3,10 @@ Initializers build a starting :class:`~pysatl_mpest.core.MixtureModel` from a sa
 
 The package is under development: it exports the base :class:`Initializer`, the role contracts :class:`Partitioner`,
 :class:`ComponentEstimator` and :class:`Matcher`, the protocol :class:`ComponentTable`, the errors and the
-partitioning methods :class:`KMeansPartitioner`, :class:`QuantilePartitioner` and :class:`RandomCentersPartitioner`.
-Ready component estimators, matchers and initializers come later.
+partitioning methods :class:`KMeansPartitioner`, :class:`QuantilePartitioner`, :class:`RandomCentersPartitioner` and
+:class:`SklearnPartitioner`. The last one needs scikit-learn, an optional dependency installed with
+``pip install pysatl-mpest[sklearn]``; the rest of the package works without it. Ready component estimators, matchers
+and initializers come later.
 """
 
 __author__ = "Danil Totmyanin"
@@ -19,6 +21,7 @@ from .cluster import (
     Partitioner,
     QuantilePartitioner,
     RandomCentersPartitioner,
+    SklearnPartitioner,
 )
 from .exceptions import ComponentEstimationError, InitializationError
 from .initializer import Initializer
@@ -34,4 +37,5 @@ __all__ = [
     "Partitioner",
     "QuantilePartitioner",
     "RandomCentersPartitioner",
+    "SklearnPartitioner",
 ]

@@ -319,7 +319,7 @@ poetry run pytest -o addopts= tests/unit/estimators/test_ecm.py -k "fit"
 
 Code coverage only shows which lines the tests execute, not whether they would notice a wrong result. Mutation testing checks that: [`mutmut`](https://github.com/boxed/mutmut) makes a small change to the code (flips a comparison, removes an argument, alters a constant), runs the tests, and reports the change as *killed* if a test fails or as *survived* if every test still passes. A survivor is either a missing test or a change that does not alter the behaviour (an *equivalent* mutant).
 
-It is run by hand and is not part of CI. The modules that are mutated are listed in the `[tool.mutmut]` section of `pyproject.toml`: the mixture model, the component helpers, the sample coverage check, the strategies of the maximization step, both steps of the iterative pipeline, the optimization block, the pipeline itself and the modules of the initializers package. A run takes about two minutes.
+It is run by hand and is not part of CI. The modules that are mutated are listed in the `[tool.mutmut]` section of `pyproject.toml`: the mixture model, the component helpers, the sample coverage check, the strategies of the maximization step, both steps of the iterative pipeline, the optimization block, the pipeline itself and the modules of the initializers package.
 
 ```bash
 poetry run mutmut run                       # generate and test the mutants
@@ -335,6 +335,7 @@ For every survivor either add a test that kills it, or check that it is equivale
 
 - `mutmut` does not mutate functions that have a decorator. That is why the implementations of the strategies in `q_function.py` and `moments.py` are plain functions registered by a call (`q_function_strategy.register(...)(function)`) and not by `@...register(...)`. Keep it that way, otherwise the most important numerical code silently drops out of the check. Properties are not mutated either.
 - The thresholds of the analytical strategies (`NUMERICAL_TOLERANCE`) are tested exactly at the boundary by replacing the constant with `0.25`, which is exact in binary floating point (in the integration tests of the strategies, with the constant replaced explicitly).
+- `mutmut` runs every mutant in a forked copy of the test process. The OpenMP thread pool that scikit-learn creates in the parent process does not survive the fork, and a clusterer such as `KMeans` then hangs in the child, so the mutant is reported as a *timeout*. That is why `tests/conftest.py` sets `OMP_NUM_THREADS=1` for the test session unless the variable is already set, before numpy and scikit-learn are imported (a library reads the variable once, when it is loaded). Do not remove this line, and do not run `mutmut` with another value of the variable.
 
 ### 8. Create a Pull Request (PR)
 

@@ -10,5 +10,6 @@ from .base import Partitioner
 from .kmeans_partitioner import KMeansPartitioner
 from .quantile_partitioner import QuantilePartitioner
 from .random_centers_partitioner import RandomCentersPartitioner
+from .sklearn_partitioner import SklearnPartitioner
 
-__all__ = ["KMeansPartitioner", "Partitioner", "QuantilePartitioner", "RandomCentersPartitioner"]
+__all__ = ["KMeansPartitioner", "Partitioner", "QuantilePartitioner", "RandomCentersPartitioner", "SklearnPartitioner"]
