@@ -16,13 +16,11 @@ from pysatl_core.families import ParametricFamilyDistribution
 from pysatl_core.types import FamilyName
 
 from ....core import _components
+from ....core._numerics import NUMERICAL_TOLERANCE
 from ....optimizers import Optimizer
 from ..pipeline_state import PipelineState
 from ..steps import OptimizationBlock
 from ._dispatch import FamilyDispatch
-
-NUMERICAL_TOLERANCE = 1e-9
-
 
 # ------------------------
 # Base Moments strategy
