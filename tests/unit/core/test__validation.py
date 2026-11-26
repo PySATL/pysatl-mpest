@@ -7,26 +7,12 @@ __license__ = "SPDX-License-Identifier: MIT"
 from typing import cast
 
 import numpy as np
-from numpy.typing import ArrayLike, NDArray
+from numpy.typing import ArrayLike
 from pysatl_core.families import ParametricFamilyDistribution
-from pysatl_core.types import CharacteristicName
 from pysatl_mpest.core._validation import sample_coverage
 from pysatl_mpest.core.mixture import MixtureModel
 
-from tests.mocks.distributions import MockContinuousDistribution
-
-
-class ScriptedLpdfDistribution(MockContinuousDistribution):
-    """Mock component that returns pre-set log-densities, one value per sample point."""
-
-    def __init__(self, lpdf_values: ArrayLike) -> None:
-        super().__init__()
-        self._lpdf_values = np.asarray(lpdf_values, dtype=np.float64)
-
-    def calculate_characteristic(self, name: CharacteristicName, X: ArrayLike) -> NDArray[np.float64]:
-        if name == CharacteristicName.LPDF:
-            return self._lpdf_values
-        raise NotImplementedError
+from tests.mocks.distributions import ScriptedLpdfDistribution
 
 
 def mixture_of(*lpdf_columns: ArrayLike, log_weights: ArrayLike | None = None) -> MixtureModel:

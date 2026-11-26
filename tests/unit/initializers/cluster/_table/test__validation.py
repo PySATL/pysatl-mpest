@@ -12,8 +12,8 @@ from hypothesis import given
 from hypothesis import strategies as st
 from numpy.typing import ArrayLike
 from pysatl_mpest.core._numerics import NUMERICAL_TOLERANCE
-from pysatl_mpest.initializers import _validation
-from pysatl_mpest.initializers._validation import (
+from pysatl_mpest.initializers.cluster._table import _validation
+from pysatl_mpest.initializers.cluster._table._validation import (
     cluster_is_large_enough,
     component_is_wide_enough,
     exceeds_m_step_tolerance,

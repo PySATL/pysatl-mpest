@@ -9,7 +9,7 @@ from typing import Any
 import pytest
 from pysatl_core.families import ParametricFamily
 from pysatl_core.types import FamilyName
-from pysatl_mpest.initializers._dispatch import FormulaDispatch
+from pysatl_mpest.initializers.cluster.component_estimators._dispatch import FormulaDispatch
 
 from tests.helpers.families import family
 

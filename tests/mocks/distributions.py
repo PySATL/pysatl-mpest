@@ -38,3 +38,16 @@ class MockContinuousDistribution:
         if name == CharacteristicName.PPF:
             return X_arr
         raise NotImplementedError
+
+
+class ScriptedLpdfDistribution(MockContinuousDistribution):
+    """Mock component that returns pre-set log-densities, one value per sample point."""
+
+    def __init__(self, lpdf_values: ArrayLike) -> None:
+        super().__init__()
+        self._lpdf_values = np.asarray(lpdf_values, dtype=np.float64)
+
+    def calculate_characteristic(self, name: CharacteristicName, X: ArrayLike) -> NDArray[np.float64]:
+        if name == CharacteristicName.LPDF:
+            return self._lpdf_values
+        raise NotImplementedError
