@@ -8,7 +8,13 @@ __license__ = "SPDX-License-Identifier: MIT"
 
 from .component_estimators import ComponentEstimator
 from .matchers import Matcher
-from .partitioners import KMeansPartitioner, Partitioner, QuantilePartitioner, RandomCentersPartitioner
+from .partitioners import (
+    KMeansPartitioner,
+    Partitioner,
+    QuantilePartitioner,
+    RandomCentersPartitioner,
+    SklearnPartitioner,
+)
 from .table import ComponentTable
 
 __all__ = [
@@ -19,4 +25,5 @@ __all__ = [
     "Partitioner",
     "QuantilePartitioner",
     "RandomCentersPartitioner",
+    "SklearnPartitioner",
 ]
