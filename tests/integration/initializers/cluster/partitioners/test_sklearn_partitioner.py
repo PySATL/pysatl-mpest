@@ -63,84 +63,88 @@ def three_distant_groups() -> UnivariateFloatArray:
     return sample
 
 
-@pytest.mark.parametrize(
-    "clusterer_class",
-    [KMeans, AgglomerativeClustering, MiniBatchKMeans],
-    ids=["kmeans", "agglomerative", "minibatch"],
-)
-def test_default_clusterer_divides_three_distant_groups_without_warnings(
-    clusterer_class: type[ClusterMixin],
-) -> None:
-    sample = three_distant_groups()
+class TestConfiguration:
+    """Checks of the clusterer when the partitioner is created."""
 
-    with warnings.catch_warnings():
-        warnings.simplefilter("error")
+    @pytest.mark.parametrize(
+        ("make_clusterer", "pattern"),
+        [
+            (partial(KMeans, n_clusters=5), r"^n_clusters=5 of the clusterer is ignored"),
+            (partial(MiniBatchKMeans, random_state=0), r"^random_state=0 of the clusterer is ignored"),
+            (partial(AgglomerativeClustering, n_clusters=3), r"^n_clusters=3 of the clusterer is ignored"),
+        ],
+        ids=["kmeans-n-clusters", "minibatch-random-state", "agglomerative-n-clusters"],
+    )
+    def test_non_default_value_warns(self, make_clusterer: Callable[[], ClusterMixin], pattern: str) -> None:
+        with pytest.warns(UserWarning, match=pattern):
+            SklearnPartitioner(make_clusterer())
+
+    def test_rejects_clusterer_without_number_of_clusters(self) -> None:
+        with pytest.raises(ValueError, match=r"^DBSCAN has no n_clusters parameter"):
+            SklearnPartitioner(DBSCAN())
+
+    def test_rejects_estimator_that_is_not_clusterer(self) -> None:
+        with pytest.raises(TypeError, match=r"got GaussianMixture\.$"):
+            SklearnPartitioner(GaussianMixture())
+
+
+class TestPartition:
+    """Partitions computed by real clusterers."""
+
+    @pytest.mark.parametrize(
+        "clusterer_class",
+        [KMeans, AgglomerativeClustering, MiniBatchKMeans],
+        ids=["kmeans", "agglomerative", "minibatch"],
+    )
+    def test_default_clusterer_divides_three_distant_groups_without_warnings(
+        self,
+        clusterer_class: type[ClusterMixin],
+    ) -> None:
+        sample = three_distant_groups()
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            partitioner = SklearnPartitioner(clusterer_class())
+            H = validate_partition(partitioner.partition(sample, 3, np.random.default_rng(1)), n=180, k=3)
+
+        assert H.sum(axis=0).tolist() == [60, 60, 60]
+        for group in (slice(0, 60), slice(60, 120), slice(120, 180)):
+            assert len(np.unique(H[group].argmax(axis=1))) == 1
+
+    @pytest.mark.parametrize(
+        "clusterer_class",
+        [KMeans, AgglomerativeClustering, MiniBatchKMeans],
+        ids=["kmeans", "agglomerative", "minibatch"],
+    )
+    def test_user_clusterer_is_unchanged_and_one_partitioner_works_with_different_k(
+        self,
+        clusterer_class: type[ClusterMixin],
+    ) -> None:
+        sample = three_distant_groups()
+        clusterer = clusterer_class()
+        before = clusterer.get_params()
+        partitioner = SklearnPartitioner(clusterer)
+
+        partitioner.partition(sample, 3, np.random.default_rng(1))
+        H = partitioner.partition(sample, 2, np.random.default_rng(1))
+
+        validate_partition(H, n=180, k=2)
+        assert clusterer.get_params() == before
+        assert not hasattr(clusterer, "labels_")
+
+    @pytest.mark.parametrize(
+        "clusterer_class",
+        [KMeans, AgglomerativeClustering, MiniBatchKMeans],
+        ids=["kmeans", "agglomerative", "minibatch"],
+    )
+    def test_same_seed_gives_same_matrix(self, clusterer_class: type[ClusterMixin]) -> None:
+        sample = three_distant_groups()
         partitioner = SklearnPartitioner(clusterer_class())
-        H = validate_partition(partitioner.partition(sample, 3, np.random.default_rng(1)), n=180, k=3)
 
-    assert H.sum(axis=0).tolist() == [60, 60, 60]
-    for group in (slice(0, 60), slice(60, 120), slice(120, 180)):
-        assert len(np.unique(H[group].argmax(axis=1))) == 1
+        first = partitioner.partition(sample, 3, np.random.default_rng(1))
+        second = partitioner.partition(sample, 3, np.random.default_rng(1))
 
-
-@pytest.mark.parametrize(
-    "clusterer_class",
-    [KMeans, AgglomerativeClustering, MiniBatchKMeans],
-    ids=["kmeans", "agglomerative", "minibatch"],
-)
-def test_user_clusterer_is_unchanged_and_one_partitioner_works_with_different_k(
-    clusterer_class: type[ClusterMixin],
-) -> None:
-    sample = three_distant_groups()
-    clusterer = clusterer_class()
-    before = clusterer.get_params()
-    partitioner = SklearnPartitioner(clusterer)
-
-    partitioner.partition(sample, 3, np.random.default_rng(1))
-    H = partitioner.partition(sample, 2, np.random.default_rng(1))
-
-    validate_partition(H, n=180, k=2)
-    assert clusterer.get_params() == before
-    assert not hasattr(clusterer, "labels_")
-
-
-@pytest.mark.parametrize(
-    "clusterer_class",
-    [KMeans, AgglomerativeClustering, MiniBatchKMeans],
-    ids=["kmeans", "agglomerative", "minibatch"],
-)
-def test_same_seed_gives_same_matrix(clusterer_class: type[ClusterMixin]) -> None:
-    sample = three_distant_groups()
-    partitioner = SklearnPartitioner(clusterer_class())
-
-    first = partitioner.partition(sample, 3, np.random.default_rng(1))
-    second = partitioner.partition(sample, 3, np.random.default_rng(1))
-
-    np.testing.assert_array_equal(first, second)
-
-
-@pytest.mark.parametrize(
-    ("make_clusterer", "pattern"),
-    [
-        (partial(KMeans, n_clusters=5), r"^n_clusters=5 of the clusterer is ignored"),
-        (partial(MiniBatchKMeans, random_state=0), r"^random_state=0 of the clusterer is ignored"),
-        (partial(AgglomerativeClustering, n_clusters=3), r"^n_clusters=3 of the clusterer is ignored"),
-    ],
-    ids=["kmeans-n-clusters", "minibatch-random-state", "agglomerative-n-clusters"],
-)
-def test_non_default_value_warns(make_clusterer: Callable[[], ClusterMixin], pattern: str) -> None:
-    with pytest.warns(UserWarning, match=pattern):
-        SklearnPartitioner(make_clusterer())
-
-
-def test_rejects_clusterer_without_number_of_clusters() -> None:
-    with pytest.raises(ValueError, match=r"^DBSCAN has no n_clusters parameter"):
-        SklearnPartitioner(DBSCAN())
-
-
-def test_rejects_estimator_that_is_not_clusterer() -> None:
-    with pytest.raises(TypeError, match=r"got GaussianMixture\.$"):
-        SklearnPartitioner(GaussianMixture())
+        np.testing.assert_array_equal(first, second)
 
 
 @pytest.mark.parametrize(
@@ -166,13 +170,17 @@ def test_result_is_valid_partition_or_has_empty_cluster(
         return
 
 
-def test_importing_package_does_not_import_scikit_learn() -> None:
-    result = subprocess.run([sys.executable, "-c", IMPORT_SCRIPT], capture_output=True, text=True, check=False)
+class TestImport:
+    """The package without scikit-learn, checked in separate processes."""
 
-    assert result.returncode == 0, result.stderr
+    def test_importing_package_does_not_import_scikit_learn(self) -> None:
+        result = subprocess.run([sys.executable, "-c", IMPORT_SCRIPT], capture_output=True, text=True, check=False)
 
+        assert result.returncode == 0, result.stderr
 
-def test_package_works_without_scikit_learn_and_partitioner_reports_it() -> None:
-    result = subprocess.run([sys.executable, "-c", WITHOUT_SKLEARN_SCRIPT], capture_output=True, text=True, check=False)
+    def test_package_works_without_scikit_learn_and_partitioner_reports_it(self) -> None:
+        result = subprocess.run(
+            [sys.executable, "-c", WITHOUT_SKLEARN_SCRIPT], capture_output=True, text=True, check=False
+        )
 
-    assert result.returncode == 0, result.stderr
+        assert result.returncode == 0, result.stderr
