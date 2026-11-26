@@ -68,11 +68,8 @@ class FormulaDispatch[F]:
         -------
         Callable
             A function that registers the implementation it is called with and returns it unchanged.
-
-        Raises
-        ------
-        ValueError
-            If an implementation is already registered for the family and parametrization.
+            The returned function raises :class:`ValueError` if an implementation is already
+            registered for the family and parametrization; the earlier registration is kept.
         """
 
         key = (str(family), parametrization)

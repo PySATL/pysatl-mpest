@@ -99,7 +99,7 @@ def cluster_is_large_enough(size: int, min_cluster_size: int) -> bool:
 
 
 def has_enough_distinct_values(n_distinct: int, n_free_parameters: int) -> bool:
-    """Whether a cluster has at least as many distinct values as the family has free parameters."""
+    """Whether a cluster has at least as many distinct values as the family has free parameters (non-strict)."""
 
     return n_distinct >= n_free_parameters
 
@@ -107,7 +107,7 @@ def has_enough_distinct_values(n_distinct: int, n_free_parameters: int) -> bool:
 def component_is_wide_enough(width: float, scale: float) -> bool:
     """Whether the interquartile width of a component exceeds ``RELATIVE_WIDTH_TOLERANCE`` of ``scale`` (strict).
 
-    ``scale`` is the spread of the whole sample.
+    ``scale`` is the spread of the whole sample. A ``NaN`` width does not pass.
     """
 
     return width > RELATIVE_WIDTH_TOLERANCE * scale
@@ -117,7 +117,7 @@ def exceeds_m_step_tolerance(value: float) -> bool:
     """Whether ``value`` exceeds the absolute M-step tolerance (strict).
 
     Temporary check until the M-step gets a relative tolerance (issue #51): M-step strategies only
-    update a parameter when the quantity is above ``NUMERICAL_TOLERANCE``, so a start below the
+    update a parameter when the quantity is above ``NUMERICAL_TOLERANCE``, so a start at or below the
     threshold would stay stuck.
     """
 
