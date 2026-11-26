@@ -40,8 +40,10 @@ class ComponentTable(Protocol):
     def groups(self) -> tuple[tuple[int, ...], ...]:
         """Groups of identical families as tuples of family indices.
 
-        Groups follow the order of the first occurrence, indices inside a group are ascending, and
-        every index belongs to exactly one group.
+        Two families are identical when their keys ``family_key`` (name, parametrization and fixed
+        parameters) are equal, so ``normal.view(mu=0.0)`` and ``normal.view(mu=5.0)`` are in different
+        groups. Groups follow the order of the first occurrence, indices inside a group are ascending,
+        and every index belongs to exactly one group.
         """
 
     def cluster_means(self) -> UnivariateFloatArray:
