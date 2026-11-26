@@ -39,13 +39,10 @@ def sample_coverage(mixture: MixtureModel, X: UnivariateFloatArray) -> SampleCov
     A point is *uncovered* when the log-density of the mixture there is ``-inf``, and *undefined*
     when it is ``NaN`` or ``+inf`` — for example when a component has a ``NaN`` parameter or its
     density has a pole at the point. The criterion is the log-density of the mixture with its
-    weights, so a component whose log-weight is ``-inf`` covers nothing. The function only
-    reports; it raises nothing itself.
+    weights, so a component whose log-weight is ``-inf`` covers nothing.
 
     Parameters
     ----------
-    mixture : MixtureModel
-        The mixture to check.
     X : UnivariateFloatArray
         A one-dimensional sample; its dimensionality and finiteness are the caller's
         responsibility and are not checked here.

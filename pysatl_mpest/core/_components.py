@@ -2,7 +2,7 @@
 Internal helpers for working with mixture components, which are `pysatl-core` distributions, and
 with the `pysatl-core` parametric families those components are created from.
 
-All access to `pysatl-core` distribution internals is kept in this module so that a change of the
+All access to `pysatl-core` distribution and family internals is kept in this module so that a change of the
 `pysatl-core` API affects a single place.
 
 A component created from ``family.view(...)`` stores only its free parameters; the fixed ones live in the
@@ -109,11 +109,10 @@ def family_free_parameter_names(family: ParametricFamily) -> tuple[str, ...]:
 
     For a plain family these are all parameters of the base parametrization; for a view, the
     unfixed parameters of its parametrization. The order is the same as in :func:`free_parameters`
-    of a component of this family. ``view()`` without arguments keeps the fixed parameters and the
-    parametrization of a view, so one call serves both kinds of family.
+    of a component of this family.
     """
 
-    return family.view().free_parameter_names
+    return tuple(getattr(family.base, "__dataclass_fields__"))
 
 
 def family_key(family: ParametricFamily) -> FamilyKey:
