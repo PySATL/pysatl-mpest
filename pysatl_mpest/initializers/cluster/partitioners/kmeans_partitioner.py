@@ -14,16 +14,16 @@ from .base import Partitioner
 
 
 class KMeansPartitioner(Partitioner):
-    """Partition a sample by one run of k-means with k-means++ initial centers.
+    """Partitions a sample by one run of k-means with k-means++ initial centers.
 
     The run is single rather than the best of several: repeated runs with different randomness are the
     responsibility of a multistart.
 
     Parameters
     ----------
-    max_iter : int, default=100
+    max_iter : int or numpy.integer, default=100
         Number of iterations. Exactly this many iterations are performed and convergence is not checked.
-        The default is 100 because the ten iterations of ``kmeans2`` are often not enough.
+        The default is 100 because the default ten iterations of ``kmeans2`` are often not enough.
 
     Attributes
     ----------
@@ -43,7 +43,7 @@ class KMeansPartitioner(Partitioner):
         partition
     """
 
-    def __init__(self, max_iter: int = 100) -> None:
+    def __init__(self, max_iter: int | np.integer = 100) -> None:
         if isinstance(max_iter, bool) or not isinstance(max_iter, (int, np.integer)) or max_iter < 1:
             raise ValueError(f"max_iter must be a positive integer, got {max_iter!r}.")
 
@@ -69,7 +69,9 @@ class KMeansPartitioner(Partitioner):
         Raises
         ------
         InitializationError
-            k-means left one of the clusters without points. Another run may succeed.
+            k-means left one of the clusters without points. Another run may succeed, except on a sample of a
+            tiny scale: with a range below about ``1e-162`` the squared distances vanish and every run fails, so the
+            data must be rescaled.
         ValueError
             The values of the sample are so large that squared distances overflow ``float64``; the data
             must be rescaled.
