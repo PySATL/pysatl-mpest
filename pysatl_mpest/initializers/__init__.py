@@ -10,12 +10,9 @@ __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
-from .component_estimator import ComponentEstimator
-from .component_table import ComponentTable
+from .cluster import ComponentEstimator, ComponentTable, Matcher, Partitioner
 from .exceptions import ComponentEstimationError, InitializationError
 from .initializer import Initializer
-from .matcher import Matcher
-from .partitioner import Partitioner
 
 __all__ = [
     "ComponentEstimationError",

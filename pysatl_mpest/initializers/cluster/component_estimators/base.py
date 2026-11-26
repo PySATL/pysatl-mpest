@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 
 from pysatl_core.families import ParametricFamily
 
-from ..typings import UnivariateFloatArray
+from ....typings import UnivariateFloatArray
 
 
 class ComponentEstimator(ABC):

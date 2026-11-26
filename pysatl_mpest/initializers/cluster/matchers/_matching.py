@@ -11,7 +11,7 @@ __license__ = "SPDX-License-Identifier: MIT"
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 
-from ..typings import MultivariateFloatArray, UnivariateFloatArray, UnivariateIntArray
+from ....typings import MultivariateFloatArray, UnivariateFloatArray, UnivariateIntArray
 
 
 def solve_assignment(cost: MultivariateFloatArray) -> UnivariateIntArray | None:

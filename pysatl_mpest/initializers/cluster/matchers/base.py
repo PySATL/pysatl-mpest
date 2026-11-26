@@ -7,9 +7,9 @@ __license__ = "SPDX-License-Identifier: MIT"
 from abc import ABC, abstractmethod
 from typing import final
 
-from ..typings import UnivariateIntArray
+from ....typings import UnivariateIntArray
+from .._table.protocol import ComponentTable
 from ._matching import order_identical
-from .component_table import ComponentTable
 
 
 class Matcher(ABC):

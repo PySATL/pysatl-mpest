@@ -22,7 +22,7 @@ from types import MappingProxyType
 from pysatl_core.families import ParametricFamily
 from pysatl_core.types import FamilyName
 
-from ..core import _components
+from ....core import _components
 
 type FormulaKey = tuple[str, str]
 

@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from ..typings import MultivariateFloatArray, UnivariateFloatArray
+from ....typings import MultivariateFloatArray, UnivariateFloatArray
 
 
 class Partitioner(ABC):

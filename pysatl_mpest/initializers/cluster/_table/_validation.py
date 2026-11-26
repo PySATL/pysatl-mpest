@@ -14,9 +14,9 @@ __license__ = "SPDX-License-Identifier: MIT"
 import numpy as np
 from numpy.typing import ArrayLike
 
-from ..core._numerics import NUMERICAL_TOLERANCE
-from ..typings import MultivariateFloatArray
-from .exceptions import InitializationError
+from ....core._numerics import NUMERICAL_TOLERANCE
+from ....typings import MultivariateFloatArray
+from ...exceptions import InitializationError
 
 RELATIVE_WIDTH_TOLERANCE = 1e-6
 """Fraction of the sample spread at or below which the interquartile width of a component counts as degenerate."""

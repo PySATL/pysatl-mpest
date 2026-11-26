@@ -7,8 +7,8 @@ __license__ = "SPDX-License-Identifier: MIT"
 from typing import cast
 
 import numpy as np
-from pysatl_mpest.initializers.component_table import ComponentTable
-from pysatl_mpest.initializers.matcher import Matcher
+from pysatl_mpest.initializers.cluster._table.protocol import ComponentTable
+from pysatl_mpest.initializers.cluster.matchers.base import Matcher
 from pysatl_mpest.typings import UnivariateFloatArray, UnivariateIntArray
 
 

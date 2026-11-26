@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
-from pysatl_mpest.initializers._matching import order_identical, solve_assignment
+from pysatl_mpest.initializers.cluster.matchers._matching import order_identical, solve_assignment
 
 
 def cost_matrix(values: list[list[float]]) -> np.ndarray:
