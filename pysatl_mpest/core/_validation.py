@@ -57,7 +57,7 @@ def sample_coverage(mixture: MixtureModel, X: UnivariateFloatArray) -> SampleCov
         log-density is finite at every point.
     """
 
-    log_density = np.asarray(mixture.lpdf(X), dtype=np.float64)
+    log_density = mixture.lpdf(X)
 
     uncovered = np.flatnonzero(log_density == -np.inf)
     undefined = np.flatnonzero(np.isnan(log_density) | np.isposinf(log_density))

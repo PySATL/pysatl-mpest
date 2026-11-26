@@ -109,11 +109,11 @@ def family_free_parameter_names(family: ParametricFamily) -> tuple[str, ...]:
 
     For a plain family these are all parameters of the base parametrization; for a view, the
     unfixed parameters of its parametrization. The order is the same as in :func:`free_parameters`
-    of a component of this family.
+    of a component of this family. ``view()`` without arguments keeps the fixed parameters and the
+    parametrization of a view, so one call serves both kinds of family.
     """
 
-    view = family if isinstance(family, PartialParametricFamily) else family.view()
-    return view.free_parameter_names
+    return family.view().free_parameter_names
 
 
 def family_key(family: ParametricFamily) -> FamilyKey:
