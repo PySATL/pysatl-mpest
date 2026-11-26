@@ -16,10 +16,11 @@ from ....typings import UnivariateFloatArray
 class ComponentEstimator(ABC):
     """Estimates the free parameters of one component from the points of a cluster.
 
-    It is not an estimator of the whole mixture such as ``EM``, ``ECM`` or ``ECME``: it only computes
-    numbers. The calling code builds the component from them and checks it in the same way for every
-    estimator (keys of the result, enough data, finiteness, constraints of the parametrization,
-    numerical degeneracy), so an estimator does not repeat these checks.
+    It is not an estimator of the whole mixture such as :class:`~pysatl_mpest.estimators.EM`,
+    :class:`~pysatl_mpest.estimators.ECM` or :class:`~pysatl_mpest.estimators.ECME`: it only computes numbers.
+    The calling code builds the component from them and checks it in the same way for every estimator (keys of
+    the result, enough data, finiteness, constraints of the parametrization, numerical degeneracy), so an
+    estimator does not repeat these checks.
 
     Methods
     -------

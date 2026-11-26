@@ -17,6 +17,11 @@ class ComponentTable(Protocol):
     Matchers use only this protocol and see neither the sample, nor the partition, nor the component
     estimator.
 
+    Attributes
+    ----------
+    k : int
+        Number of families, equal to the number of clusters.
+
     Methods
     -------
     .. autosummary::
@@ -30,7 +35,7 @@ class ComponentTable(Protocol):
 
     @property
     def k(self) -> int:
-        """Number of families, equal to the number of clusters."""
+        """int: Number of families, equal to the number of clusters."""
 
     def groups(self) -> tuple[tuple[int, ...], ...]:
         """Groups of identical families as tuples of family indices.

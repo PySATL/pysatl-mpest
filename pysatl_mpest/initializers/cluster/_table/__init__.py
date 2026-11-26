@@ -1,5 +1,6 @@
 """
-Internal machinery of the cluster scheme: the component table implementation and the checks of partitions and pairs.
+Internal machinery of the cluster scheme: the component table implementation, the evaluation of pairs and the
+checks of partitions, permutations and thresholds.
 """
 
 __author__ = "Danil Totmyanin"

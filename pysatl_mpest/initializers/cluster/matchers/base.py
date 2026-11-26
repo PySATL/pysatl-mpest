@@ -34,8 +34,8 @@ class Matcher(ABC):
     def match(self, table: ComponentTable) -> UnivariateIntArray:
         """Match clusters to families and order identical families.
 
-        The template method calls ``_match`` and then the hook ``_order``; it is closed to
-        overriding.
+        The template method calls ``_match`` and then the hook ``_order``. It must not be overridden; type
+        checkers flag an override.
 
         Parameters
         ----------
