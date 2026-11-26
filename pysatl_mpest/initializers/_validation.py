@@ -19,7 +19,7 @@ from ..typings import MultivariateFloatArray
 from .exceptions import InitializationError
 
 RELATIVE_WIDTH_TOLERANCE = 1e-6
-"""Fraction of the sample spread below which a component width counts as degenerate."""
+"""Fraction of the sample spread at or below which the interquartile width of a component counts as degenerate."""
 
 
 def validate_partition(H: ArrayLike, n: int, k: int) -> MultivariateFloatArray:
@@ -105,7 +105,10 @@ def has_enough_distinct_values(n_distinct: int, n_free_parameters: int) -> bool:
 
 
 def component_is_wide_enough(width: float, scale: float) -> bool:
-    """Whether a component width exceeds ``RELATIVE_WIDTH_TOLERANCE`` of the sample spread ``scale`` (strict)."""
+    """Whether the interquartile width of a component exceeds ``RELATIVE_WIDTH_TOLERANCE`` of ``scale`` (strict).
+
+    ``scale`` is the spread of the whole sample.
+    """
 
     return width > RELATIVE_WIDTH_TOLERANCE * scale
 

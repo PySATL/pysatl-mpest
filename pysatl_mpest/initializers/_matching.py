@@ -19,8 +19,7 @@ def solve_assignment(cost: MultivariateFloatArray) -> UnivariateIntArray | None:
 
     Each row (family) is assigned a distinct column (cluster) so that the total cost is
     minimal. A cost of ``+inf`` marks a forbidden pair: the pair is never chosen when an
-    assignment without forbidden pairs exists. The returned array ``result`` satisfies
-    ``result[j]`` — the column assigned to row ``j``.
+    assignment without forbidden pairs exists.
 
     Returns ``None`` when every assignment contains a forbidden pair. The function does
     not raise in this case because the caller, which knows why pairs are impossible,

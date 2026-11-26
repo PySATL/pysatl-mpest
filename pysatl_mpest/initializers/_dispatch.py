@@ -90,17 +90,21 @@ class FormulaDispatch[F]:
     def supports(self, family: ParametricFamily) -> bool:
         """Check whether an implementation is registered for the family's pair of names.
 
-        The pair is the family name and the parametrization name of the family, as selected by
-        :func:`pysatl_mpest.core._components.family_key`.
+        Parameters
+        ----------
+        family : ParametricFamily
+            The family to check.
+
+        Returns
+        -------
+        bool
+            Whether :meth:`dispatch` would find an implementation for the family.
         """
 
         return _formula_key(family) in self._registry
 
     def dispatch(self, family: ParametricFamily) -> F:
         """Select the implementation for the family's pair of names.
-
-        The pair is the family name and the parametrization name of the family, as selected by
-        :func:`pysatl_mpest.core._components.family_key`.
 
         Parameters
         ----------
