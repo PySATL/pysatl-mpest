@@ -23,8 +23,6 @@ from pysatl_mpest.initializers._validation import (
 )
 from pysatl_mpest.initializers.exceptions import InitializationError
 
-nan = np.nan
-
 
 class TestValidatePartition:
     """Checks of the hard partition matrix returned by a partitioning method."""
@@ -61,7 +59,7 @@ class TestValidatePartition:
         [
             pytest.param(np.array([[2, -1], [0, 1]]), id="other-integers"),
             pytest.param(np.array([[0.5, 0.5], [0.0, 1.0]]), id="fractional"),
-            pytest.param(np.array([[nan, 1.0], [0.0, 1.0]]), id="nan"),
+            pytest.param(np.array([[np.nan, 1.0], [0.0, 1.0]]), id="nan"),
         ],
     )
     def test_rejects_values_other_than_zero_and_one(self, H: ArrayLike) -> None:
@@ -91,7 +89,7 @@ class TestValidatePartition:
             validate_partition(H, n=n, k=3)
 
     def test_structure_error_takes_precedence_over_empty_cluster(self) -> None:
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="^Every row of a partition matrix"):
             validate_partition(np.array([[1, 0], [0, 0]]), n=2, k=2)
 
 
@@ -100,8 +98,7 @@ def _hard_partition(draw: st.DrawFn) -> tuple[np.ndarray, np.ndarray, int]:
     """A random hard partition of ``n`` points into ``k`` non-empty clusters, as ``(H, labels, k)``."""
 
     k = draw(st.integers(min_value=1, max_value=5))
-    n_extra = draw(st.integers(min_value=0, max_value=20))
-    extras = draw(st.lists(st.integers(min_value=0, max_value=k - 1), min_size=n_extra, max_size=n_extra))
+    extras = draw(st.lists(st.integers(min_value=0, max_value=k - 1), max_size=20))
     labels = np.asarray(draw(st.permutations(list(range(k)) + extras)))
     dtype = draw(st.sampled_from([np.bool_, np.int64, np.float64]))
 
@@ -168,7 +165,7 @@ class TestThresholds:
             pytest.param(0, 1, False, id="empty-cluster"),
         ],
     )
-    def test_cluster_is_large_enough(self, size: int, min_cluster_size: int, expected: bool) -> None:
+    def test_cluster_passes_from_minimum_size(self, size: int, min_cluster_size: int, expected: bool) -> None:
         assert cluster_is_large_enough(size, min_cluster_size) == expected
 
     @pytest.mark.parametrize(
@@ -181,7 +178,9 @@ class TestThresholds:
             pytest.param(0, 1, False, id="no-distinct-values"),
         ],
     )
-    def test_has_enough_distinct_values(self, n_distinct: int, n_free_parameters: int, expected: bool) -> None:
+    def test_passes_from_as_many_distinct_values_as_free_parameters(
+        self, n_distinct: int, n_free_parameters: int, expected: bool
+    ) -> None:
         assert has_enough_distinct_values(n_distinct, n_free_parameters) == expected
 
     @pytest.mark.parametrize(
@@ -193,10 +192,10 @@ class TestThresholds:
             pytest.param(np.nextafter(2e-6, 1.0), 2.0, True, id="scaled-just-above-threshold"),
             pytest.param(0.0, 0.03, False, id="zero-width"),
             pytest.param(2.70, 3.0, True, id="wide-component"),
-            pytest.param(nan, 1.0, False, id="nan-width"),
+            pytest.param(np.nan, 1.0, False, id="nan-width"),
         ],
     )
-    def test_component_is_wide_enough(self, width: float, scale: float, expected: bool) -> None:
+    def test_width_must_strictly_exceed_relative_threshold(self, width: float, scale: float, expected: bool) -> None:
         assert component_is_wide_enough(width, scale) == expected
 
     @pytest.mark.parametrize(
@@ -208,10 +207,10 @@ class TestThresholds:
             pytest.param(1.0, True, id="large-value"),
         ],
     )
-    def test_exceeds_m_step_tolerance(self, value: float, expected: bool) -> None:
+    def test_value_must_strictly_exceed_m_step_tolerance(self, value: float, expected: bool) -> None:
         assert exceeds_m_step_tolerance(value) == expected
 
-    def test_exceeds_m_step_tolerance_reads_module_tolerance(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_m_step_threshold_reads_module_tolerance(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(_validation, "NUMERICAL_TOLERANCE", 0.25)
 
         assert not exceeds_m_step_tolerance(0.25)
