@@ -102,6 +102,17 @@ class TestInput:
         np.testing.assert_array_equal(received_X, [1.0, 2.0, 3.0])
         assert received_families is families
 
+    def test_passes_a_copy_of_the_caller_array(self) -> None:
+        sample = np.array([1.0, 2.0, 3.0])
+        initializer = returning(good_mixture())
+
+        initializer.initialize(sample, [normal_family(), exponential_family()])
+
+        received_X, _, _ = initializer.calls[0]
+        assert received_X is not sample
+        received_X[0] = 100.0
+        np.testing.assert_array_equal(sample, [1.0, 2.0, 3.0])
+
     def test_rejects_empty_families(self) -> None:
         initializer = returning(good_mixture())
 
@@ -467,15 +478,12 @@ class TestResult:
 
         assert exc_info.value is error
 
+    @pytest.mark.filterwarnings("error")
     def test_infinite_likelihood_of_finite_point_densities_has_no_example_points(self) -> None:
         families = [normal_family()]
         mixture = MixtureModel([normal_like([-1e308, -1e308, -1.0])])
 
-        with (
-            np.errstate(over="ignore"),
-            pytest.raises(
-                InitializationError,
-                match=r"^The log-likelihood of the starting mixture on the sample is -inf\.$",
-            ),
+        with pytest.raises(
+            InitializationError, match=r"^The log-likelihood of the starting mixture on the sample is -inf\.$"
         ):
             returning(mixture).initialize([10.0, 20.0, 30.0], families)
