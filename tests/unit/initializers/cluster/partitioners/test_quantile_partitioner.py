@@ -47,7 +47,7 @@ def test_column_is_segment_of_sorted_sample() -> None:
     ],
 )
 def test_clusters_are_array_split_parts_of_sorted_sample(n: int, k: int) -> None:
-    sample = np.random.default_rng(42).normal(size=n).astype(np.float64)
+    sample = np.random.default_rng(42).normal(size=n)
     sample.flags.writeable = False
 
     H = QuantilePartitioner().partition(sample, k, np.random.default_rng(0))
@@ -72,7 +72,7 @@ def test_divides_sample_of_identical_values() -> None:
 
 
 def test_does_not_use_generator() -> None:
-    sample = np.random.default_rng(42).normal(size=20).astype(np.float64)
+    sample = np.random.default_rng(42).normal(size=20)
     sample.flags.writeable = False
     rng = np.random.default_rng(3)
     state = rng.bit_generator.state

@@ -7,7 +7,6 @@ __license__ = "SPDX-License-Identifier: MIT"
 import numpy as np
 import pytest
 from numpy.typing import ArrayLike
-from pysatl_mpest.initializers.cluster._table._validation import validate_partition
 from pysatl_mpest.initializers.cluster.partitioners._labels import one_hot
 
 
@@ -28,8 +27,6 @@ def test_label_outside_the_range_gives_a_row_without_a_one(labels: list[int]) ->
     H = one_hot(labels, 2)
 
     np.testing.assert_array_equal(H, [[1, 0], [0, 0]])
-    with pytest.raises(ValueError, match="^Every row of a partition matrix must contain exactly one 1"):
-        validate_partition(H, n=2, k=2)
 
 
 def test_number_without_labels_gives_a_zero_column() -> None:

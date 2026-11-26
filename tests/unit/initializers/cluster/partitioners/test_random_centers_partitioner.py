@@ -70,8 +70,8 @@ def test_equidistant_point_goes_to_smaller_column() -> None:
 
 
 @given(partition_inputs(distinct_values=True))
-def test_repeated_values_stay_in_one_cluster(partition: tuple[UnivariateFloatArray, int, int]) -> None:
-    X, k, seed = partition
+def test_repeated_values_stay_in_one_cluster(inputs: tuple[UnivariateFloatArray, int, int]) -> None:
+    X, k, seed = inputs
 
     H = validate_partition(RandomCentersPartitioner().partition(X, k, np.random.default_rng(seed)), n=len(X), k=k)
     cluster_values = [set(X[H[:, column] == 1].tolist()) for column in range(k)]

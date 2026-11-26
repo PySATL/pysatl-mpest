@@ -20,7 +20,7 @@ from tests.helpers.partitions import partition_inputs
 
 
 def three_overlapping_modes() -> UnivariateFloatArray:
-    """Sample of three overlapping normal modes, shared by the partitioning tests."""
+    """Sample of three overlapping normal modes for the tests of this file."""
 
     rng = np.random.default_rng(42)
     sample = np.concatenate([rng.normal(0.0, 1.0, 40), rng.normal(3.0, 1.0, 40), rng.normal(6.0, 1.0, 40)])
