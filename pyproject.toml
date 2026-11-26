@@ -84,6 +84,7 @@ source_paths = ["pysatl_mpest"]
 only_mutate = [
     "pysatl_mpest/core/mixture.py",
     "pysatl_mpest/core/_components.py",
+    "pysatl_mpest/core/_validation.py",
     "pysatl_mpest/estimators/iterative/_strategies/*.py",
     "pysatl_mpest/estimators/iterative/steps/*.py",
     "pysatl_mpest/estimators/iterative/pipeline.py",
