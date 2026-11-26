@@ -126,7 +126,7 @@ def test_registry_is_read_only_and_reflects_registrations(formulas: FormulaDispa
 
     assert dict(formulas.registry) == {("Normal", "meanStd"): "impl"}
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match="does not support item assignment"):
         formulas.registry[("X", "y")] = "impl"  # type: ignore[index]
 
 
