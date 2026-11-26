@@ -88,7 +88,7 @@ def order_identical(
 
     for members in groups:
         clusters = sorted((assignment[member] for member in members), key=lambda c: (means[c], c))
-        for member, cluster in zip(members, clusters, strict=True):
+        for member, cluster in zip(members, clusters):
             result[member] = cluster
 
     return result
