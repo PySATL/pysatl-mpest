@@ -102,7 +102,7 @@ class TestInput:
         np.testing.assert_array_equal(received_X, [1.0, 2.0, 3.0])
         assert received_families is families
 
-    def test_passes_a_copy_of_the_caller_array(self) -> None:
+    def test_passes_a_read_only_copy_of_the_caller_array(self) -> None:
         sample = np.array([1.0, 2.0, 3.0])
         initializer = returning(good_mixture())
 
@@ -110,8 +110,8 @@ class TestInput:
 
         received_X, _, _ = initializer.calls[0]
         assert received_X is not sample
-        received_X[0] = 100.0
-        np.testing.assert_array_equal(sample, [1.0, 2.0, 3.0])
+        assert not received_X.flags.writeable
+        assert sample.flags.writeable
 
     def test_rejects_empty_families(self) -> None:
         initializer = returning(good_mixture())
@@ -333,7 +333,7 @@ class TestResult:
                 ),
                 r"^Component 0 of the result is not from families\[0\]: expected family Normal in parametrization "
                 r"meanStd with fixed parameters \{\}, got family Exponential in parametrization rate with fixed "
-                r"parameters \{\}\.$",
+                r"parameters \{\}",
                 id="first-component",
             ),
             pytest.param(
@@ -477,6 +477,18 @@ class TestResult:
             initializer.initialize([1.0], [normal_family()])
 
         assert exc_info.value is error
+
+    @pytest.mark.filterwarnings("error")
+    def test_reports_degenerate_component_without_numpy_warnings(self) -> None:
+        mixture = MixtureModel([normal(0.0, 1e-170)])
+
+        with pytest.raises(
+            InitializationError,
+            match=r"^The log-likelihood of the starting mixture on the sample is nan\. 1 of 2 sample points are not "
+            r"covered by any component, for example 1\.0\. The density of the mixture is undefined at 1 of 2 sample "
+            r"points, for example 0\.0\.$",
+        ):
+            returning(mixture).initialize([0.0, 1.0], [normal_family()])
 
     @pytest.mark.filterwarnings("error")
     def test_infinite_likelihood_of_finite_point_densities_has_no_example_points(self) -> None:

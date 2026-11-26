@@ -47,13 +47,13 @@ class Initializer(ABC):
         """Build a starting mixture from the sample.
 
         The method checks the input, creates the random generator, calls ``_initialize``, checks its result
-        and returns that mixture unchanged. The method is final and cannot be overridden.
+        and returns that mixture unchanged. The method must not be overridden; type checkers flag an override.
 
         Parameters
         ----------
         X : ArrayLike
-            The sample; a one-dimensional ``float64`` copy of it is passed to the initializer step, so the
-            caller's array is never modified.
+            The sample; a read-only one-dimensional ``float64`` copy of it is passed to the initializer step and
+            used to check the result, so the caller's array is never modified.
         families : Sequence[ParametricFamily]
             One family per component of the mixture. A parametrization is chosen and parameters are fixed through
             ``family.view(...)``.
@@ -82,7 +82,9 @@ class Initializer(ABC):
             points have the log-density ``-inf``, and by
             ``" The density of the mixture is undefined at {m} of {n} sample points, for example {examples}."``
             if some points have the log-density ``NaN`` or ``+inf``. ``examples`` are the values of at most the
-            first three such points, separated by ``", "``.
+            first three such points, separated by ``", "``. NumPy warnings while the log-likelihood is computed
+            are suppressed: the error explains the failure. Exceptions raised by ``_initialize``, such as an
+            :class:`~pysatl_mpest.initializers.InitializationError` of an unlucky run, pass through unchanged.
         """
 
         sample = _validate_input(X, families)
@@ -97,9 +99,10 @@ class Initializer(ABC):
     ) -> MixtureModel:
         """Build the starting mixture from the checked input.
 
-        The sample is a one-dimensional ``float64`` array of finite values with at least as many points as there
-        are families, ``families`` is the same object that was passed to :meth:`initialize`, and ``rng`` is a
-        ready random generator. All randomness of the implementation must come from ``rng``.
+        The sample is a read-only one-dimensional ``float64`` array of finite values with at least as many points
+        as there are families; the result is checked on the same array, so copy it to change it. ``families`` is
+        the same object that was passed to :meth:`initialize`, and ``rng`` is a ready random generator. All
+        randomness of the implementation must come from ``rng``.
 
         Parameters
         ----------
@@ -123,7 +126,7 @@ class Initializer(ABC):
 
 
 def _validate_input(X: ArrayLike, families: Sequence[ParametricFamily]) -> UnivariateFloatArray:
-    """Check the sample and families, returning a one-dimensional ``float64`` copy of the sample."""
+    """Check the sample and families, returning a read-only one-dimensional ``float64`` copy of the sample."""
 
     if len(families) == 0:
         raise ValueError("families must not be empty.")
@@ -133,6 +136,7 @@ def _validate_input(X: ArrayLike, families: Sequence[ParametricFamily]) -> Univa
             raise TypeError(f"families[{j}] must be a ParametricFamily, got {type(family).__name__}.")
 
     sample = np.array(X, dtype=np.float64)
+    sample.flags.writeable = False
     if sample.ndim != 1:
         raise ValueError(f"X must be one-dimensional, got an array of shape {sample.shape}.")
     if not np.isfinite(sample).all():
@@ -149,8 +153,8 @@ def _validate_input(X: ArrayLike, families: Sequence[ParametricFamily]) -> Univa
 def _validate_result(mixture: MixtureModel, X: UnivariateFloatArray, families: Sequence[ParametricFamily]) -> None:
     """Check the number and the families of the components and the finiteness of the log-likelihood.
 
-    The sample coverage is used only to explain a non-finite log-likelihood in the message; an overflow of
-    the sum of finite log-densities is not warned about, it is reported by the error.
+    The sample coverage is used only to explain a non-finite log-likelihood in the message. NumPy warnings of
+    both computations are suppressed: the error reports the failure.
     """
 
     k = len(families)
@@ -167,12 +171,12 @@ def _validate_result(mixture: MixtureModel, X: UnivariateFloatArray, families: S
                 f"expected {_format_family_key(expected)}, got {_format_family_key(received)}."
             )
 
-    with np.errstate(over="ignore"):
+    with np.errstate(all="ignore"):
         loglikelihood = mixture.loglikelihood(X)
-    if np.isfinite(loglikelihood):
-        return
+        if np.isfinite(loglikelihood):
+            return
+        coverage = sample_coverage(mixture, X)
 
-    coverage = sample_coverage(mixture, X)
     message = f"The log-likelihood of the starting mixture on the sample is {loglikelihood}."
     if len(coverage.uncovered) != 0:
         message += (
