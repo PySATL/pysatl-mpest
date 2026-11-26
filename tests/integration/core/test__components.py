@@ -6,11 +6,18 @@ __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
+from collections.abc import Callable
+
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
-from pysatl_core.families import ParametricFamilyDistribution
-from pysatl_core.types import FamilyName
+from pysatl_core.families import (
+    ParametricFamily,
+    ParametricFamilyDistribution,
+    Parametrization,
+    parametrization,
+)
+from pysatl_core.types import CharacteristicName, FamilyName, UnivariateContinuous
 from pysatl_mpest.core import _components as cc
 from scipy import stats
 
@@ -165,3 +172,228 @@ class TestComponentKey:
         registry = {cc.component_key(normal): "normal"}
 
         assert registry[cc.component_key(cc.with_parameters(normal))] == "normal"
+
+
+def three_parameter_family() -> ParametricFamily:
+    """Build an unregistered family with three parameters: a view of a built-in family fixes at most one."""
+
+    result = ParametricFamily(
+        name="ThreeParameter",
+        distr_type=UnivariateContinuous,
+        distr_parametrizations=["abc"],
+        distr_characteristics={CharacteristicName.PDF: lambda parameters, x: np.ones_like(x)},
+    )
+
+    @parametrization(family=result, name="abc")
+    class _Abc(Parametrization):
+        a: float
+        b: float
+        c: float
+
+    return result
+
+
+FAMILY_CASES: dict[str, tuple[Callable[[], ParametricFamily], dict[str, float]]] = {
+    "normal": (lambda: family(FamilyName.NORMAL), {"mu": 0.5, "sigma": 2.0}),
+    "exponential": (lambda: family(FamilyName.EXPONENTIAL), {"lambda_": 1.5}),
+    "uniform": (lambda: family(FamilyName.CONTINUOUS_UNIFORM), {"lower_bound": 0.0, "upper_bound": 1.0}),
+    "normal-fixed-mu": (lambda: family(FamilyName.NORMAL).view(mu=1.0), {"sigma": 2.0}),
+    "normal-meanVar": (
+        lambda: family(FamilyName.NORMAL).view(parametrization_name="meanVar"),
+        {"mu": 0.0, "var": 4.0},
+    ),
+    "normal-meanVar-fixed-mu": (
+        lambda: family(FamilyName.NORMAL).view(parametrization_name="meanVar", mu=1.0),
+        {"var": 4.0},
+    ),
+    "uniform-fixed-lower": (lambda: family(FamilyName.CONTINUOUS_UNIFORM).view(lower_bound=0.0), {"upper_bound": 1.0}),
+}
+
+family_cases = pytest.mark.parametrize("make_family, free", FAMILY_CASES.values(), ids=FAMILY_CASES.keys())
+
+
+class TestFamilyKey:
+    @pytest.mark.parametrize(
+        ("name", "expected"),
+        [
+            pytest.param(FamilyName.NORMAL, ("Normal", "meanStd", ()), id="normal"),
+            pytest.param(FamilyName.EXPONENTIAL, ("Exponential", "rate", ()), id="exponential"),
+            pytest.param(FamilyName.CONTINUOUS_UNIFORM, ("ContinuousUniform", "standard", ()), id="uniform"),
+        ],
+    )
+    def test_plain_family_has_no_fixed_parameters(self, name: FamilyName, expected: cc.FamilyKey) -> None:
+        assert cc.family_key(family(name)) == expected
+
+    def test_view_contains_fixed_parameter(self) -> None:
+        assert cc.family_key(family(FamilyName.NORMAL).view(mu=0.0)) == ("Normal", "meanStd", (("mu", 0.0),))
+
+    def test_view_contains_its_parametrization(self) -> None:
+        assert cc.family_key(family(FamilyName.NORMAL).view(parametrization_name="meanVar")) == (
+            "Normal",
+            "meanVar",
+            (),
+        )
+        assert cc.family_key(family(FamilyName.NORMAL).view(parametrization_name="meanVar", mu=1.0)) == (
+            "Normal",
+            "meanVar",
+            (("mu", 1.0),),
+        )
+
+    def test_view_without_fixed_parameters_in_base_parametrization_has_plain_family_key(self) -> None:
+        normal_family = family(FamilyName.NORMAL)
+
+        assert cc.family_key(normal_family.view()) == cc.family_key(normal_family)
+        assert cc.family_key(normal_family.view(parametrization_name="meanStd")) == cc.family_key(normal_family)
+
+    def test_differs_by_fixed_value(self) -> None:
+        assert cc.family_key(family(FamilyName.NORMAL).view(mu=0.0)) != cc.family_key(
+            family(FamilyName.NORMAL).view(mu=5.0)
+        )
+
+    def test_differs_by_fixed_parameter(self) -> None:
+        assert cc.family_key(family(FamilyName.NORMAL).view(mu=1.0)) != cc.family_key(
+            family(FamilyName.NORMAL).view(sigma=1.0)
+        )
+
+    def test_differs_by_parametrization(self) -> None:
+        assert cc.family_key(family(FamilyName.NORMAL)) != cc.family_key(
+            family(FamilyName.NORMAL).view(parametrization_name="meanVar")
+        )
+
+    def test_differs_by_family(self) -> None:
+        assert cc.family_key(family(FamilyName.CONTINUOUS_UNIFORM)) != cc.family_key(family(FamilyName.EXPONENTIAL))
+
+    def test_equal_for_independent_equal_views(self) -> None:
+        first = family(FamilyName.NORMAL).view(mu=1.0)
+        second = family(FamilyName.NORMAL).view(mu=1.0)
+
+        assert cc.family_key(first) == cc.family_key(second)
+        assert hash(cc.family_key(first)) == hash(cc.family_key(second))
+
+    def test_int_and_float_fixed_values_give_equal_keys(self) -> None:
+        first = family(FamilyName.NORMAL).view(mu=0)
+        second = family(FamilyName.NORMAL).view(mu=0.0)
+
+        assert cc.family_key(first) == cc.family_key(second)
+        assert hash(cc.family_key(first)) == hash(cc.family_key(second))
+
+    def test_fixed_parameters_sorted_by_name(self) -> None:
+        three = three_parameter_family()
+
+        assert (
+            cc.family_key(three.view(a=1.0, b=2.0))
+            == cc.family_key(three.view(b=2.0, a=1.0))
+            == (
+                "ThreeParameter",
+                "abc",
+                (("a", 1.0), ("b", 2.0)),
+            )
+        )
+
+
+FIXED_PARAMETER_CASES: dict[str, tuple[Callable[[], ParametricFamily], dict[str, float]]] = {
+    "plain": (lambda: family(FamilyName.NORMAL), {}),
+    "fixed-mu": (lambda: family(FamilyName.NORMAL).view(mu=1.0), {"mu": 1.0}),
+    "meanVar": (lambda: family(FamilyName.NORMAL).view(parametrization_name="meanVar"), {}),
+    "meanVar-fixed-var": (
+        lambda: family(FamilyName.NORMAL).view(parametrization_name="meanVar", var=4.0),
+        {"var": 4.0},
+    ),
+}
+
+fixed_parameter_cases = pytest.mark.parametrize(
+    "make_family, expected", FIXED_PARAMETER_CASES.values(), ids=FIXED_PARAMETER_CASES.keys()
+)
+
+FREE_PARAMETER_CASES: dict[str, tuple[Callable[[], ParametricFamily], tuple[str, ...]]] = {
+    "normal": (lambda: family(FamilyName.NORMAL), ("mu", "sigma")),
+    "exponential": (lambda: family(FamilyName.EXPONENTIAL), ("lambda_",)),
+    "uniform": (lambda: family(FamilyName.CONTINUOUS_UNIFORM), ("lower_bound", "upper_bound")),
+    "fixed-mu": (lambda: family(FamilyName.NORMAL).view(mu=0.0), ("sigma",)),
+    "fixed-sigma": (lambda: family(FamilyName.NORMAL).view(sigma=1.0), ("mu",)),
+    "meanVar": (lambda: family(FamilyName.NORMAL).view(parametrization_name="meanVar"), ("mu", "var")),
+    "meanVar-fixed-var": (
+        lambda: family(FamilyName.NORMAL).view(parametrization_name="meanVar", var=4.0),
+        ("mu",),
+    ),
+    "uniform-fixed-upper": (lambda: family(FamilyName.CONTINUOUS_UNIFORM).view(upper_bound=3.0), ("lower_bound",)),
+}
+
+free_parameter_cases = pytest.mark.parametrize(
+    "make_family, expected", FREE_PARAMETER_CASES.values(), ids=FREE_PARAMETER_CASES.keys()
+)
+
+
+class TestFamilyParameters:
+    @fixed_parameter_cases
+    def test_returns_fixed_parameters(
+        self, make_family: Callable[[], ParametricFamily], expected: dict[str, float]
+    ) -> None:
+        assert cc.family_fixed_parameters(make_family()) == expected
+
+    def test_returns_new_dictionary_each_call(self) -> None:
+        view = family(FamilyName.NORMAL).view(mu=1.0)
+
+        first = cc.family_fixed_parameters(view)
+        first["mu"] = 5.0
+
+        assert cc.family_fixed_parameters(view) == {"mu": 1.0}
+
+    @free_parameter_cases
+    def test_returns_free_parameter_names_in_declaration_order(
+        self, make_family: Callable[[], ParametricFamily], expected: tuple[str, ...]
+    ) -> None:
+        assert cc.family_free_parameter_names(make_family()) == expected
+
+    def test_free_and_fixed_partition_parametrization_parameters(self) -> None:
+        view = family(FamilyName.NORMAL).view(mu=1.0)
+
+        free = set(cc.family_free_parameter_names(view))
+        fixed = set(cc.family_fixed_parameters(view))
+
+        assert free | fixed == {"mu", "sigma"}
+        assert not free & fixed
+
+    @family_cases
+    def test_family_parameters_match_component(
+        self, make_family: Callable[[], ParametricFamily], free: dict[str, float]
+    ) -> None:
+        family_ = make_family()
+        component = family_.distribution(**free)
+
+        assert cc.family_free_parameter_names(family_) == tuple(cc.free_parameters(component))
+        assert cc.family_fixed_parameters(family_) == cc.fixed_parameters(component)
+
+
+class TestComponentFamilyKey:
+    @family_cases
+    def test_equals_family_key(self, make_family: Callable[[], ParametricFamily], free: dict[str, float]) -> None:
+        family_ = make_family()
+
+        assert cc.component_family_key(family_.distribution(**free)) == cc.family_key(family_)
+
+    def test_ignores_free_parameter_values(self) -> None:
+        assert cc.component_family_key(family(FamilyName.NORMAL)(mu=0.0, sigma=1.0)) == cc.component_family_key(
+            family(FamilyName.NORMAL)(mu=5.0, sigma=2.0)
+        )
+
+    def test_view_component_differs_from_full_component(self) -> None:
+        view_component = family(FamilyName.NORMAL).view(mu=1.0)(sigma=2.0)
+        full_component = family(FamilyName.NORMAL)(mu=1.0, sigma=2.0)
+
+        assert cc.component_family_key(view_component) != cc.component_family_key(full_component)
+
+    def test_survives_with_parameters(self) -> None:
+        component = family(FamilyName.NORMAL).view(mu=1.0)(sigma=2.0)
+
+        assert cc.component_family_key(cc.with_parameters(component, sigma=3.0)) == cc.component_family_key(component)
+
+    def test_component_in_non_base_parametrization_gets_view_key(self) -> None:
+        component = family(FamilyName.NORMAL)(parametrization_name="meanVar", mu=0.0, var=4.0)
+
+        assert (
+            cc.component_family_key(component)
+            == cc.family_key(family(FamilyName.NORMAL).view(parametrization_name="meanVar"))
+            == ("Normal", "meanVar", ())
+        )
+        assert cc.component_family_key(component) != cc.family_key(family(FamilyName.NORMAL))
