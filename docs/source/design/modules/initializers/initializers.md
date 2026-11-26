@@ -10,73 +10,69 @@ matchers/matchers
 component_estimators/component_estimators
 ```
 
-Модуля в коде пока нет: сейчас начальную `MixtureModel` с параметрами задаёт пользователь, см. [«Модуль `core`»](../core/core.md). Ниже описан проект. Имена классов и сигнатуры предварительные, конкретные реализации ролей пока не детализированы. Эта страница описывает модуль целиком; три роли `ClusterInitializer` разобраны на подстраницах: [«Разбиение»](partitioners/partitioners.md), [«Сопоставление кластеров и семейств»](matchers/matchers.md) и [«Оценка параметров компоненты»](component_estimators/component_estimators.md).
+Модуль реализуется по этапам; ниже — проект, имена и сигнатуры предварительные. Пока модуля нет, начальную `MixtureModel` задаёт пользователь, см. [«Модуль `core`»](../core/core.md). Три роли `ClusterInitializer` разобраны на подстраницах: [«Разбиение»](partitioners/partitioners.md), [«Сопоставление кластеров и семейств»](matchers/matchers.md), [«Оценка параметров компоненты»](component_estimators/component_estimators.md).
 
 ## Задача
 
-Инициализатор получает выборку `X` и список `families`, по элементу на компоненту, и возвращает `MixtureModel` с полностью заданными параметрами и весами. Результат передаётся в `fit` оценщиков смеси из `estimators`.
+Инициализатор получает выборку `X` и список `families` (по элементу на компоненту) и возвращает `MixtureModel` с заданными параметрами и весами — старт для `fit` оценщиков смеси.
 
 ```python
 normal = ParametricFamilyRegister.get(FamilyName.NORMAL)
 expon = ParametricFamilyRegister.get(FamilyName.EXPONENTIAL)
 
 initializer = ClusterInitializer(KMeansPartitioner())
+
+# Лучший из 10 запусков по правдоподобию стартовой смеси.
 start = MultiStartInitializer(initializer, n_init=10).initialize(X, [normal, normal, expon], random_state=42)
-result = EM(...).fit(X, start)
-```
 
-Здесь лучший из 10 запусков выбирается по правдоподобию стартовой смеси. Чтобы выбирать по итогу оценщика смеси, каждый старт сначала доводят оценщиком в `RefiningInitializer`, см. {ref}`«Уточнение оценщиком смеси» <init-refining>`:
-
-```python
+# Лучший из 10 запусков по итогу короткого EM, см. «Уточнение оценщиком смеси».
 short_em = EM(breakpointers=[StepBreakpointer(20)], pruners=[], optimizer=ScipyNelderMead())
 refined = RefiningInitializer(initializer, short_em)
 start = MultiStartInitializer(refined, n_init=10).initialize(X, [normal, normal, expon], random_state=42)
+
 result = EM(...).fit(X, start)
 ```
 
-Слово «оценщик» в этом документе всегда уточняется:
+Слово «оценщик» всегда уточняется:
 
-- **оценщик смеси** — `EM`, `ECM`, `ECME` из `estimators`, оценивают всю смесь;
-- **оценщик компоненты** — `ComponentEstimator` и его реализации в `initializers`, оценивают параметры одной компоненты по кластеру. Поэтому и поле `ClusterInitializer` называется `component_estimator`, а ошибка — `ComponentEstimationError`: поле `estimator` у `RefiningInitializer` — оценщик смеси.
+- **оценщик смеси** — `EM`, `ECM`, `ECME` из `estimators`; поле `estimator` у `RefiningInitializer`;
+- **оценщик компоненты** — `ComponentEstimator` в `initializers`, оценивает одну компоненту по кластеру; отсюда имена `component_estimator` и `ComponentEstimationError`.
 
-Типы массивов берутся из `pysatl_mpest.typings`: выборка `X` и столбец `h` — `UnivariateFloatArray`, матрица разбиения `H` — `MultivariateFloatArray`, перестановка `assignment` — `UnivariateIntArray`.
+Типы массивов — из `pysatl_mpest.typings`: `X` и столбец `h` — `UnivariateFloatArray`, матрица разбиения `H` — `MultivariateFloatArray`, перестановка `assignment` — `UnivariateIntArray`.
 
 ### Вход: `families`
 
-- Элемент `families` — `ParametricFamily` из `pysatl-core`.
-- Параметры, которые нужно оставить неизменными, фиксируются через `family.view(...)`. Результат, `PartialParametricFamily`, — тоже `ParametricFamily`.
-- Параметризация выбирается так же: `family.view(parametrization_name="meanStd")` без фиксированных параметров. Без `view` используется базовая параметризация.
-- Оцениваются только свободные параметры. Компоненту собирает таблица компонент через `family.distribution(**free)`, и `_components.fixed_parameters` у неё совпадает с `view`.
-- Полностью известной компоненты, например известного фона, в первой версии нет, см. «Отложено».
-- Свой тип спецификации компоненты пока не вводится. Он понадобится, если появятся настройки отдельной компоненты, а не семейства: подсказки, границы параметров, свой способ оценки для одного из одинаковых семейств.
+- Элемент — `ParametricFamily` из `pysatl-core`. Фиксированные параметры и параметризация задаются через `family.view(...)`, результат (`PartialParametricFamily`) — тоже `ParametricFamily`. Без `view` — базовая параметризация.
+- Оцениваются только свободные параметры. Компоненту собирает таблица через `family.distribution(**free)`, и её фиксированные параметры совпадают с `view`.
+- Полностью известной компоненты (например, известного фона) в первой версии нет, см. «Отложено».
+- Своего типа спецификации компоненты нет. Он понадобится с настройками отдельной компоненты: подсказками, границами параметров, своим способом оценки для одного из одинаковых семейств.
 
 (init-output-order)=
 ### Выход: порядок компонент
 
-**Порядок компонент результата совпадает с порядком `families`.** На него опираются настройки оценщиков смеси по номеру компоненты, например `parameter_groups` у `ECM` и стратегии у `ECME`.
-
-Одинаковые семейства различаются положением: среди них раньше в `families` стоит то, чей кластер левее, то есть с меньшим средним. Для `[normal, normal, normal]` компонента 0 — самая левая мода, компонента 2 — самая правая, в любом запуске. Этот порядок наводит базовый `Matcher` хуком `_order` после сопоставления, при любом способе разбиения и любом встроенном сопоставителе, кроме `IdentityMatcher`: с ним порядок одинаковых семейств задаёт способ разбиения, см. {ref}`«Порядок одинаковых семейств» <init-order-identical>`. Что компонента `j` результата — из семейства `families[j]`, проверяет общий `Initializer.initialize`, см. {ref}`«Ход initialize» <init-walk>`.
+- **Порядок компонент совпадает с `families`.** На него опираются настройки по номеру компоненты: `parameter_groups` у `ECM`, стратегии у `ECME`. Что компонента `j` — из `families[j]`, проверяет общий `Initializer.initialize`, см. {ref}`«Ход initialize» <init-walk>`.
+- **Одинаковые семейства упорядочены по среднему кластера:** у `[normal, normal, normal]` компонента 0 — самая левая мода в любом запуске. Порядок наводит хук `_order` базового `Matcher`; исключение — `IdentityMatcher`, у него порядок задаёт способ разбиения, см. {ref}`«Порядок одинаковых семейств» <init-order-identical>`.
 
 ### Зависимости
 
-- Модуль зависит от `core`, `pysatl-core` и `scipy`. k-means берётся из `scipy.cluster.vq.kmeans2`, а не пишется свой.
-- scikit-learn — необязательная зависимость. Он нужен только `SklearnPartitioner` и ставится отдельно: `pip install pysatl-mpest[sklearn]`. Без него остальной модуль работает. В dev-зависимостях он есть, чтобы тесты `SklearnPartitioner` запускались всегда.
-- От `estimators` зависит только `RefiningInitializer`, и только от базового класса `BaseEstimator`: конкретный оценщик смеси передаёт пользователь. `estimators` от `initializers` не зависит, так что зависимость односторонняя. От `optimizers` модуль не зависит.
-- Будущий `structure_selection` будет выдавать именно `families`, так что цепочка выглядит как «`structure_selection` → `initializers` → `estimators`».
+- `core`, `pysatl-core` и `scipy`; k-means — `scipy.cluster.vq.kmeans2`, своего нет.
+- scikit-learn — необязательная зависимость, только для `SklearnPartitioner`: `pip install pysatl-mpest[sklearn]`. Без него остальной модуль работает. В dev-зависимостях он есть, чтобы тесты `SklearnPartitioner` шли всегда.
+- От `estimators` зависит только `RefiningInitializer`, и только от `BaseEstimator`. `estimators` от `initializers` не зависит, от `optimizers` модуль не зависит.
+- Будущий `structure_selection` будет выдавать `families`: «`structure_selection` → `initializers` → `estimators`».
 
 ### Граница с `estimators`
 
-Оценка параметров при известных ответственностях — это по сути M-шаг, поэтому граница с `estimators` проводится по цели, а не по виду вычислений:
+Оценка параметров при известных ответственностях — по сути M-шаг, поэтому граница проведена по цели:
 
-- **Инициализатор даёт дешёвую стартовую точку.** Без итераций по всей смеси и без численной оптимизации: только оценки в явном виде и одномерный поиск корня на заданном отрезке, см. {ref}`«Контракт формулы» <init-formula-contract>`.
-- **Точное совместное уточнение всей смеси — работа `estimators`.** Инициализатор оценивает компоненты по отдельным кластерам; точность смеси даст EM, запущенный из полученной смеси. Исключение — семейства, у которых носитель зависит от параметров, см. «Ограничения».
-- **`RefiningInitializer` границу не нарушает.** Сам он не итерирует: он вызывает готовый оценщик смеси из `estimators` и нужен только затем, чтобы мультистарт сравнивал запуски по итогу оценщика.
+- **инициализатор даёт дешёвый старт:** явные формулы и одномерный поиск корня на отрезке, без итераций по смеси и без численной оптимизации, см. {ref}`«Контракт формулы» <init-formula-contract>`;
+- **точное уточнение всей смеси — работа `estimators`;** исключение — семейства с носителем, зависящим от параметров, см. «Ограничения»;
+- **`RefiningInitializer` границу не нарушает:** сам не итерирует, а вызывает готовый оценщик смеси, чтобы мультистарт сравнивал запуски по его итогу.
 
-Новое в инициализаторе по сравнению с EM — только две вещи: получить ответственности, когда параметров ещё нет, и сопоставить полученные кластеры с семействами.
+Нового по сравнению с EM в инициализаторе две вещи: получить ответственности без параметров и сопоставить кластеры с семействами.
 
 ## Состав модуля
 
-Планируемая раскладка. В корне пакета лежат только публичный вход и готовые инициализаторы: фасад `__init__.py`, абстрактный `Initializer`, ошибки и три инициализатора. Части схемы «разбиение → сопоставление → оценка», которыми пользуется `ClusterInitializer`, собраны в подпакет `cluster/`; у каждой роли свой подпакет, где абстракция лежит в `base.py`, рядом с реализациями и приватными помощниками. У каждого подпакета свой `__init__.py` с экспортом его публичных классов; пользователь импортирует всё публичное из `pysatl_mpest.initializers`. `MomentsComponentEstimator`, `ComponentEstimatorChain` и `ExhaustiveMatcher` описаны в проекте, но войдут в модуль позже, см. «Первая версия».
+В корне — публичный вход и готовые инициализаторы. Части схемы «разбиение → сопоставление → оценка» лежат в `cluster/`: у каждой роли свой подпакет с абстракцией в `base.py`. Каждый подпакет экспортирует свои публичные классы, пользователь импортирует всё из `pysatl_mpest.initializers`.
 
 ```text
 initializers/
@@ -105,82 +101,64 @@ initializers/
         └── _validation.py
 ```
 
-- `__init__.py` — фасад пакета: экспорт публичных классов и ошибок.
-- `initializer.py` — абстрактный `Initializer`, публичный интерфейс модуля: общий для всех `initialize` с проверками входа и результата и абстрактный `_initialize`.
-- `exceptions.py` — `InitializationError` (наследник `Exception`) и его наследник `ComponentEstimationError`, см. «Ошибки».
-- `cluster_initializer.py` — `ClusterInitializer`: инициализация по схеме «разбиение → сопоставление → оценка».
-- `multi_start.py` — `MultiStartInitializer`, мультистарт поверх любого `Initializer`.
-- `refining.py` — `RefiningInitializer`: старт от другого инициализатора, доведённый оценщиком смеси.
-- `cluster/partitioners/` — абстрактный `Partitioner` в `base.py` и реализации `KMeansPartitioner`, `SklearnPartitioner`, `QuantilePartitioner`, `RandomCentersPartitioner`, см. [«Разбиение»](partitioners/partitioners.md).
-- `cluster/component_estimators/` — абстрактный `ComponentEstimator` в `base.py`, реализации `MLEComponentEstimator`, `MomentsComponentEstimator` и составной `ComponentEstimatorChain`, см. [«Оценка параметров компоненты»](component_estimators/component_estimators.md). Там же `_dispatch.py` — свой диспетчер формул по ключу семейства, см. {ref}`«Реестр формул» <init-formula-registry>`.
-- `cluster/matchers/` — абстрактный `Matcher` с шаблонным методом `match` в `base.py` и реализации `HungarianMatcher`, `IdentityMatcher`, `ExhaustiveMatcher`, см. [«Сопоставление кластеров и семейств»](matchers/matchers.md). Там же `_matching.py` — чистые функции `solve_assignment(cost)` (задача о назначениях с запрещёнными парами, см. {ref}`«Критерий по парам» <init-hungarian>`) и `order_identical(assignment, groups, means)` (порядок одинаковых семейств, см. {ref}`«Порядок одинаковых семейств» <init-order-identical>`).
-- `cluster/table.py` — протокол `ComponentTable`: всё, что сопоставитель может спросить у таблицы компонент, см. «Таблица компонент». Он публичный: на него опираются пользовательские сопоставители. Реализация протокола приватная, в `cluster/_table/`.
-- `cluster/_table/` — внутренняя кухня `ClusterInitializer`:
-  - `_lazy.py` — `LazyComponentTable`, единственная реализация протокола: ленивый кэш оценок пар «семейство × кластер», группы одинаковых семейств, средние кластеров и сборка смеси;
-  - `_pair.py` — чистая функция `evaluate_pair`: оценка одной пары и все её проверки, см. «Оценка пары»;
-  - `_validation.py` — чистые функции проверок: `validate_partition`, `validate_permutation` и предикаты порогов из «Вырожденных кластеров».
+| Модуль | Содержимое |
+| --- | --- |
+| `__init__.py` | Фасад: публичные классы и ошибки |
+| `initializer.py` | Абстрактный `Initializer`: общий `initialize` с проверками входа и результата, абстрактный `_initialize` |
+| `exceptions.py` | `InitializationError` (наследник `Exception`) и его наследник `ComponentEstimationError`, см. «Ошибки» |
+| `cluster_initializer.py` | `ClusterInitializer`: «разбиение → сопоставление → оценка» |
+| `multi_start.py` | `MultiStartInitializer`: мультистарт поверх любого `Initializer` |
+| `refining.py` | `RefiningInitializer`: старт, доведённый оценщиком смеси |
+| `cluster/partitioners/` | `Partitioner` и `KMeansPartitioner`, `SklearnPartitioner`, `QuantilePartitioner`, `RandomCentersPartitioner`, см. [«Разбиение»](partitioners/partitioners.md) |
+| `cluster/component_estimators/` | `ComponentEstimator`, `MLEComponentEstimator`, позже `MomentsComponentEstimator` и `ComponentEstimatorChain`; `_dispatch.py` — диспетчер формул по ключу семейства, см. {ref}`«Реестр формул» <init-formula-registry>` |
+| `cluster/matchers/` | `Matcher` с шаблонным `match`, `HungarianMatcher`, `IdentityMatcher`, позже `ExhaustiveMatcher`; `_matching.py` — чистые `solve_assignment(cost)` (см. {ref}`«Критерий по парам» <init-hungarian>`) и `order_identical(assignment, groups, means)` (см. {ref}`«Порядок одинаковых семейств» <init-order-identical>`) |
+| `cluster/table.py` | Публичный протокол `ComponentTable` — всё, что видит сопоставитель, см. «Таблица компонент» |
+| `cluster/_table/_lazy.py` | `LazyComponentTable` — единственная реализация протокола: ленивый кэш пар, группы одинаковых семейств, средние кластеров, сборка смеси |
+| `cluster/_table/_pair.py` | Чистая `evaluate_pair`: оценка одной пары со всеми проверками, см. «Оценка пары» |
+| `cluster/_table/_validation.py` | Чистые проверки: `validate_partition`, `validate_permutation`, предикаты порогов из «Вырожденных кластеров» |
 
-Вне модуля, в `core/_components.py`, добавляются четыре функции:
+В `core/_components.py` добавляются четыре функции. Им место в `core`: фиксированные параметры есть только у `PartialParametricFamily`, а он не экспортируется из `pysatl_core.families`, и все обращения к внутренностям `pysatl-core` живут там.
 
 - `family_key(family)` — ключ «имя, параметризация, отсортированные фиксированные параметры»;
-- `family_fixed_parameters(family)` — фиксированные параметры семейства. Существующая `fixed_parameters(component)` становится её частным случаем;
-- `family_free_parameter_names(family)` — имена свободных параметров; по ним `evaluate_pair` сверяет ответ оценщика компоненты;
-- `component_family_key(component)` — ключ семейства, из которого создана компонента, `family_key(_family(component))`; по нему общий `initialize` проверяет порядок компонент результата.
+- `family_fixed_parameters(family)` — фиксированные параметры; `fixed_parameters(component)` становится её частным случаем;
+- `family_free_parameter_names(family)` — имена свободных параметров, по ним `evaluate_pair` сверяет ответ оценщика;
+- `component_family_key(component)` — `family_key` семейства компоненты, по нему общий `initialize` проверяет порядок результата.
 
-Им место в `core`: фиксированные параметры есть только у `PartialParametricFamily`, а он не экспортируется из `pysatl_core.families`. Поэтому, как и остальные обращения к внутренностям `pysatl-core`, они живут только там (см. `core`).
-
-В приватных модулях `core` живут и общие для `initializers` и `estimators` вещи: функция, которая находит точки выборки, не покрытые ни одной компонентой смеси ([#53](https://github.com/PySATL/pysatl-mpest/issues/53)), и константа `NUMERICAL_TOLERANCE` порога M-шага: её берут и стратегии M-шага в `estimators`, и временная проверка в `evaluate_pair` ([#47](https://github.com/PySATL/pysatl-mpest/issues/47)).
+Ещё в приватных модулях `core` — общие с `estimators` функция поиска точек выборки, не покрытых смесью ([#53](https://github.com/PySATL/pysatl-mpest/issues/53)), и константа `NUMERICAL_TOLERANCE` порога M-шага ([#47](https://github.com/PySATL/pysatl-mpest/issues/47)).
 
 (init-first-version)=
 ### Первая версия
 
-В `pysatl-core` 0.1.0a0 три семейства: `Normal`, `ContinuousUniform` и `Exponential`. У всех трёх есть MLE в явном виде, а у `Normal` и `Exponential` он совпадает с методом моментов. Поэтому часть проекта сейчас нечем проверить интеграционно, без дублей:
-
-- `MomentsComponentEstimator` отличается от `MLEComponentEstimator` только на `ContinuousUniform`, и там он хуже;
-- `ComponentEstimatorChain([MLEComponentEstimator(), MomentsComponentEstimator()])` никогда не дойдёт до второго звена;
-- что `ExhaustiveMatcher` даёт сверх `HungarianMatcher`, на трёх семействах не видно.
+В `pysatl-core` 0.1.0a0 три семейства — `Normal`, `ContinuousUniform`, `Exponential`, — и у всех MLE в явном виде, у `Normal` и `Exponential` совпадающий с методом моментов. На них нельзя проверить без дублей, что дают `MomentsComponentEstimator`, `ComponentEstimatorChain` и `ExhaustiveMatcher`, поэтому они отложены.
 
 | Часть | Первая версия | Позже |
 | --- | --- | --- |
 | Инициализаторы и таблица | `ClusterInitializer`, `MultiStartInitializer`, `RefiningInitializer`, `ComponentTable`, `LazyComponentTable` | — |
 | Способы разбиения | `KMeansPartitioner`, `QuantilePartitioner`, `RandomCentersPartitioner`, `SklearnPartitioner` | — |
-| Оценщики компоненты | `MLEComponentEstimator` с формулами для трёх семейств | `MomentsComponentEstimator` и `ComponentEstimatorChain` — с первым семейством, у которого MLE не сводится к явным формулам и поиску одного корня, а метод моментов сводится (например, GEV: форма по асимметрии). У `Gamma` и `Weibull` MLE сводится к поиску одного корня, им хватит `MLEComponentEstimator`. Это закрывает требование INIT-05, которое сейчас ждёт новых семейств в `pysatl-core` |
+| Оценщики компоненты | `MLEComponentEstimator` с формулами для трёх семейств | `MomentsComponentEstimator` и `ComponentEstimatorChain` — с первым семейством, у которого MLE не сводится к явным формулам и одному корню, а моменты сводятся (например, GEV). `Gamma` и `Weibull` хватит `MLEComponentEstimator`. Закрывает INIT-05 |
 | Сопоставители | `HungarianMatcher`, `IdentityMatcher` | `ExhaustiveMatcher` — с первым примером, где `HungarianMatcher` выбирает плохую раздачу |
 
-На диаграмме классов отложенные классы остаются, чтобы было видно, куда они встанут.
+Отложенные классы остаются на диаграмме, чтобы было видно, куда они встанут.
 
 ## Диаграмма классов
 
 [Исходник диаграммы классов](diagrams/initializers.drawio "Overview")
 
-- `Initializer` — минимальный интерфейс. Публичный `initialize(X, families, random_state=None) -> MixtureModel` у него один на все реализации и помечен `@final`: он приводит `X`, делает общие проверки, создаёт генератор, вызывает абстрактный `_initialize(X, families, rng)` и проверяет результат. Реализации пишут только `_initialize`. Схема «кластеры → оценка» — одна из реализаций, а не обязательная для всех.
-- `ClusterInitializer` — единственный кластерный инициализатор с тремя заменяемыми ролями. Фасадов под отдельные способы разбиения нет: разные способы — это разные `Partitioner`. k-means без новых зависимостей даёт `KMeansPartitioner`, а любой кластеризатор scikit-learn подключается через один `SklearnPartitioner`.
-- `MultiStartInitializer` — тоже `Initializer` и содержит другой `Initializer`. Это обёртка: она работает с любым инициализатором, а не только с кластерным.
-- `RefiningInitializer` — такая же обёртка, но вокруг одного запуска: старт от вложенного `Initializer` она доводит оценщиком смеси `BaseEstimator` из `estimators`. Это единственная связь модуля с `estimators`, на рисунке — пунктирная зависимость от пакета.
-- Роли `ClusterInitializer` получает в конструкторе и не владеет ими: один объект роли можно отдать нескольким инициализаторам. Поэтому на рисунке это агрегация, а не композиция.
-- Под каждой ролью — её реализации с аргументами конструктора; у реализаций без полей аргументов нет. `SklearnPartitioner` принимает кластеризатор типа `ClusterMixin` — базового класса кластеризаторов scikit-learn.
-- `ComponentEstimatorChain` сам является `ComponentEstimator` и содержит список других оценщиков компоненты `estimators`.
-- `Matcher` устроен так же: `match(table)` помечен `@final`, вызывает абстрактный `_match(table)` и затем хук `_order`, который упорядочивает одинаковые семейства. `IdentityMatcher` переопределяет только хук.
-- `ComponentTable` — протокол, кружок на рисунке у `LazyComponentTable`. От него зависит `Matcher`, и только от него: сопоставители, в том числе пользовательские, не видят ни `X`, ни `H`, ни оценщика компоненты.
-- `LazyComponentTable` создаёт `ClusterInitializer` на каждый вызов `initialize` и передаёт её в `Matcher.match`. Таблица живёт один вызов `initialize`: новое разбиение — новая таблица.
-- Оценщик компоненты таблица получает в конструкторе от `ClusterInitializer` и хранит в приватном поле `component_estimator` (агрегация на рисунке). Вызывает его только она, поэтому ни сопоставитель, ни сборка смеси к `ComponentEstimator` напрямую не обращаются.
+- **`Initializer`** — минимальный интерфейс: `@final` `initialize(X, families, random_state=None)` приводит `X`, проверяет вход, создаёт генератор, вызывает абстрактный `_initialize(X, families, rng)` и проверяет результат. Кластерная схема — одна из реализаций.
+- **`ClusterInitializer`** — единственный кластерный инициализатор с тремя заменяемыми ролями. Фасадов под способы разбиения нет: другой способ — другой `Partitioner`.
+- **`MultiStartInitializer` и `RefiningInitializer`** — обёртки над любым `Initializer`. `RefiningInitializer` доводит старт оценщиком смеси `BaseEstimator`; это единственная связь с `estimators` (пунктир на рисунке).
+- **Роли — агрегация:** `ClusterInitializer` получает их в конструкторе и не владеет ими, один объект роли можно отдать нескольким инициализаторам. `ComponentEstimatorChain` сам `ComponentEstimator` и содержит список оценщиков.
+- **`Matcher`** устроен как `Initializer`: `@final` `match(table)` вызывает `_match(table)` и хук `_order`. `IdentityMatcher` переопределяет только хук.
+- **`ComponentTable`** — протокол (кружок у `LazyComponentTable`). `Matcher` зависит только от него и не видит ни `X`, ни `H`, ни оценщика компоненты.
+- **`LazyComponentTable`** создаётся на каждый вызов `initialize` и хранит оценщик компоненты в приватном поле; вызывает оценщик только она.
 
-Роли `ClusterInitializer` и их значения по умолчанию:
-
-| Роль | По умолчанию |
+| Роль `ClusterInitializer` | По умолчанию |
 | --- | --- |
-| `Partitioner` | Нет, передаётся явно: способ разбиения сильнее всего влияет на результат, и пользователь выбирает его сам |
-| `ComponentEstimator` | `MLEComponentEstimator()`. Когда появится `ComponentEstimatorChain` — `ComponentEstimatorChain([MLEComponentEstimator(), MomentsComponentEstimator()])` |
+| `Partitioner` | Нет, передаётся явно: способ разбиения сильнее всего влияет на результат |
+| `ComponentEstimator` | `MLEComponentEstimator()`; с появлением цепочки — `ComponentEstimatorChain([MLEComponentEstimator(), MomentsComponentEstimator()])` |
 | `Matcher` | `HungarianMatcher` |
 
-На рисунке сознательно не проведены:
-
-- зависимость `Matcher` от протокола `ComponentTable`, видная из сигнатуры `match`;
-- приватные модули функций `_matching`, `_pair`, `_dispatch` и `_validation`: их зовут `Matcher`, `LazyComponentTable`, способы оценки и `ClusterInitializer`, а на рисунке они не дали бы ничего, кроме лишних стрелок;
-- использование `core._components` в `Initializer`, `_pair` и `_dispatch`;
-- сборка компоненты `family.distribution(**free)` в `_pair`, то есть её зависимость от `ParametricFamily`;
-- вызов `scipy.cluster.vq.kmeans2` из `KMeansPartitioner`;
-- вызов `scipy.optimize.linear_sum_assignment` из `_matching`: он показан на схеме сопоставления.
+На рисунке сознательно нет: зависимости `Matcher` от `ComponentTable` (видна из сигнатуры), приватных модулей функций (`_matching`, `_pair`, `_dispatch`, `_validation`), обращений к `core._components`, сборки `family.distribution(**free)` в `_pair` и вызовов `kmeans2` и `linear_sum_assignment` (последний — на схеме сопоставления).
 
 ## Устройство
 
@@ -189,236 +167,211 @@ initializers/
 
 [Исходник схемы вызовов](diagrams/initializers.drawio "Sequence: initialize")
 
-`Initializer.initialize(X, families, random_state)` общий для всех инициализаторов и помечен `@final`:
+`Initializer.initialize(X, families, random_state)`, общий и `@final`:
 
-1. Приводит `X` к `UnivariateFloatArray` и проверяет то, без чего не работает никакой инициализатор: `families` не пуст, `X` одномерный, все его значения конечны (без `NaN` и $\pm\infty$), `n >= k`. Иначе `ValueError`.
-2. Создаёт генератор `rng = np.random.default_rng(random_state)`, см. «Случайность».
+1. Приводит `X` к `UnivariateFloatArray` и проверяет: `families` не пуст, `X` одномерный, значения конечны, `n >= k`. Иначе `ValueError`.
+2. Создаёт `rng = np.random.default_rng(random_state)`, см. «Случайность».
 3. Вызывает `self._initialize(X, families, rng)`.
-4. **Проверяет результат**, см. ниже, и возвращает смесь.
+4. Проверяет результат (см. ниже) и возвращает смесь.
 
-`ClusterInitializer._initialize(X, families, rng)` выполняет пять действий, где `k = len(families)`:
+`ClusterInitializer._initialize(X, families, rng)`, где `k = len(families)`:
 
-1. **Проверка входа** — всё, что ещё можно проверить до разбиения, см. ниже.
-2. **Разбиение.** `Partitioner.partition(X, k, rng)` возвращает матрицу `H` размера `(n, k)`; столбец `H` — один кластер. `validate_partition(H, k)` проверяет структуру и приводит `H` к `MultivariateFloatArray`, затем проверяется размер кластеров, см. «Вырожденные кластеры». Порядок столбцов не меняется.
+1. **Проверка входа** (см. ниже).
+2. **Разбиение.** `Partitioner.partition(X, k, rng)` возвращает `H` размера `(n, k)`, столбец — кластер. `validate_partition(H, k)` проверяет структуру и приводит `H` к `MultivariateFloatArray`, затем проверяется размер кластеров, см. «Вырожденные кластеры». Порядок столбцов не меняется.
 3. **Таблица.** Создаётся пустая `LazyComponentTable(X, H, families, component_estimator)`.
-4. **Сопоставление.** `Matcher.match(table)` возвращает перестановку `assignment`: элемент `families[j]` получает столбец `H[:, assignment[j]]`. Одинаковые семейства в ней уже упорядочены хуком `_order` сопоставителя. `validate_permutation(assignment, k)` проверяет, что это действительно перестановка.
-5. **Сборка.** `table.mixture(assignment)` берёт компоненты из таблицы, считает веса и собирает `MixtureModel`.
-
-Сборка показана отдельно:
+4. **Сопоставление.** `Matcher.match(table)` возвращает перестановку `assignment`: `families[j]` получает столбец `H[:, assignment[j]]`, одинаковые семейства уже упорядочены. `validate_permutation(assignment, k)` проверяет, что это перестановка.
+5. **Сборка.** `table.mixture(assignment)` берёт компоненты из таблицы, считает веса и собирает `MixtureModel`. Пары, которые сопоставитель уже запрашивал, повторно не оцениваются; остальные (с `IdentityMatcher` или с `HungarianMatcher` при одинаковых семействах) оцениваются здесь.
 
 [Исходник схемы сборки смеси](diagrams/initializers.drawio "Sequence: assembly")
 
-**Проверка входа.** Чтобы кластеризация, самая дорогая часть, не запускалась зря, до разбиения `ClusterInitializer` проверяет то, что зависит от его устройства:
+**Проверка входа.** До разбиения, самой дорогой части, `ClusterInitializer` проверяет: `n >= k · min_cluster_size`; различных значений в выборке не меньше `k`; `component_estimator.supports(family)` для каждого семейства. Иначе `ValueError`, для неподдерживаемых семейств — `NotImplementedError` со списком всех таких семейств.
 
-- `n >= k · min_cluster_size`, иначе ни одно разбиение не пройдёт порог размера;
-- различных значений в выборке не меньше `k`;
-- `component_estimator.supports(family)` истинно для каждого семейства.
+**Проверка перестановки.** `assignment` — перестановка `0…k−1`: длина `k`, целые, различные, в диапазоне. Иначе `ValueError` с полученным значением, например «Matcher вернул не перестановку длины 3: [0, 0, 1]», а не `IndexError` где-то в таблице.
 
-Иначе `ValueError`, а для неподдерживаемых семейств — `NotImplementedError` со списком всех таких семейств, а не только первого.
+**Проверка результата** — в общем `initialize`, поэтому гарантия «с этой смесью EM стартует» действует для любого инициализатора, в том числе пользовательского:
 
-**Проверка перестановки.** `assignment` должен быть перестановкой чисел `0…k−1`: длина `k`, числа целые, различные, каждое в диапазоне. Иначе `ValueError` с полученным значением, например «Matcher вернул не перестановку длины 3: [0, 0, 1]». Без проверки ошибка всплыла бы далеко от причины: `IndexError` в таблице или `ValueError` о сумме весов из `MixtureModel`.
+- в смеси `k` компонент, и `component_family_key(component) == family_key(families[j])`. Иначе `ValueError`: это ошибка в коде, мультистарт её не глотает;
+- `loglikelihood(X)` конечен. Иначе `InitializationError` с примерами непокрытых точек; их находит та же функция из `core`, что проверяет пользовательский старт в `Pipeline.fit` ([#53](https://github.com/PySATL/pysatl-mpest/issues/53)). Другое разбиение может пройти, поэтому мультистарт такой запуск пропускает и сравнивает только конечные значения.
 
-**Повторной оценки при сборке нет**, если сопоставитель эту пару уже запрашивал. Иначе таблица оценивает её сейчас. Так бывает с `IdentityMatcher` и с `HungarianMatcher`, когда все семейства одинаковые и он к таблице не обращается.
+У `ClusterInitializer` бесконечное правдоподобие бывает, только когда раздачу выбрали без $\ell_{jc}$: с `IdentityMatcher` и с `HungarianMatcher` при одинаковых семействах. Пример: у `[expon, expon]` кластер `{−1, 5}` оценивается (`lambda_ = 0.5`), но точку −1 не покрывает ни одна компонента. Если её покрывает соседняя компонента, смесь годна: EM отдаст точку ей.
 
-**Проверка результата.** Её делает общий `Initializer.initialize` для любого инициализатора, в том числе пользовательского, поэтому гарантия «с этой смесью EM стартует» действует для всех:
-
-- В смеси `k` компонент, и компонента `j` — из семейства `families[j]`: `component_family_key(component) == family_key(families[j])`. Иначе `ValueError`: это ошибка в коде инициализатора, и мультистарт её не глотает.
-- `loglikelihood(X)` смеси конечен. Иначе `InitializationError` с примерами точек, которые не покрывает ни одна компонента; эти точки находит общая функция из `core`, та же, которой `Pipeline.fit` проверяет пользовательский старт ([#53](https://github.com/PySATL/pysatl-mpest/issues/53)): другое разбиение может пройти, и мультистарт такой запуск пропускает. Заодно мультистарт сравнивает только конечные значения: смесь с $-\infty$ или `NaN` до него не доходит.
-
-У `ClusterInitializer` бесконечное правдоподобие бывает, только когда раздачу выбрали, не глядя на $\ell_{jc}$: с `IdentityMatcher` и с `HungarianMatcher` при одинаковых семействах. Например, у `[expon, expon]` кластер `{−1, 5}` оценивается (`lambda_ = 0.5`), но не покрывает свою точку −1, а другая компонента её тоже не покрывает. Если же точку вне носителя покрывает соседняя компонента, смесь годна: EM отдаст точку той компоненте, см. «Оценка пары».
-
-**Состояние.** Изменяемого состояния вроде `PipelineState` нет: между стадиями передаются только `H`, таблица и `assignment`. Таблица меняется только как кэш: она запоминает уже посчитанные пары, и от порядка запросов её ответы не зависят. Порядок стадий фиксирован, поэтому `ClusterInitializer` принимает роли по имени, а не список шагов, как `Pipeline`.
+**Состояния нет.** Между стадиями передаются только `H`, таблица и `assignment`; таблица меняется только как кэш, и её ответы не зависят от порядка запросов. Порядок стадий фиксирован, поэтому роли передаются по имени, а не списком шагов, как в `Pipeline`.
 
 ### Роли
 
-Действия 2 и 4 выполняют заменяемые роли, а оценщик компоненты вызывается только из таблицы. Каждая роль разобрана на своей подстранице:
+Действия 2 и 4 выполняют заменяемые роли; оценщик компоненты вызывается только из таблицы.
 
 | Роль | Что делает | Подробно |
 | --- | --- | --- |
-| `Partitioner` | Разбивает выборку на `k` кластеров и возвращает матрицу `H` | [«Разбиение»](partitioners/partitioners.md) |
+| `Partitioner` | Разбивает выборку на `k` кластеров, возвращает `H` | [«Разбиение»](partitioners/partitioners.md) |
 | `Matcher` | Решает, какой кластер достаётся какому семейству | [«Сопоставление кластеров и семейств»](matchers/matchers.md) |
-| `ComponentEstimator` | Оценивает свободные параметры компоненты по точкам кластера | [«Оценка параметров компоненты»](component_estimators/component_estimators.md) |
+| `ComponentEstimator` | Оценивает свободные параметры компоненты по кластеру | [«Оценка параметров компоненты»](component_estimators/component_estimators.md) |
 
 (init-component-table)=
 ### Таблица компонент
 
-`ComponentTable` — протокол: всё, что сопоставитель может спросить у таблицы. Сопоставители, в том числе пользовательские, пользуются только им, а юнит-тесты сопоставителей подставляют маленькую поддельную таблицу.
+`ComponentTable` — протокол: всё, что сопоставитель может спросить у таблицы. Пользовательские сопоставители пользуются только им, юнит-тесты подставляют поддельную таблицу.
 
 | Член | Что возвращает |
 | --- | --- |
 | `k` (свойство) | Число семейств, оно же число кластеров |
 | `groups()` | Группы одинаковых семейств, `tuple[tuple[int, ...], ...]`, см. «Одинаковые семейства» |
 | `cluster_means()` | Средние кластеров по столбцам `H` |
-| `loglikelihood(j, c)` | $\ell_{jc}$ — логарифм правдоподобия кластера $c$ при компоненте семейства `families[j]`, оценённой на этом кластере; конечное число или $-\infty$ |
-| `failure(j, c)` | Причина, по которой $\ell_{jc}$ не конечен, или `None`, если конечен |
+| `loglikelihood(j, c)` | $\ell_{jc}$ — логарифм правдоподобия кластера $c$ при компоненте семейства `families[j]`, оценённой на нём; конечное число или $-\infty$ |
+| `failure(j, c)` | Причина, по которой $\ell_{jc}$ не конечен, или `None` |
 
-Протокол можно расширять: таблицу создаёт только `ClusterInitializer`, а пользователи пишут сопоставители, а не таблицы, поэтому новый метод ничьего кода не сломает. Так `ExhaustiveMatcher` добавит `mixture_loglikelihood(assignment)`.
+- **Протокол можно расширять:** таблицу создаёт только `ClusterInitializer`, пользователи пишут сопоставители, а не таблицы. Так `ExhaustiveMatcher` добавит `mixture_loglikelihood(assignment)`.
+- **`component(j, c)` и `mixture(assignment)` — методы `LazyComponentTable`, а не протокола:** их зовёт только `ClusterInitializer`, сопоставителю собирать компоненты незачем.
 
-`component(j, c)` и `mixture(assignment)` — методы `LazyComponentTable`, а не протокола: их вызывает только `ClusterInitializer`, который сам создал таблицу и знает её класс. Сопоставителю собирать компоненты и смеси незачем, и поддельной таблице в тестах их реализовывать не нужно.
+`LazyComponentTable`:
 
-Реализация протокола одна — `LazyComponentTable`:
-
-- **Ленивая.** Пару она оценивает при первом запросе функцией `evaluate_pair` и запоминает результат. Одинаковые семейства делят записи, поэтому при $d$ различных семействах оценок не больше $d \cdot k$, а не $k^2$.
-- **Значения нормализованы.** `loglikelihood` — конечное число или $-\infty$. `NaN` и $+\infty$, откуда бы они ни пришли, записываются как $-\infty$. Сопоставителям других значений проверять не нужно.
-- **Смесь собирает она.** `mixture(assignment)` — единственное место, где считаются веса и создаётся `MixtureModel`. Компоненты она берёт через `component`, поэтому выбранная пара без компоненты прерывает сборку `ComponentEstimationError`.
+- **ленивая:** пару оценивает при первом запросе через `evaluate_pair` и запоминает; одинаковые семейства делят записи, поэтому оценок не больше $d \cdot k$ при $d$ различных семействах, а не $k^2$;
+- **нормализует значения:** `NaN` и $+\infty$ в `loglikelihood` записываются как $-\infty$;
+- **собирает смесь:** `mixture(assignment)` — единственное место, где считаются веса и создаётся `MixtureModel`; выбранная пара без компоненты прерывает сборку `ComponentEstimationError`.
 
 (init-pair-states)=
 #### Состояния пары
 
-У пары «семейство — кластер» три состояния:
+| Состояние | Компонента | $\ell_{jc}$ | `failure` | `component` |
+| --- | --- | --- | --- | --- |
+| Оценена | есть | конечен | `None` | компонента |
+| Не покрывает кластер | есть | $-\infty$ (в том числе из `NaN` и $+\infty$) | «1 точка кластера вне носителя, например −1.0» | компонента |
+| Не оценена | нет | $-\infty$ | причина проверки | новый `ComponentEstimationError` с причиной |
 
-- **Оценена.** Компонента есть, $\ell_{jc}$ конечен. `failure` возвращает `None`, `component` — компоненту.
-- **Не покрывает кластер.** Компонента есть, но часть точек кластера лежит вне её носителя, и $\ell_{jc} = -\infty$; сюда же попадает $\ell_{jc}$, равный `NaN` или $+\infty$. Пример: `Exponential(0.5)` по кластеру `{−1, 5}` — допустимая компонента, не подходит ей только точка −1. `failure` возвращает причину вида «1 точка кластера вне носителя, например −1.0», `component` — компоненту.
-- **Не оценена.** Компоненты нет: не прошла одна из проверок «Оценки пары», например `Exponential` на кластере со средним −2 даёт `lambda_ < 0`. $\ell_{jc} = -\infty$, `failure` возвращает причину проверки, `component` каждый раз бросает новый `ComponentEstimationError` с ней, не вызывая оценщик компоненты повторно. Объект исключения таблица не хранит: при повторном `raise` он копил бы кадры в `__traceback__` и держал бы ссылки на `X` и `H`.
+- Пример «не покрывает»: `Exponential(0.5)` по кластеру `{−1, 5}`. Пример «не оценена»: `Exponential` на кластере со средним −2 даёт `lambda_ < 0`.
+- `failure(j, c)` — `None` тогда и только тогда, когда $\ell_{jc}$ конечен.
+- У «не оценена» `component` каждый раз бросает новое исключение, не вызывая оценщик повторно. Объект исключения не хранится: при повторном `raise` он копил бы кадры в `__traceback__` и держал ссылки на `X` и `H`.
+- Причина хранится без номеров; префикс «семейство 2 (`Exponential`), кластер 1:» дописывается при чтении, потому что одну запись делят одинаковые семейства с разными номерами.
 
-`failure(j, c)` возвращает `None` тогда и только тогда, когда $\ell_{jc}$ конечен. Причина хранится без номеров, а префикс «семейство 2 (`Exponential`), кластер 1:» таблица дописывает при чтении: одну запись делят одинаковые семейства с разными номерами.
-
-Как два последних состояния понимают сопоставители, см. {ref}`«Невозможные пары» <init-impossible-pairs>`: `HungarianMatcher` запрещает оба, а `IdentityMatcher` пропускает пару «не покрывает кластер» и оставляют решение проверке результата.
+`HungarianMatcher` запрещает оба последних состояния, `IdentityMatcher` пропускает «не покрывает кластер» и оставляет решение проверке результата, см. {ref}`«Невозможные пары» <init-impossible-pairs>`.
 
 (init-pair-walk)=
 #### Оценка пары
 
 [Исходник схемы оценки пары](diagrams/initializers.drawio "Sequence: estimate")
 
-Пару «семейство `j`, кластер `c`» оценивает чистая функция `_pair.evaluate_pair(X, h, family, component_estimator, scale)`, где `h = H[:, c]`, а `scale` — $\operatorname{std}(X)$, который таблица считает один раз. О кэше и номерах она ничего не знает, поэтому её проверки тестируются на литералах с дублем оценщика компоненты, а пороги — ровно на границе. Возвращает `PairEvaluation(component, loglikelihood, reason)`, где `component` — `None` у пары «не оценена».
+Пару «семейство `j`, кластер `c`» оценивает чистая `_pair.evaluate_pair(X, h, family, component_estimator, scale)`, где `h = H[:, c]`, `scale` = $\operatorname{std}(X)$ (таблица считает его один раз). О кэше и номерах она не знает, поэтому тестируется на литералах, пороги — ровно на границе. Возвращает `PairEvaluation(component, loglikelihood, reason)`, `component` — `None` у пары «не оценена».
 
-1. Вызывает `component_estimator.estimate(X, h, family)` и получает словарь свободных параметров `free`. `NotImplementedError` и ошибки в коде проходят насквозь, `ComponentEstimationError` делает пару не оценённой.
-2. **Сверяет ключи:** `set(free)` должно совпадать с `_components.family_free_parameter_names(family)`. Не совпало — значит, ошибка в оценщике или формуле, например возвращён фиксированный параметр: `TypeError`, пара в состояние не переводится. После этой проверки фиксированный параметр в `pysatl-core` попасть не может.
-3. **Проверяет достаточность данных:** различных значений среди точек кластера не меньше, чем свободных параметров, см. «Достаточность данных».
-4. **Проверяет, что значения — вещественные скаляры, приводит их к `float` и проверяет, что они конечны.** `pysatl-core` значения параметров не проверяет, только объявленные ограничения параметризации ([pysatl-core#158](https://github.com/PySATL/pysatl-core/issues/158)). Он создаёт `Normal(mu="a")`, `Normal(mu=np.array([1.0, 2.0]))` (тогда `pdf` в одной точке молча возвращает два значения), `Normal(mu=nan)` и `Exponential(lambda_=inf)`. Поэтому значение, которое не `int`, `float`, `np.integer` или `np.floating`, — `TypeError`: ошибка в оценщике, в том числе массив из одного элемента. Числа numpy, в том числе `np.float32`, приводятся к `float`, чтобы в компоненту не попал тип меньшей точности. Неконечное значение делает пару не оценённой.
-5. **Собирает компоненту** `family.distribution(**free)`. Благодаря действию 2 `ValueError` здесь означает только нарушенное ограничение параметризации, например `lambda_ < 0`, и делает пару не оценённой.
-6. **Проверяет ширину компоненты** по квартилям, см. «Численная вырожденность».
-7. **Временно проверяет пороги M-шага** у `Normal` и `Exponential`, см. там же.
-8. **Считает $\ell_{jc}$** по точкам кластера (`h > 0`). Если он не конечен, пара не покрывает кластер: компонента сохраняется, а причина называет точки вне носителя.
+1. `component_estimator.estimate(X, h, family)` возвращает словарь свободных параметров `free`. `ComponentEstimationError` делает пару не оценённой; `NotImplementedError` и ошибки в коде проходят насквозь.
+2. **Ключи:** `set(free)` совпадает с `_components.family_free_parameter_names(family)`, иначе `TypeError` (ошибка в оценщике, например возвращён фиксированный параметр).
+3. **Достаточность данных:** различных значений в кластере не меньше, чем свободных параметров, см. «Достаточность данных».
+4. **Значения:** каждое — `int`, `float`, `np.integer` или `np.floating`, иначе `TypeError` (в том числе массив из одного элемента); приводится к `float`, чтобы не попал `np.float32`; неконечное делает пару не оценённой. Это нужно потому, что `pysatl-core` проверяет только ограничения параметризации и создаёт `Normal(mu="a")`, `Normal(mu=nan)`, `Normal(mu=np.array([1.0, 2.0]))` ([pysatl-core#158](https://github.com/PySATL/pysatl-core/issues/158)).
+5. **Сборка** `family.distribution(**free)`. После шага 2 `ValueError` здесь означает только нарушенное ограничение параметризации (`lambda_ < 0`) и делает пару не оценённой.
+6. **Ширина компоненты** по квартилям, см. «Численная вырожденность».
+7. **Временно — пороги M-шага** у `Normal` и `Exponential`, см. там же.
+8. **$\ell_{jc}$** по точкам кластера (`h > 0`). Не конечен — пара не покрывает кластер: компонента сохраняется, причина называет точки вне носителя.
 
-Если не прошла проверка 3–7, пара не оценена с причиной от этой проверки. Проверки одинаковы для любого оценщика компоненты, поэтому свой оценщик забыть их не может.
+Шаги 3–7 переводят пару в «не оценена» с причиной этой проверки. Проверки одинаковы для любого оценщика, поэтому свой оценщик забыть их не может.
 
-**У пары «не покрывает кластер» параметры — не MLE.** Если в кластере есть точка вне носителя, правдоподобие кластера равно нулю при любых параметрах, и максимума нет. Формула выдаёт подстановочное значение, в котором такая точка учтена с весом 1: у `Exponential` по кластеру `{−1, 5}` `lambda_ = 1/2` вместо `1/5`. EM это исправляет на первой итерации: E-шаг даёт точке у этой компоненты ответственность 0 и делит её между компонентами, которые её покрывают, пропорционально $\pi_l f_l(x)$, а M-шаг пересчитывает параметр уже без неё. Оценка только по точкам внутри носителя — см. «Отложено».
+**У пары «не покрывает кластер» параметры — не MLE:** с точкой вне носителя правдоподобие кластера равно нулю при любых параметрах. Формула учитывает такую точку с весом 1: у `Exponential` по `{−1, 5}` `lambda_ = 1/2` вместо `1/5`. EM исправляет это на первой итерации: E-шаг даёт точке ответственность 0, M-шаг пересчитывает параметр без неё. Оценка только по точкам внутри носителя — см. «Отложено».
 
 (init-identical-families)=
 #### Одинаковые семейства
 
-- Ключ семейства — тройка «имя семейства, параметризация, фиксированные параметры», `_components.family_key(family)`. Два `Normal` с фиксированными `mu=0` и `mu=5` — разные семейства, и сопоставление для них нужно.
-- Группы одинаковых семейств считает только таблица и отдаёт методом `groups()` — кортежем групп индексов в `families`, в порядке первого вхождения. Кортежи неизменяемы, поэтому сопоставитель не может испортить кэш таблицы.
-- Сопоставители и `ClusterInitializer` свои ключи не считают. Если бы таблица и группировка считали одинаковость по-разному, `normal.view(mu=0)` мог бы получить из общей записи компоненту, оценённую как свободный `normal`.
+- Ключ семейства — «имя, параметризация, фиксированные параметры», `_components.family_key(family)`. `Normal` с `mu=0` и с `mu=5` — разные семейства.
+- Группы считает только таблица и отдаёт `groups()` — кортежами индексов в порядке первого вхождения; кортежи неизменяемы, сопоставитель не испортит кэш.
+- Свои ключи никто больше не считает: при расхождении `normal.view(mu=0)` мог бы получить из общей записи компоненту свободного `normal`.
 
 (init-randomness)=
 ### Случайность
 
-Случайность передаётся аргументом вызова, а не хранится в объектах. `initialize(X, families, random_state=None)` принимает `random_state` — `int`, `np.random.Generator` или `None`, как `MixtureModel.generate`. Генератор `rng` из него создаёт общий `Initializer.initialize`, поэтому все инициализаторы обращаются с `random_state` одинаково. `ClusterInitializer` передаёт `rng` в `partition(X, k, rng)`. Ни у одной роли нет поля со своим генератором, поэтому:
+Случайность — аргумент вызова, а не поле объекта. `initialize` принимает `random_state` — `int`, `np.random.Generator` или `None`, как `MixtureModel.generate`. Генератор `rng` создаёт общий `initialize`, `ClusterInitializer` передаёт его в `partition(X, k, rng)`. Своего генератора нет ни у одной роли.
 
 | `random_state` | Поведение |
 | --- | --- |
-| Целое число | Одинаковые аргументы дают одинаковую смесь, независимо от того, сколько раз объект вызывали раньше |
-| `np.random.Generator` | Используется на месте, без копии, и сдвигается, как в `generate`: `np.random.default_rng(g)` возвращает сам `g`, а `g.spawn` сдвигает его счётчик потомков. Два вызова с одним объектом генератора дают разные смеси. Ради этого генератор и передают: серия вызовов из одного потока случайности |
-| `None` | Каждый вызов берёт свежую энтропию и не воспроизводится, как в numpy |
+| Целое число | Одинаковые аргументы — одинаковая смесь, сколько бы раз объект ни вызывали раньше |
+| `np.random.Generator` | Используется на месте и сдвигается, как в `generate`; два вызова с одним генератором дают разные смеси |
+| `None` | Свежая энтропия, не воспроизводится |
 
-- Воспроизводимость с целым сидом нужна `structure_selection`: старт для одного числа компонент не зависит от того, перебирались ли до него другие. Для этого каждому числу компонент передаётся свой сид или свой потомок через `spawn`, а не один общий генератор.
-- Детерминированный способ разбиения, например `QuantilePartitioner`, аргумент `rng` не использует.
-
-Кластеризаторы scikit-learn генератор не принимают, поэтому `SklearnPartitioner` переводит `rng` в целый сид, см. {ref}`SklearnPartitioner <init-sklearn-partitioner>`.
+- Воспроизводимость с целым сидом нужна `structure_selection`: каждому числу компонент — свой сид или потомок через `spawn`.
+- Детерминированный способ разбиения (`QuantilePartitioner`) `rng` не использует; `SklearnPartitioner` переводит его в целый сид, см. {ref}`SklearnPartitioner <init-sklearn-partitioner>`.
 
 ### Веса
 
-Вес компоненты $j$ — средняя ответственность её кластера:
+Вес компоненты $j$ — средняя ответственность её кластера, считает `table.mixture(assignment)`; отдельной роли нет:
 
 $$
 \pi_j = \frac{1}{n} \sum_{i=1}^{n} \gamma_{i\sigma(j)}.
 $$
 
-Правило одно и не зависит от ролей, поэтому отдельной роли для весов нет. Считает веса `table.mixture(assignment)`.
-
 (init-degenerate)=
 ### Вырожденные кластеры
 
-Параметры не удаётся оценить не только по пустому кластеру, но и по любому вырожденному:
-
-- **пустой кластер** — у кластеризатора центр остался без точек;
-- **слишком мало точек** — например, кластер из одной точки;
-- **нет разброса** — кластер целиком из одинаковых или почти одинаковых значений, частый случай при повторах в выборке.
-
-Проверки распределены между участниками так:
+Вырожденный кластер — пустой, со слишком малым числом точек или без разброса (одинаковые или почти одинаковые значения). Проверки распределены так:
 
 | Что проверяется | Кто и когда | Ошибка |
 | --- | --- | --- |
-| Форма `H` — `(n, k)`, значения только 0 и 1, в каждой строке ровно одна единица | `validate_partition` после разбиения | `ValueError`: ошибка в способе разбиения |
-| Пустой кластер | `KMeansPartitioner` при разбиении, для остальных способов — `validate_partition` после него | `InitializationError` |
-| Размер каждого кластера не меньше `min_cluster_size` | `ClusterInitializer` после разбиения, до сопоставления | `InitializationError` |
-| Различных значений в кластере не меньше, чем свободных параметров | `evaluate_pair` при оценке пары | `ComponentEstimationError` |
-| Параметры конечны и допустимы (`NaN`, `sigma = 0`, `lambda_ < 0`) | `evaluate_pair` при оценке пары | `ComponentEstimationError` |
-| Ширина компоненты больше порога | `evaluate_pair` при оценке пары | `ComponentEstimationError` |
-| У `Normal` дисперсия и у `Exponential` среднее больше `NUMERICAL_TOLERANCE` M-шага | `evaluate_pair`, временно | `ComponentEstimationError` |
+| Форма `H` — `(n, k)`, значения 0 и 1, в строке ровно одна единица | `validate_partition` после разбиения | `ValueError` |
+| Пустой кластер | `KMeansPartitioner` при разбиении, иначе `validate_partition` | `InitializationError` |
+| Размер кластера не меньше `min_cluster_size` | `ClusterInitializer` после разбиения | `InitializationError` |
+| Различных значений не меньше, чем свободных параметров | `evaluate_pair` | `ComponentEstimationError` |
+| Параметры конечны и допустимы (`NaN`, `sigma = 0`, `lambda_ < 0`) | `evaluate_pair` | `ComponentEstimationError` |
+| Ширина компоненты больше порога | `evaluate_pair` | `ComponentEstimationError` |
+| Дисперсия `Normal` и среднее `Exponential` больше `NUMERICAL_TOLERANCE` | `evaluate_pair`, временно | `ComponentEstimationError` |
 
-Все пороги — маленькие чистые предикаты в `cluster/_table/_validation.py`, чтобы их можно было проверить тестами ровно на границе.
+Все пороги — чистые предикаты в `cluster/_table/_validation.py`, тестируемые ровно на границе.
 
 #### Структура разбиения
 
-- **Способ разбиения и `ClusterInitializer` проверяют только структуру.** `KMeans` из scikit-learn сам переносит центры опустевших кластеров; `kmeans2` и остальные кластеризаторы этого не делают, и мы их не чиним.
-- **Неверная структура `H` — `ValueError`:** это ошибка в способе разбиения, и другое разбиение её не исправит. Пустой столбец — `InitializationError`.
-- **У `SklearnPartitioner` не бывает** «шумовых» меток (`-1` у `DBSCAN`) и неверного числа кластеров: он принимает только кластеризаторы с `n_clusters`.
-- **Ошибки входа ловятся до разбиения:** это ошибка входа, а не неудачное разбиение, и сразу `ValueError`. `n < k` проверяет общий `Initializer.initialize`, а `n < k · min_cluster_size` и «различных значений в выборке меньше `k`» — `ClusterInitializer`.
+- Способ разбиения и `ClusterInitializer` проверяют только структуру и кластеризаторы не чинят: опустевшие центры переносит только `KMeans` из scikit-learn.
+- Неверная структура `H` — `ValueError` (ошибка в способе разбиения), пустой столбец — `InitializationError`.
+- «Шумовых» меток (`-1` у `DBSCAN`) и неверного числа кластеров у `SklearnPartitioner` не бывает: он принимает только кластеризаторы с `n_clusters`.
+- Ошибки входа — `ValueError` до разбиения: `n < k` проверяет общий `initialize`, `n < k · min_cluster_size` и «различных значений меньше `k`» — `ClusterInitializer`.
 
 #### Достаточность данных
 
-- **Нижнюю границу проверяет `evaluate_pair`,** одинаково для любого оценщика: различных значений в кластере не меньше, чем свободных параметров, иначе условий меньше, чем неизвестных. Например, для `Normal` нужны хотя бы два различных значения, иначе `sigma = 0`.
-- **Сверх неё требования ставит оценщик компоненты.** Сколько данных нужно его формулам, знает только он; способ разбиения не видит ни семейств, ни формул.
-- **Ошибка понятная.** Если данных не хватает, `evaluate_pair` или оценщик компоненты бросают `ComponentEstimationError` с причиной. Если по формулам получились недопустимые параметры (`sigma = 0`, `lambda_ < 0`), это ловит `evaluate_pair` по `ValueError` из `pysatl-core` и тоже переводит в `ComponentEstimationError` с причиной. На шаге сопоставления такая пара просто становится невозможной, см. {ref}`«Невозможные пары» <init-impossible-pairs>`.
-- **Цепочка не передаёт кластер дальше.** В `ComponentEstimatorChain` `ComponentEstimationError` не передаёт кластер следующему способу: иначе одинаковые семейства могли бы оказаться оценены разными способами, а `supports(family)` отвечает только на вопрос, есть ли формулы.
+- **Нижнюю границу проверяет `evaluate_pair`** для любого оценщика: различных значений в кластере не меньше, чем свободных параметров, иначе условий меньше, чем неизвестных. `Normal` нужны два различных значения.
+- **Сверх неё требования ставит оценщик компоненты:** только он знает, сколько данных нужно его формулам.
+- **Ошибка понятная:** недостаток данных и недопустимые параметры (`ValueError` из `pysatl-core`) становятся `ComponentEstimationError` с причиной, и пара становится невозможной, см. {ref}`«Невозможные пары» <init-impossible-pairs>`.
+- **Цепочка не передаёт кластер дальше:** `ComponentEstimationError` в `ComponentEstimatorChain` не отдаёт кластер следующему способу, иначе одинаковые семейства оценивались бы разными способами.
 
 #### Численная вырожденность
 
-Правдоподобие смеси не ограничено сверху. Если поставить компоненту на группу почти совпадающих точек и устремить её масштаб к нулю, плотность на этих точках, а с ней и правдоподобие смеси, растёт без ограничения (Kiefer и Wolfowitz, 1956; McLachlan и Peel, 2000). Такой «максимум» статистического смысла не имеет, поэтому масштаб компоненты принято ограничивать снизу: ограниченная оценка максимального правдоподобия у Hathaway (1985) ограничивает снизу отношение дисперсий компонент, а `GaussianMixture` из scikit-learn прибавляет к дисперсиям `reg_covar = 1e-6`. Ограничение `sigma > 0` у `pysatl-core` от этого не защищает: ровно нулевой масштаб в арифметике с плавающей точкой обычно не получается.
+Правдоподобие смеси не ограничено сверху: компонента на группе почти совпадающих точек с масштабом, стремящимся к нулю, даёт сколь угодно большое правдоподобие (Kiefer и Wolfowitz, 1956; McLachlan и Peel, 2000). Такой «максимум» смысла не имеет, и масштаб компоненты принято ограничивать снизу: так делает ограниченная оценка максимального правдоподобия у Hathaway (1985) и `reg_covar = 1e-6` в `GaussianMixture` из scikit-learn. Ограничение `sigma > 0` в `pysatl-core` не помогает: ровно ноль в арифметике с плавающей точкой обычно не получается.
 
-Инициализатору это ограничение нужно больше, чем EM: он сам выбирает старт по правдоподобию. Так `HungarianMatcher` сравнивает раздачи, а `MultiStartInitializer` — запуски. Вырожденный старт выигрывает любое такое сравнение, и EM из него не уходит: вблизи пика правдоподобие только растёт. Поэтому `evaluate_pair` проверяет, что компонента не слишком узкая по сравнению со всей выборкой. Ширина компоненты — расстояние между её квартилями, на которое приходится средняя половина вероятности:
+Инициализатору ограничение нужнее, чем EM: он сам выбирает старт по правдоподобию (`HungarianMatcher` — раздачу, `MultiStartInitializer` — запуск), и вырожденный старт выигрывает любое сравнение, а EM из него не уходит. Поэтому `evaluate_pair` требует, чтобы ширина компоненты — расстояние между квартилями — была не слишком мала по сравнению с выборкой:
 
 $$
 \operatorname{ppf}(0.75) - \operatorname{ppf}(0.25) > \varepsilon \cdot \operatorname{std}(X), \qquad \varepsilon = 10^{-6}.
 $$
 
-- **Когда срабатывает.** Нужен атом в данных — много почти совпадающих значений: залипший датчик, значение-заглушка вместо пропуска, цензурирование на пороге обнаружения, округление с последующим пересчётом единиц. Ровно одинаковые значения раньше отвергает достаточность данных: различное значение в таком кластере одно. На непрерывных данных без атомов кластер уже порога практически не получается, и проверка ничего не меняет.
-- **Одна формула для всех семейств.** Квартили даёт `calculate_characteristic(PPF, ...)` у любой компоненты `pysatl-core`, поэтому знать, какой параметр у семейства отвечает за масштаб, не нужно. Например, ширина `Normal(0, 2)` — 2.70, `Exponential(0.5)` — 2.20, `ContinuousUniform(0, 4)` — 2.0.
-- **Порог относительный,** поэтому не зависит от единиц измерения.
-- **Справа $\operatorname{std}(X)$, а не размах квартилей выборки:** если больше половины значений выборки совпадают, размах квартилей выборки равен 0, и порог перестал бы ловить вырожденные компоненты.
-- **Значение $\varepsilon$ — соглашение,** того же порядка, что `reg_covar`, а не выведенная величина. Порог отсекает только компоненты, в миллион раз более узкие, чем выборка. Узкие кластеры из нескольких выбросов он пропускает: у выбросов `20.0` и `20.001` `sigma = 0.0005`. От них защищает `min_cluster_size`, см. «Порог размера кластера».
-- **Временная абсолютная проверка порогов M-шага.** M-шаг в `estimators` не обновляет `sigma` у `Normal`, если дисперсия не больше `NUMERICAL_TOLERANCE = 1e-9` (то есть `sigma` меньше примерно `3e-5`), и `lambda_` у `Exponential`, если взвешенное среднее не больше `1e-9`. Старт ниже порога застрял бы в EM навсегда. Ширина по квартилям этого не ловит: она относительная, а порог M-шага абсолютный. При $\operatorname{std}(X) = 10^{-4}$ компонента с `sigma = 1e-5` проходит проверку ширины, но M-шаг её `sigma` не обновит. Поэтому `evaluate_pair` делает такую пару не оценённой с причиной «дисперсия (среднее) меньше абсолютного порога M-шага `1e-9`, перемасштабируйте данные»; причина видна в ошибке «нет раздачи». Константа берётся из `core`, одна на `estimators` и `initializers`. Когда порог M-шага станет относительным ([#51](https://github.com/PySATL/pysatl-mpest/issues/51)), проверка уйдёт, а порог ширины согласуется с новым порогом M-шага, см. «Отложено».
-- Если проверка не прошла — `ComponentEstimationError`, и пара не оценена.
+- **Срабатывает только на атомах** — многих почти совпадающих значениях: залипший датчик, заглушка вместо пропуска, цензурирование на пороге, округление с пересчётом единиц. Ровно одинаковые значения раньше отвергает достаточность данных; на непрерывных данных без атомов проверка ничего не меняет.
+- **Одна формула для всех семейств:** квартили даёт `calculate_characteristic(PPF, ...)`, знать параметр масштаба не нужно. Ширина `Normal(0, 2)` — 2.70, `Exponential(0.5)` — 2.20, `ContinuousUniform(0, 4)` — 2.0.
+- **Порог относительный** и не зависит от единиц. Справа $\operatorname{std}(X)$, а не размах квартилей выборки: он равен 0, если совпадает больше половины значений.
+- **$\varepsilon$ — соглашение** порядка `reg_covar`, а не выведенная величина. Узкие кластеры из нескольких выбросов (`20.0` и `20.001`, `sigma = 0.0005`) порог пропускает, их отсекает `min_cluster_size`.
+- **Временная проверка порогов M-шага.** M-шаг не обновляет `sigma` у `Normal` при дисперсии не больше `NUMERICAL_TOLERANCE = 1e-9` (`sigma` ≲ `3e-5`) и `lambda_` у `Exponential` при взвешенном среднем не больше `1e-9`, и такой старт застрял бы навсегда. Относительная ширина этого не ловит: при $\operatorname{std}(X) = 10^{-4}$ `sigma = 1e-5` её проходит. Поэтому такая пара не оценена с причиной «дисперсия (среднее) меньше абсолютного порога M-шага `1e-9`, перемасштабируйте данные». Константа общая с `estimators` и лежит в `core`. Проверка уйдёт, когда порог M-шага станет относительным ([#51](https://github.com/PySATL/pysatl-mpest/issues/51)), см. «Отложено».
 
-**Пример.** Выборка — две моды, 600 точек `N(0, 1000)` и 1400 точек `N(6000, 1500)`, и 40 показаний залипшего датчика `15000 ± 0.001` (`np.random.default_rng(42)`). Семейства `[normal, normal]`, мультистарт из 100 запусков `RandomCentersPartitioner` с сидами 0–99, критерий — правдоподобие стартовой смеси, затем `EM`.
+````{admonition} Пример: залипший датчик
+:class: tip
 
-- **Вырожденный запуск.** В 99 запусках кластеры обычные. В запуске 93 случайный центр попал в залипший блок, и кластер состоит ровно из его 40 точек, `sigma ≈ 9e-4`. Остальные проверки такой кластер пропускают: значения различаются, точек больше `min_cluster_size`, а `sigma` выше порога M-шага `3e-5`.
-- **Без проверки ширины** запуск 93 выигрывает: логарифм правдоподобия старта −18 854 против −19 202 у лучшего из остальных. `EM` из него не уходит: итог — пик на 15 000 и одна широкая компонента `N(4121, 3045)` поверх обеих мод. Две моды потеряны, хотя правдоподобие этого итога выше.
-- **С проверкой** ширина пика 0.0012 меньше порога $10^{-6} \cdot \operatorname{std}(X) = 0.0034$, пара не оценена, и запуск 93 пропускается. Выигрывает запуск 49, и `EM` находит обе моды: `N(−173, 871)` и `N(5927, 2324)`. Вторая компонента шире истинной, потому что её тянут залипшие точки.
+Две моды `N(0, 1000)` и `N(6000, 1500)` (2000 точек) и 40 показаний залипшего датчика `15000 ± 0.001`; `[normal, normal]`, мультистарт из 100 запусков `RandomCentersPartitioner`, затем `EM`. Один запуск выделяет залипший блок в кластер с `sigma ≈ 9e-4`, который пропускают все остальные проверки.
 
-![Пример: без проверки ширины мультистарт выбирает старт с пиком на залипших значениях, с проверкой EM находит обе моды](diagrams/initializers.width-check-example.png)
+```{figure} diagrams/initializers.width-check-example.png
+:alt: Четыре графика: данные, правдоподобие стартов мультистарта, итог EM без проверки ширины и с ней
 
-Картинка получена расчётом по правилам этого раздела: разбиение — `RandomCentersPartitioner`, итог — `EM` из `estimators`; оценка пар и выбор запуска повторены вручную по описанию таблицы компонент и мультистарта.
+Без проверки ширины запуск с пиком выигрывает по правдоподобию (2), и `EM` теряет обе моды (3); с проверкой он пропускается, и `EM` их находит (4). Оценка пар и выбор запуска повторены вручную по правилам этой страницы.
+```
+````
 
 #### Порог размера кластера
 
-Порог включён по умолчанию, потому что численный порог узкие кластеры не ловит:
+Численный порог узкие кластеры из нескольких выбросов не ловит, а оба критерия выбора (`HungarianMatcher` и мультистарт) их предпочитают, поэтому порог размера включён по умолчанию:
 
-- правдоподобие смеси не ограничено сверху: при `sigma → 0` или ширине `ContinuousUniform → 0` оно растёт, поэтому и критерий `HungarianMatcher`, и критерий мультистарта предпочитают узкие кластеры из нескольких выбросов;
-- у двух выбросов `20.0` и `20.001` `sigma = 0.0005` численно нормальна.
-
-Правило:
-
-- `ClusterInitializer(min_cluster_size=None)` по умолчанию требует в каждом кластере не меньше $2 p$ точек, где $p$ — наибольшее число свободных параметров среди `families`: 4 точки для `Normal` и `ContinuousUniform`, 2 для `Exponential`;
+- `ClusterInitializer(min_cluster_size=None)` требует не меньше $2p$ точек в кластере, $p$ — наибольшее число свободных параметров среди `families`: 4 для `Normal` и `ContinuousUniform`, 2 для `Exponential`;
 - целое значение задаёт порог явно, `min_cluster_size=1` отключает проверку;
-- кластер меньше порога делает запуск неудачным (`InitializationError`), с `MultiStartInitializer` такие разбиения просто отбрасываются;
-- порог проверяется на действии 2, до сопоставления, и не зависит от того, какое семейство получит кластер.
+- кластер меньше порога — `InitializationError`, мультистарт такие разбиения отбрасывает;
+- проверка — на действии 2, до сопоставления, и не зависит от семейства.
 
 #### Чего нет
 
-- **Никаких молчаливых подстановок** вроде «взять оценку по всей выборке»: такая смесь выглядит нормально, но построена не так, как думает пользователь.
-- **Повторные попытки** — дело `MultiStartInitializer`, а не отдельной логики внутри.
+- **Молчаливых подстановок** вроде «оценки по всей выборке»: смесь выглядела бы нормально, но была бы построена не так, как думает пользователь.
+- **Повторных попыток внутри:** это дело `MultiStartInitializer`.
 
 (init-errors)=
 ### Ошибки
 
-Ошибки инициализатора делятся на два вида и ловятся по-разному:
-
-- **Неудачное разбиение** — `InitializationError` и его наследник `ComponentEstimationError`. В таблице ниже это все строки с этими типами. Другое разбиение может пройти, поэтому такие ошибки ловят `evaluate_pair` (только `ComponentEstimationError` оценщика) и `MultiStartInitializer`. `InitializationError` наследует напрямую `Exception`, а не `ValueError`: иначе `except ValueError`, которым ловят ошибки входа, ловил бы и неудачные разбиения, и деление на два вида перестало бы быть однозначным.
-- **Всё остальное** (`ValueError`, `NotImplementedError`, `ImportError`, `TypeError`) пробрасывается без перехвата: ошибки входа и конфигурации, неподдерживаемое семейство, ошибки в коде. Повтор с другим разбиением их не исправит, а перехват спрятал бы настоящую проблему.
+- **Неудачное разбиение** — `InitializationError` и его наследник `ComponentEstimationError`: другое разбиение может пройти, поэтому их ловят `evaluate_pair` (только `ComponentEstimationError` оценщика) и `MultiStartInitializer`. `InitializationError` наследует `Exception`, а не `ValueError`, чтобы `except ValueError` не ловил неудачные разбиения.
+- **Всё остальное** (`ValueError`, `NotImplementedError`, `ImportError`, `TypeError`) пробрасывается: ошибки входа, конфигурации и кода другое разбиение не исправит.
 
 | Ситуация | Ошибка | Где возникает |
 | --- | --- | --- |
@@ -430,130 +383,101 @@ $$
 | Неверная структура `H` | `ValueError` | `validate_partition` |
 | Пустой кластер | `InitializationError` | `KMeansPartitioner` или `validate_partition` |
 | Кластер меньше `min_cluster_size` | `InitializationError` | `ClusterInitializer` после разбиения |
-| Пару «семейство — кластер» нельзя оценить | `ComponentEstimationError` | Оценщик компоненты или проверки `evaluate_pair`; на сопоставлении пара становится невозможной |
-| Оценщик вернул не те параметры, например фиксированный, или значение, которое не вещественный скаляр | `TypeError` | `evaluate_pair`; это ошибка в оценщике или формуле, а не в данных |
-| В матрице стоимостей `NaN` или $-\infty$ | `ValueError` | `solve_assignment`; это ошибка в коде |
+| Пару «семейство — кластер» нельзя оценить | `ComponentEstimationError` | Оценщик компоненты или `evaluate_pair`; на сопоставлении пара невозможна |
+| Оценщик вернул не те параметры или не вещественный скаляр | `TypeError` | `evaluate_pair`; ошибка в оценщике или формуле |
+| В матрице стоимостей `NaN` или $-\infty$ | `ValueError` | `solve_assignment`; ошибка в коде |
 | Нет раздачи, где каждое семейство получает подходящий кластер | `InitializationError` с причинами невозможных пар | `HungarianMatcher`, `ExhaustiveMatcher` |
-| Пару, выбранную без $\ell_{jc}$ (`IdentityMatcher`, `HungarianMatcher` при одной группе семейств), нельзя оценить | `ComponentEstimationError` | Сборка смеси |
+| Пару, выбранную без $\ell_{jc}$ (`IdentityMatcher`, `HungarianMatcher` при одной группе), нельзя оценить | `ComponentEstimationError` | Сборка смеси |
 | Сопоставитель вернул не перестановку | `ValueError` | `validate_permutation` после `match` |
 | Вариантов раздачи больше `max_candidates` | `ValueError` | `ExhaustiveMatcher` |
-| Смесь не покрывает часть выборки | `InitializationError` с примерами точек | Проверка результата в общем `Initializer.initialize` |
-| Инициализатор вернул не `k` компонент или не в порядке `families` | `ValueError` | Проверка результата в общем `Initializer.initialize`; это ошибка в коде инициализатора |
-| Все запуски мультистарта неудачны | `InitializationError`, причина последнего запуска в `__cause__` | `MultiStartInitializer` |
-| `fit_kwargs` не подходят к сигнатуре `estimator.fit`: неизвестное имя или повтор `X`, `mixture` | `TypeError` | Конструктор `RefiningInitializer` |
+| Смесь не покрывает часть выборки | `InitializationError` с примерами точек | Проверка результата в общем `initialize` |
+| Не `k` компонент или не в порядке `families` | `ValueError` | Проверка результата в общем `initialize`; ошибка в коде |
+| Все запуски мультистарта неудачны | `InitializationError`, причина последнего в `__cause__` | `MultiStartInitializer` |
+| `fit_kwargs` не подходят к `estimator.fit` (неизвестное имя, повтор `X` или `mixture`) | `TypeError` | Конструктор `RefiningInitializer` |
 | Оценщик смеси вернул меньше `k` компонент | `InitializationError` | `RefiningInitializer` после `estimator.fit` |
 
 ### Мультистарт
 
 [Исходник схемы мультистарта](diagrams/initializers.drawio "Sequence: multistart")
 
-`MultiStartInitializer(initializer, n_init)` вызывает `initializer.initialize(X, families, random_state=child)` `n_init` раз, каждый раз со своим генератором `child`, считает `loglikelihood(X)` каждой смеси и возвращает смесь с наибольшим значением.
+`MultiStartInitializer(initializer, n_init)` вызывает `initializer.initialize(X, families, random_state=child)` `n_init` раз и возвращает смесь с наибольшим `loglikelihood(X)`.
 
-- **Разные результаты при повторах.** Обёртка делит свой генератор `rng` на `n_init` независимых генераторов через `rng.spawn(n_init)`. Каждый запуск получает свой, поэтому запуски различаются, воспроизводятся при одном целом `random_state` и не зависят друг от друга: их можно выполнять параллельно.
-- **Ошибки отдельных запусков.** Если запуск упал с `InitializationError`, например на вырожденном кластере, обёртка пропускает его. Другие ошибки она не ловит, см. «Ошибки». Ошибку она бросает, только если упали все запуски, и прикладывает причину последнего. Так мультистарт заодно закрывает редкие вырожденные разбиения.
-- **Пропущенные запуски не молчат.** Если упал хотя бы один запуск, но не все, обёртка выдаёт `RuntimeWarning` вида «3 из 10 запусков не удались; последняя причина: кластер 2 из 3 точек, `min_cluster_size` равен 4» и возвращает лучшую смесь как обычно. Иначе при 9 упавших из 10 пользователь думал бы, что лучший старт выбран из 10. `RuntimeWarning`, а не `UserWarning`: так `estimators` сообщают о событиях во время работы.
-- **С детерминированным инициализатором** (например, с `QuantilePartitioner` или `SklearnPartitioner(AgglomerativeClustering())`) мультистарт бесполезен: все запуски одинаковы.
-- **Критерий — правдоподобие того, что вернул вложенный инициализатор.** У `ClusterInitializer` это стартовая смесь: дёшево, но лучший старт не обязательно приводит к лучшему итогу. Критерий не ограничен сверху и тянется к узким кластерам; от них защищают численный порог таблицы и `min_cluster_size`, см. «Вырожденные кластеры». Чтобы сравнивать запуски по итогу оценщика смеси, вложенным инициализатором ставят `RefiningInitializer`, см. ниже.
+- **Запуски независимы:** генератор делится через `rng.spawn(n_init)`, поэтому запуски различаются, воспроизводятся при целом сиде и могут идти параллельно.
+- **Неудачные запуски пропускаются:** ловится только `InitializationError`. Если упали все — `InitializationError` с причиной последнего. Так мультистарт заодно закрывает редкие вырожденные разбиения.
+- **Пропуски не молчат:** если упал хотя бы один, но не все, — `RuntimeWarning` «3 из 10 запусков не удались; последняя причина: …». `RuntimeWarning`, как у событий во время работы в `estimators`.
+- **С детерминированным инициализатором** (`QuantilePartitioner`, `SklearnPartitioner(AgglomerativeClustering())`) мультистарт бесполезен.
+- **Критерий — правдоподобие того, что вернул вложенный инициализатор:** у `ClusterInitializer` это старт, дёшево, но лучший старт не обязательно даёт лучший итог. Критерий не ограничен и тянется к узким кластерам, от них защищают проверки из «Вырожденных кластеров». Сравнение по итогу оценщика — через `RefiningInitializer`.
 
 (init-refining)=
 ### Уточнение оценщиком смеси
 
 [Исходник схемы уточнения](diagrams/initializers.drawio "Sequence: refining")
 
-`RefiningInitializer(initializer, estimator, fit_kwargs=None)` — `Initializer`, у которого `_initialize(X, families, rng)` получает старт `initializer.initialize(X, families, random_state=rng)` и возвращает `estimator.fit(X, start, **fit_kwargs)`. Сам по себе это один запуск «старт → оценщик смеси». Мультистарт по итогу оценщика (требование INIT-02) — это `MultiStartInitializer` вокруг него:
+`RefiningInitializer(initializer, estimator, fit_kwargs=None)` — `Initializer`, у которого `_initialize` получает старт от `initializer` и возвращает `estimator.fit(X, start, **fit_kwargs)`. Мультистарт по итогу оценщика (INIT-02) — `MultiStartInitializer` вокруг него, без изменений в самом мультистарте:
 
-- **несколько итераций на каждый старт (emEM):** оценщик с коротким остановом, например `StepBreakpointer(20)`; лучшего кандидата потом доводят полным `EM`, как в примере из «Задачи»;
-- **полный прогон на каждый старт:** оценщик с обычным остановом; лучший запуск — уже итоговая смесь.
+- **emEM:** оценщик с коротким остановом (`StepBreakpointer(20)`), лучший кандидат потом доводится полным `EM`, как в примере из «Задачи»;
+- **полный прогон на каждый старт:** лучший запуск — уже итоговая смесь.
 
-`MultiStartInitializer` при этом не меняется: он сравнивает `loglikelihood(X)` того, что вернул вложенный инициализатор, то есть смеси после оценщика. Отдельного фасада «мультистарт + оценщик» нет: он повторил бы `spawn`, пропуск неудачных запусков и предупреждения из `MultiStartInitializer`, а его сигнатура `fit(X, families, random_state)` не подошла бы ни к `Initializer`, ни к `BaseEstimator`. Если собирать композицию руками неудобно, фасад можно добавить позже как функцию в одну строку поверх неё.
+Отдельного фасада «мультистарт + оценщик» нет: он повторил бы логику `MultiStartInitializer`, а его сигнатура не подошла бы ни к `Initializer`, ни к `BaseEstimator`. При необходимости его можно добавить функцией в одну строку.
 
-- **Аргументы `fit`.** `fit_kwargs` передаются в `estimator.fit` как есть: `parameter_groups` и `once_in_iterations` у `ECM`, индексы стратегий у `ECME`. Конструктор копирует словарь и сразу проверяет его вызовом `inspect.signature(estimator.fit).bind(X, mixture, **fit_kwargs)` с заглушками вместо `X` и `mixture`: неизвестное имя или повтор `X`, `mixture` дают `TypeError` при создании, а не на первом запуске мультистарта. Номера компонент в этих аргументах совпадают с номерами `families`: компонента `j` старта — из `families[j]`, это проверяет общий `initialize`, см. {ref}`«Выход: порядок компонент» <init-output-order>`.
-- **Удаление компонент.** Если у оценщика есть pruners, например `PriorThresholdPruner`, он может вернуть меньше `k` компонент. Общая проверка результата сочла бы это ошибкой в коде (`ValueError`), и мультистарт упал бы целиком. Поэтому `RefiningInitializer` сам сверяет число компонент и бросает `InitializationError` «оценщик вернул 2 компоненты из 3»: другой старт может сохранить все, и мультистарт такой запуск пропускает.
-- **Ошибки.** `InitializationError` вложенного инициализатора не перехватывается и доходит до мультистарта как есть. Ошибки самого оценщика смеси пробрасываются без перехвата, как и все ошибки, кроме `InitializationError`, см. «Ошибки».
-- **Случайность.** Генератор `rng` уходит только во вложенный инициализатор: оценщики смеси детерминированы и генератора не принимают.
-- **Цена.** Каждый запуск мультистарта — полный вызов оценщика смеси, поэтому `n_init` запусков стоят в `n_init` раз дороже одного `fit`. Запуски независимы и могут идти параллельно, см. «Мультистарт».
+- **`fit_kwargs`** уходят в `estimator.fit` как есть (`parameter_groups` у `ECM`, стратегии `ECME`). Конструктор копирует словарь и проверяет его через `inspect.signature(estimator.fit).bind(X, mixture, **fit_kwargs)` с заглушками: ошибка — `TypeError` при создании, а не на первом запуске. Номера компонент совпадают с номерами `families`, см. {ref}`«Выход: порядок компонент» <init-output-order>`.
+- **Удаление компонент:** с pruners оценщик может вернуть меньше `k` компонент. Общая проверка сочла бы это ошибкой кода, поэтому `RefiningInitializer` сам бросает `InitializationError` «оценщик вернул 2 компоненты из 3», и мультистарт пропускает запуск.
+- **Ошибки:** `InitializationError` вложенного инициализатора доходит до мультистарта как есть, ошибки оценщика смеси пробрасываются.
+- **Случайность:** `rng` уходит только во вложенный инициализатор, оценщики смеси детерминированы.
+- **Цена:** `n_init` запусков — `n_init` вызовов `fit`; запуски можно вести параллельно.
 - **Критерий тянется к вырожденным решениям** сильнее, чем на старте, см. «Ограничения».
 
 ## Как расширить
 
-- **Кластеризатор scikit-learn.** Поставить `pysatl-mpest[sklearn]` и передать кластеризатор в `SklearnPartitioner`.
-- **Способ разбиения.** Унаследовать `Partitioner` и реализовать `partition`: вернуть матрицу `(n, k)`, в каждой строке которой ровно одна единица, остальные нули; тип элементов любой из `bool`, `int`, `float`. Случайность брать только из аргумента `rng`, не хранить генератор в объекте. Если способ знает семейства и кладёт кластер для `families[j]` в столбец `j`, использовать его с `IdentityMatcher`: он сохраняет этот порядок и у одинаковых семейств.
-- **Формулы для нового семейства `pysatl-core`** (доработка библиотеки, а не пользовательское расширение), см. {ref}`«Контракт формулы» <init-formula-contract>`. Добавить функцию `formula(X, h, fixed) -> dict[str, float]` и зарегистрировать её вызовом в приватном реестре нужного способа, например `MLEComponentEstimator` или `MomentsComponentEstimator`, для пары «семейство, параметризация». Она должна учитывать `fixed` и возвращать только свободные параметры.
-- **Новый способ оценки.** Унаследовать `ComponentEstimator`, реализовать `supports` и `estimate`, вернуть словарь свободных параметров и поставить способ в нужное место `ComponentEstimatorChain`. Если данных кластера не хватает его формулам, бросать `ComponentEstimationError`; ключи, общую нижнюю границу данных, конечность, ограничения, ширину и пороги M-шага проверит `evaluate_pair`. Способ в явном виде можно добавлять в цепочку по умолчанию, численный — нет.
-- **Сопоставитель.** Унаследовать `Matcher` и реализовать `_match`: вернуть перестановку длины `k`, иначе `ClusterInitializer` бросит `ValueError`. Пользоваться только протоколом `ComponentTable`: $\ell_{jc}$ и причины брать из таблицы, а не оценивать заново. Порядок одинаковых семейств наводит `match` базового класса хуком `_order`; переопределять хук нужно, только если порядок задаёт кто-то другой, как у `IdentityMatcher`.
-- **Инициализатор другого устройства.** Унаследовать `Initializer` напрямую и реализовать `_initialize(X, families, rng)`: проверенный `X` и готовый генератор он получит от общего `initialize`, а его результат тот же `initialize` проверит. Мультистарт с ним работает без изменений.
+- **Кластеризатор scikit-learn:** поставить `pysatl-mpest[sklearn]` и передать кластеризатор в `SklearnPartitioner`.
+- **Способ разбиения:** унаследовать `Partitioner`, реализовать `partition` — матрица `(n, k)` с ровно одной единицей в строке, тип `bool`, `int` или `float`; случайность только из `rng`. Если способ знает семейства и кладёт кластер для `families[j]` в столбец `j`, использовать с `IdentityMatcher`.
+- **Формулы для нового семейства `pysatl-core`** (доработка библиотеки): функция `formula(X, h, fixed) -> dict[str, float]`, зарегистрированная вызовом в приватном реестре способа для пары «семейство, параметризация», см. {ref}`«Контракт формулы» <init-formula-contract>`.
+- **Способ оценки:** унаследовать `ComponentEstimator`, реализовать `supports` и `estimate`, вернуть словарь свободных параметров. Нехватку данных для своих формул — `ComponentEstimationError`, остальное проверит `evaluate_pair`. В цепочку по умолчанию — только способы в явном виде.
+- **Сопоставитель:** унаследовать `Matcher`, реализовать `_match` — перестановку длины `k`, пользуясь только `ComponentTable`. Хук `_order` переопределять, только если порядок задаёт кто-то другой.
+- **Инициализатор другого устройства:** унаследовать `Initializer` и реализовать `_initialize(X, families, rng)`; проверки входа и результата сделает общий `initialize`, мультистарт работает без изменений.
 
 ## Ограничения и решения
 
 (init-limitations)=
 ### Ограничения
 
-- **Носитель, зависящий от параметров, оценщик смеси не расширяет.** Оценка `ContinuousUniform` по кластеру — минимум и максимум его точек, поэтому носитель стартовой компоненты равен диапазону кластера.
-  - В EM точки вне носителя получают нулевую ответственность, и Q-функция растёт при сужении отрезка: границы могут только сужаться.
-  - `ECME` с максимизацией правдоподобия всей смеси расширяет их лишь частично и застревает в локальном максимуме, когда соседняя компонента уже покрыла недостающие точки.
-  - Например, на 600 точках `U(0, 10)` и 400 точках `N(5, 0.5)` старт `U(0.05, 5.82)` после 100 итераций EM остаётся `U(0.05, 5.82)`, а у `ECME` становится `U(0.05, 5.94)`. Нормальная компонента расплывается до `N(5.97, 1.84)`, логарифм правдоподобия около −2166 против −2043 у истинной смеси.
-  - Для таких смесей нужен мультистарт или старт, заданный вручную.
-- **Способ разбиения не знает семейств.** Для смесей с разными носителями (например, `Normal` и `Exponential`) кластеры могут не подойти ни одному семейству. Сопоставление выбирает лучшую из возможных пар, но не исправляет разбиение.
-- **Способ разбиения не учитывает фиксированные параметры.** Обычно это исправляет сопоставление: у `[normal.view(mu=0), normal]` на модах около 0 и около 10 семейство с `mu=0` получит кластер около 0, потому что на другом кластере его правдоподобие хуже. Но если ни один кластер не лежит около зафиксированного значения, например широкая компонента вокруг 0 и узкая около 3 дают кластеры около −3 и 3, стартовая `sigma` у `normal.view(mu=0)` будет смещена. Исправляют это EM, запущенный из полученной смеси (фиксированный `mu` там тоже держится), или мультистарт с другим разбиением.
-- **Формулы оценки регистрируются по параметризации.** У `Normal` их четыре (`meanStd`, `meanVar`, `meanPrec`, `exponential`). В `pysatl-core` есть перевод значений параметров в базовую параметризацию, `transform_to_base_parametrization`, но не перевод семейства с фиксированными параметрами: фиксированный параметр одной параметризации может не соответствовать никакому набору фиксированных параметров другой. Поэтому формулы `meanStd` для `meanVar` не переиспользовать.
-  - `normal.view(parametrization_name="meanVar")` с цепочкой по умолчанию даст `NotImplementedError` на проверке входа, пока для `meanVar` не зарегистрированы свои формулы.
-  - Когда формулы появятся, `normal` и `normal.view(parametrization_name="meanVar")` будут разными семействами, хотя это одна модель: ключ семейства по той же причине включает параметризацию. Смесь от этого не портится: у таких семейств одинаковые $\ell_{jc}$, и любая раздача между ними даёт ту же смесь. Цена — лишние оценки в таблице и не нормализованный порядок этих компонент.
-- **Мультистарт по итогу оценщика смеси тянется к вырожденным решениям.** Правдоподобие смеси не ограничено сверху, а EM может сжать компоненту на паре близких точек: `sigma` уменьшается, правдоподобие растёт, и именно такой запуск мультистарт выберет как лучший. На старте от этого защищают численный порог таблицы и `min_cluster_size`, а после оценщика — только порог M-шага `NUMERICAL_TOLERANCE`: ниже него `sigma` не обновляется, поэтому правдоподобие хоть и не уходит в бесконечность, но может стать очень большим. Своей защиты в `initializers` нет, это задача M-шага, см. «Отложено».
-- **Сопоставление оптимально только относительно оценок выбранного способа:** оба критерия считаются в точке оценки `ComponentEstimator`, а не в максимуме правдоподобия.
-- **Число вариантов у `ExhaustiveMatcher` растёт комбинаторно:** при многих разных семействах он неприменим.
-- **Семейство, у которого оценки не сводятся к явным формулам и поиску одного корня, пока инициализировать нельзя:** многомерного численного способа оценки нет, он отложен.
-- **Агломеративное и спектральное разбиение стоят квадратично от размера выборки** и годятся для выборок порядка $10^4$ точек: при $n = 20\,000$ `ward` занимает 9 с и около 1,6 ГБ памяти. Подробнее — в [«Разбиении»](partitioners/partitioners.md).
-- **Только жёсткое разбиение и только одномерные выборки.**
+- **Носитель, зависящий от параметров, оценщик смеси не расширяет.** Старт `ContinuousUniform` — диапазон кластера, а в EM границы могут только сужаться (точки вне носителя получают ответственность 0); `ECME` расширяет их лишь частично. Пример: на 600 точках `U(0, 10)` и 400 точках `N(5, 0.5)` старт `U(0.05, 5.82)` после 100 итераций EM не меняется, у `ECME` становится `U(0.05, 5.94)`, нормальная компонента расплывается до `N(5.97, 1.84)`, логарифм правдоподобия −2166 против −2043 у истинной смеси. Нужен мультистарт или ручной старт.
+- **Способ разбиения не знает семейств:** при разных носителях (`Normal` и `Exponential`) кластеры могут не подойти ни одному семейству; сопоставление выбирает лучшую пару, но разбиение не исправляет.
+- **Способ разбиения не учитывает фиксированные параметры.** Обычно это исправляет сопоставление: у `[normal.view(mu=0), normal]` на модах около 0 и 10 семейство с `mu=0` получит кластер около 0. Но если ни один кластер не лежит около фиксированного значения, стартовая `sigma` будет смещена; исправляют EM или мультистарт.
+- **Формулы регистрируются по параметризации.** У `Normal` их четыре; `pysatl-core` переводит значения в базовую параметризацию, но не семейство с фиксированными параметрами, поэтому формулы `meanStd` для `meanVar` не переиспользуются. `normal.view(parametrization_name="meanVar")` даст `NotImplementedError`, пока нет своих формул; потом `normal` и он будут разными семействами — смесь не портится, но оценок больше и порядок этих компонент не нормализован.
+- **Мультистарт по итогу оценщика тянется к вырожденным решениям:** EM может сжать компоненту на паре близких точек, и такой запуск выиграет. После оценщика защищает только порог M-шага; своей защиты в `initializers` нет, это задача M-шага, см. «Отложено».
+- **Сопоставление оптимально только относительно оценок выбранного способа,** а не в максимуме правдоподобия.
+- **`ExhaustiveMatcher` растёт комбинаторно** и неприменим при многих разных семействах.
+- **Семейства без явных формул и одного корня пока не инициализируются:** численный способ оценки отложен.
+- **Агломеративное и спектральное разбиение квадратичны по $n$** и годятся до ~$10^4$ точек (`ward` при $n = 20\,000$ — 9 с и ~1,6 ГБ), см. [«Разбиение»](partitioners/partitioners.md).
+- **Только жёсткое разбиение и одномерные выборки.**
 
 ### Принятые решения
 
-| Вопрос | Решение |
-| --- | --- |
-| Имя метода | `initialize(X, families, random_state=None)` |
-| Общая часть инициализаторов | Шаблонный метод: `@final` `Initializer.initialize` приводит `X`, делает общие проверки, создаёт генератор и проверяет результат (число компонент, порядок семейств, конечное правдоподобие); реализации пишут `_initialize(X, families, rng)` |
-| Случайность | Аргумент вызова: `random_state` у `initialize`, `rng` у `_initialize` и `partition`. У ролей нет своего генератора, мультистарт делит генератор через `spawn` |
-| Тип элемента `families` | `ParametricFamily`; свой тип — когда появятся настройки отдельной компоненты |
-| Типы массивов | Из `pysatl_mpest.typings`: `H` — `MultivariateFloatArray` со значениями 0 и 1, как матрица ответственностей в `estimators`; способ разбиения может вернуть `bool`, `int` или `float`, `validate_partition` приводит к `float64` |
-| Порядок одинаковых семейств | По возрастанию среднего их кластеров, при равных — по номеру столбца. Наводит хук `_order` в `@final` `Matcher.match`, поэтому свой сопоставитель его не нарушит; `IdentityMatcher` переопределяет хук, и порядок задаёт способ разбиения |
-| Разбиение | Роль `Partitioner`, только жёсткое: `H` из единиц и нулей, по одной единице в строке, это проверяет `validate_partition`. Способ разбиения передаётся явно, по умолчанию его нет |
-| k-means | `KMeansPartitioner` на `scipy.cluster.vq.kmeans2`, своего k-means нет |
-| Кластеризаторы scikit-learn | Только с параметром `n_clusters`, через `SklearnPartitioner`; scikit-learn — необязательная зависимость (`pysatl-mpest[sklearn]`). Число кластеров и сид подставляются в копию кластеризатора, значения пользователя заменяются с предупреждением; кластеризаторы без `n_clusters` отвергаются. Агломеративное и спектральное разбиение (INIT-03) — только так, встроенных нет |
-| Случайный старт | `RandomCentersPartitioner` по случайным центрам, не по случайным меткам |
-| Сопоставители первой версии | `HungarianMatcher` по умолчанию и `IdentityMatcher` для способов разбиения, знающих семейства. Отдельного сопоставителя «слева направо» нет: при необходимости это несколько строк в `_match` пользовательского сопоставителя |
-| Вырожденные кластеры | Способ разбиения и `validate_partition` проверяют структуру разбиения, `evaluate_pair` — нижнюю границу данных, конечность, ограничения и ширину по квартилям (больше $10^{-6} \cdot \operatorname{std}(X)$), оценщик компоненты — свои требования к данным. Временно ещё пороги M-шага у `Normal` и `Exponential`. `min_cluster_size` по умолчанию $2p$ точек, $p$ — наибольшее число свободных параметров. Никаких подстановок, повторы через мультистарт |
-| Мультистарт | Обёртка `MultiStartInitializer` поверх любого `Initializer`; о пропущенных запусках — `RuntimeWarning` |
-| Мультистарт по итогу оценщика смеси | Обёртка `RefiningInitializer(initializer, estimator, fit_kwargs)` доводит старт оценщиком смеси; `MultiStartInitializer` вокруг неё выбирает лучший запуск по итогу. Отдельного фасада нет. `fit_kwargs` проверяются в конструкторе через `inspect.signature(...).bind`; меньше `k` компонент после оценщика — `InitializationError` |
-| Ошибки | `InitializationError` для неудачного разбиения и наследник `ComponentEstimationError` для пары, которую нельзя оценить. Невозможная пара не обрывает сопоставление, а исключается из раздач; ловятся только эти два типа. `InitializationError` наследует `Exception` |
-| Состояния пары | Оценена; не покрывает кластер (компонента есть, $\ell_{jc} = -\infty$); не оценена (компоненты нет). `HungarianMatcher` запрещает оба последних, остальные сопоставители пропускают «не покрывает», годность смеси решает проверка результата |
-| Таблица компонент | Протокол `ComponentTable` (`k`, `groups`, `cluster_means`, `loglikelihood`, `failure`) — всё, что видит сопоставитель; реализация `LazyComponentTable` — ленивый кэш, общий для сопоставления и сборки: каждая пара «семейство — кластер» оценивается не больше одного раза при любом сопоставителе. Оценку и проверки пары делает чистая `evaluate_pair`, смесь собирает таблица |
-| Задача о назначениях | $+\infty$ передаётся в scipy как запрет; `NaN` и $-\infty$ `solve_assignment` отвергает заранее, поэтому `ValueError` от scipy значит только «нет раздачи» |
-| Способы оценки | В первой версии только `MLEComponentEstimator`, он же по умолчанию. `MomentsComponentEstimator`, `ComponentEstimatorChain` и `ExhaustiveMatcher` — позже, с первым случаем, где они нужны |
-| Контракт оценщика и формулы | `estimate(X, h, family)` и `formula(X, h, fixed)` возвращают `dict[str, float]` свободных параметров; фиксированные параметры входят аргументом. Проверки результата делает `evaluate_pair`. Внутри формулы допустим одномерный поиск корня на заданном отрезке (`brentq`), многомерная численная оптимизация — нет |
-| Диспетчеризация по семейству | Свой диспетчер в `initializers`, ключ берётся у семейства, а не у компоненты. Реестр формул приватный, на уровне модуля, формулы регистрируются вызовом, как у `FamilyDispatch` в `estimators`. Публичной регистрации формул нет, расширение способа оценки — через `ComponentEstimator`. Общий диспетчер и общие формулы с M-шагом — отдельной задачей |
+Сводка; полные формулировки — в разделах.
+
+- **Интерфейс:** `@final` `initialize` с общими проверками, реализации пишут `_initialize`; случайность — аргумент вызова («Ход `initialize`», «Случайность»).
+- **Разбиение:** только жёсткое, способ передаётся явно; k-means на `kmeans2`, scikit-learn — через `SklearnPartitioner` с `n_clusters`; случайный старт — по центрам ([«Разбиение»](partitioners/partitioners.md)).
+- **Сопоставление:** `HungarianMatcher` по умолчанию, `IdentityMatcher`; сопоставителя «слева направо» нет — это несколько строк в `_match`; одинаковые семейства — по среднему кластера ([«Сопоставление»](matchers/matchers.md)).
+- **Таблица:** протокол `ComponentTable` и ленивая `LazyComponentTable`, пару проверяет `evaluate_pair`; три состояния пары («Таблица компонент»).
+- **Вырожденные кластеры:** ширина по квартилям больше $10^{-6} \cdot \operatorname{std}(X)$, `min_cluster_size` = $2p$, без подстановок («Вырожденные кластеры»).
+- **Ошибки и мультистарт:** неудачное разбиение — `InitializationError`, остальное пробрасывается; мультистарт над любым `Initializer`, по итогу оценщика — через `RefiningInitializer` («Ошибки», «Мультистарт»).
+- **Оценка компоненты:** только `MLEComponentEstimator`, формулы — словарь свободных параметров, приватный реестр ([«Оценка параметров компоненты»](component_estimators/component_estimators.md)).
 
 (init-deferred)=
 ### Отложено
 
-- **Полностью известная компонента** — готовое `ParametricFamilyDistribution` в `families`, например известный фон.
-  - Через `view` её не выразить: `pysatl-core` запрещает фиксировать все параметры.
-  - Оценщики смеси её не сохранят: `EM` оптимизирует все свободные параметры, а у готового распределения свободны все; `ECM` не даёт оставить компоненту без групп. Поэтому сначала нужна заморозка целой компоненты в `estimators`.
-  - Ей нужен свой ключ, отличный от ключа семейства.
-  - Вес по одному жёсткому кластеру занижает вес фона, перекрытого другими компонентами.
-- **Встроенный способ разбиения, учитывающий семейства,** например k-means с неподвижными центрами для фиксированных параметров положения. Нужно передать `families` в `partition`; помогает только параметрам положения. Сопоставитель для него, `IdentityMatcher`, уже есть: он сохраняет порядок способа разбиения и у одинаковых семейств.
-- **Относительный порог M-шага** ([#51](https://github.com/PySATL/pysatl-mpest/issues/51)). Когда он появится в `estimators`, временная проверка порогов M-шага у `Normal` и `Exponential` уходит, а порог ширины по квартилям согласуется с новым порогом: при пороге вида $10^{-9} \cdot \operatorname{var}(X)$ нынешняя ширина гарантирует лишь $\sigma^2 \gtrsim 5.5 \cdot 10^{-13} \cdot \operatorname{var}(X)$.
-- **Оценка по точкам внутри носителя.** У семейств с носителем, который не зависит от параметров, например `Exponential`, точки кластера вне носителя можно исключить до формулы, как это делает E-шаг. Для этого нужен носитель семейства до оценки, а в `pysatl-core` он есть только у готового распределения. Пока это исправляет первая итерация EM, см. «Оценка пары».
-- **Численный способ оценки через `Optimizer`.** Нужен семействам, у которых оценки не сводятся к явным формулам и поиску одного корня. Оптимизатору нужна начальная точка, а у такого семейства её взять неоткуда. Подключать `optimizers` стоит так, чтобы численные оценки были общими для `estimators` и `initializers`, а не реализованы дважды. Решается вместе с первым таким семейством.
-- **Мягкое разбиение.** При нём почти каждая точка имеет вес в каждом кластере, поэтому нужно заново определить: какой вес считать принадлежностью к кластеру, размер кластера для проверок и `min_cluster_size`, носитель и невозможные пары, границы `ContinuousUniform`. Сигнатура `estimate(X, h, family)` останется, но контракт `h` придётся расширить с маски на дробные веса.
-- **Способ оценки по квантилям** (медианы и квартили из требования INIT-04). Параметры подбираются так, чтобы квантили компоненты совпали с выборочными квантилями кластера; на квартилях оценка выдерживает до четверти выбросов в кластере. Общей формулы для всех семейств нет, но семейства делятся на три группы:
-  - **сдвиг и масштаб** (`Normal`, `ContinuousUniform`, Gumbel, логистическое, Лапласа) и **только масштаб** (`Exponential`): квантиль равен $\mu + \sigma z_q$, где $z_q$ — квантиль стандартного распределения семейства. Два выборочных квантиля дают $\sigma = (\hat x_{q_2} - \hat x_{q_1}) / (z_{q_2} - z_{q_1})$ и $\mu = \hat x_{q_1} - \sigma z_{q_1}$, одного достаточно для масштаба. Одна общая функция покрывает всю группу, семейству достаточно дать $z_q$ и перевод сдвига и масштаба в свои параметры: у `ContinuousUniform` $z_q = q$, `lower_bound` — сдвиг, `upper_bound` — сдвиг плюс масштаб. Например, $\sigma = \mathrm{IQR} / 1.349$ у `Normal` и $\lambda = \ln 2 / \operatorname{median}$ у `Exponential`;
-  - **сдвиг и масштаб после логарифма** (логнормальное, Вейбулла, Парето, Фреше): те же формулы по $\ln x$;
-  - **с параметром формы** (Gamma, GEV, Стьюдента): отношение квантилей вроде $(\hat x_{0.75} - \hat x_{0.5}) / (\hat x_{0.5} - \hat x_{0.25})$ зависит только от формы, форма находится одномерным поиском корня (`brentq`), затем сдвиг и масштаб — как в первой группе. Интервал поиска и монотонность отношения задаются для каждого семейства. У семейств с двумя параметрами формы, например бета, так не получится.
-
-  Все три семейства `pysatl-core` сейчас из первой группы. Делать — вместе с первым случаем, где выбросы в кластере портят MLE.
-- **Способ оценки по L-моментам.** Устойчивее к выбросам, подходит для GEV, Gumbel, Pareto, но строится по порядковым статистикам и требует решить, как работать с мягким разбиением. Он закрывает тяжелохвостую часть INIT-05: выборочные дисперсия и асимметрия при тяжёлых хвостах неустойчивы, а у Парето с малой формой моментов может не быть вовсе, тогда как L-моменты существуют, если есть среднее.
+- **Полностью известная компонента** (например, фон). Через `view` не выразить: `pysatl-core` запрещает фиксировать все параметры. Нужны заморозка целой компоненты в `estimators` (`EM` оптимизирует все свободные параметры, `ECM` не даёт оставить компоненту без групп), свой ключ и другой расчёт веса: жёсткий кластер занижает вес перекрытого фона.
+- **Встроенный способ разбиения, знающий семейства,** например k-means с неподвижными центрами для фиксированных параметров положения. Нужно передать `families` в `partition`; сопоставитель для него, `IdentityMatcher`, уже есть.
+- **Относительный порог M-шага** ([#51](https://github.com/PySATL/pysatl-mpest/issues/51)). Тогда временная проверка порогов M-шага уходит, а порог ширины согласуется с новым: при пороге $10^{-9} \cdot \operatorname{var}(X)$ нынешняя ширина гарантирует лишь $\sigma^2 \gtrsim 5.5 \cdot 10^{-13} \cdot \operatorname{var}(X)$.
+- **Оценка по точкам внутри носителя** для семейств с носителем, не зависящим от параметров (`Exponential`). Нужен носитель семейства до оценки, а в `pysatl-core` он есть только у готового распределения. Пока это исправляет первая итерация EM.
+- **Численный способ оценки через `Optimizer`** — для семейств без явных формул и одного корня. Нужна начальная точка, и численные оценки должны быть общими с `estimators`. Вместе с первым таким семейством.
+- **Мягкое разбиение.** Нужно заново определить принадлежность к кластеру, размер кластера и `min_cluster_size`, носитель и невозможные пары, границы `ContinuousUniform`. Сигнатура `estimate(X, h, family)` останется, `h` станет весами.
+- **Оценка по квантилям** (медианы и квартили, INIT-04) — устойчива к выбросам до четверти кластера. Для семейств «сдвиг и масштаб» (`Normal`, `ContinuousUniform`, `Exponential`, Gumbel, Лапласа) это одна общая функция от двух выборочных квантилей, например $\sigma = \mathrm{IQR} / 1.349$ у `Normal`; для логнормального, Вейбулла, Парето — то же по $\ln x$; для семейств с одним параметром формы (Gamma, GEV) форма находится `brentq` по отношению квантилей. Делать с первым случаем, где выбросы портят MLE.
+- **Оценка по L-моментам** — устойчивее к выбросам, подходит для GEV, Gumbel, Pareto и закрывает тяжелохвостую часть INIT-05: L-моменты существуют, если есть среднее. Нужно решить, как работать с мягким разбиением.
 - **Ускорение сопоставления подвыборкой**, см. {ref}`«Ускорение» <init-speedup>`.
-- **Разбиение подвыборки** для кластеризаторов с квадратичной стоимостью, `AgglomerativeClustering` и `SpectralClustering`: кластеризуется случайная подвыборка, остальные точки относятся к ближайшему центру. Нужно решить, где это живёт — обёрткой над любым `Partitioner` или параметром `SklearnPartitioner`.
-- **Возмущённые старты.** INIT-02 допускает старты «случайно сгенерированные или возмущённые»; случайные дают `RandomCentersPartitioner` и `KMeansPartitioner`. Инициализатор, который случайно сдвигает параметры готовой смеси, — когда понадобится.
-- **Регуляризация дисперсии в M-шаге**, аналог `reg_covar` из scikit-learn: к оценке дисперсии на каждом M-шаге прибавляется малая константа, поэтому правдоподобие ограничено сверху и мультистарт по итогу оценщика не выбирает вырожденные компоненты. Цена — небольшое смещение оценок и абсолютный порог в единицах данных. Это изменение в `estimators`, а не в `initializers`.
-- **Подменяемая таблица компонент.** Если появится вторая реализация, например ускоренная по подвыборке, `ClusterInitializer` получит параметр `table_factory` со значением по умолчанию `LazyComponentTable`, а для его нужд — протокол `AssemblingTable(ComponentTable)` с `component` и `mixture`. Изменение не ломает ни сопоставители, ни существующие вызовы.
-- **Общий диспетчер в `core`** ([#52](https://github.com/PySATL/pysatl-mpest/issues/52)). Отдельной задачей после реализации модуля. `_dispatch.py` и `FamilyDispatch` из `estimators` различаются не только источником ключа: `FamilyDispatch` вызывается как функция, берёт ключ у компоненты из первого аргумента и при отсутствии реализации вызывает реализацию по умолчанию, а формулу `formula(X, h, fixed)` оценщик вызывает сам, ключ берёт у семейства, и умолчания нет: незарегистрированное семейство не поддерживается. Поэтому общим будет реестр «ключ → реализация» с поиском по ключу, а вызов с ключом из первого аргумента останется тонкой обёрткой над ним в `estimators`. Общие с M-шагом формулы — позже, см. {ref}`«Реестр формул» <init-formula-registry>`.
+- **Разбиение подвыборки** для `AgglomerativeClustering` и `SpectralClustering`: остальные точки — к ближайшему центру. Обёрткой над `Partitioner` или параметром `SklearnPartitioner` — решить.
+- **Возмущённые старты** (INIT-02): инициализатор, случайно сдвигающий параметры готовой смеси, — когда понадобится.
+- **Регуляризация дисперсии в M-шаге,** аналог `reg_covar`: ограничивает правдоподобие и защищает мультистарт по итогу оценщика ценой небольшого смещения. Изменение в `estimators`.
+- **Подменяемая таблица компонент:** со второй реализацией `ClusterInitializer` получит `table_factory` (по умолчанию `LazyComponentTable`) и протокол `AssemblingTable(ComponentTable)` с `component` и `mixture`, без поломки существующего кода.
+- **Общий диспетчер в `core`** ([#52](https://github.com/PySATL/pysatl-mpest/issues/52)) — после реализации модуля. `FamilyDispatch` берёт ключ у компоненты из первого аргумента и имеет реализацию по умолчанию, диспетчер формул берёт ключ у семейства и умолчания не имеет. Общим будет реестр «ключ → реализация», вызов по первому аргументу останется обёрткой в `estimators`. Общие с M-шагом формулы — позже, см. {ref}`«Реестр формул» <init-formula-registry>`.
