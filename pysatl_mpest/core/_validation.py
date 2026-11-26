@@ -43,6 +43,8 @@ def sample_coverage(mixture: MixtureModel, X: UnivariateFloatArray) -> SampleCov
 
     Parameters
     ----------
+    mixture : MixtureModel
+        Mixture whose weighted log-density is checked at every point of ``X``.
     X : UnivariateFloatArray
         A one-dimensional sample; its dimensionality and finiteness are the caller's
         responsibility and are not checked here.

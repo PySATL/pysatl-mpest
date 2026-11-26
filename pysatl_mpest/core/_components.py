@@ -2,8 +2,8 @@
 Internal helpers for working with mixture components, which are `pysatl-core` distributions, and
 with the `pysatl-core` parametric families those components are created from.
 
-All access to `pysatl-core` distribution and family internals is kept in this module so that a change of the
-`pysatl-core` API affects a single place.
+All access to `pysatl-core` distribution and family internals is kept in this module so that a change
+of the `pysatl-core` API affects a single place.
 
 A component created from ``family.view(...)`` stores only its free parameters; the fixed ones live in the
 view. `pysatl-core` has no public way to get from such a component to its view
