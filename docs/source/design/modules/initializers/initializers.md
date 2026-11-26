@@ -76,22 +76,50 @@ result = EM(...).fit(X, start)
 
 ## Состав модуля
 
-Планируемая раскладка, по строке на файл. `MomentsComponentEstimator`, `ComponentEstimatorChain` и `ExhaustiveMatcher` описаны в проекте, но войдут в модуль позже, см. «Первая версия».
+Планируемая раскладка. В корне пакета лежат только публичный вход и готовые инициализаторы: фасад `__init__.py`, абстрактный `Initializer`, ошибки и три инициализатора. Части схемы «разбиение → оценка → сопоставление», которыми пользуется `ClusterInitializer`, собраны в подпакет `cluster/`; у каждой роли свой подпакет, где абстракция лежит в `base.py`, рядом с реализациями и приватными помощниками. Пользователь импортирует всё публичное из `pysatl_mpest.initializers`. `MomentsComponentEstimator`, `ComponentEstimatorChain` и `ExhaustiveMatcher` описаны в проекте, но войдут в модуль позже, см. «Первая версия».
 
+```text
+initializers/
+├── __init__.py
+├── initializer.py
+├── exceptions.py
+├── cluster_initializer.py
+├── multi_start.py
+├── refining.py
+└── cluster/
+    ├── __init__.py
+    ├── partitioners/
+    │   ├── base.py
+    │   └── ...
+    ├── component_estimators/
+    │   ├── base.py
+    │   ├── _dispatch.py
+    │   └── ...
+    ├── matchers/
+    │   ├── base.py
+    │   ├── _matching.py
+    │   └── ...
+    └── _table/
+        ├── protocol.py
+        ├── _lazy.py
+        ├── _pair.py
+        └── _validation.py
+```
+
+- `__init__.py` — фасад пакета: экспорт публичных классов и ошибок.
 - `initializer.py` — абстрактный `Initializer`, публичный интерфейс модуля: общий для всех `initialize` с проверками входа и результата и абстрактный `_initialize`.
+- `exceptions.py` — `InitializationError` (наследник `Exception`) и его наследник `ComponentEstimationError`, см. «Ошибки».
 - `cluster_initializer.py` — `ClusterInitializer`: инициализация по схеме «разбиение → сопоставление → оценка».
 - `multi_start.py` — `MultiStartInitializer`, мультистарт поверх любого `Initializer`.
 - `refining.py` — `RefiningInitializer`: старт от другого инициализатора, доведённый оценщиком смеси.
-- `partitioner.py`, `partitioners/` — абстрактный `Partitioner` и реализации `KMeansPartitioner`, `SklearnPartitioner`, `QuantilePartitioner`, `RandomCentersPartitioner`, см. [«Разбиение»](partitioners/partitioners.md).
-- `component_estimator.py`, `component_estimators/` — абстрактный `ComponentEstimator`, реализации `MLEComponentEstimator`, `MomentsComponentEstimator` и составной `ComponentEstimatorChain`, см. [«Оценка параметров компоненты»](component_estimators/component_estimators.md).
-- `_dispatch.py` — свой диспетчер формул по ключу семейства, см. {ref}`«Реестр формул» <init-formula-registry>`.
-- `matcher.py`, `matchers/` — абстрактный `Matcher` с шаблонным методом `match` и реализации `HungarianMatcher`, `IdentityMatcher`, `ExhaustiveMatcher`, см. [«Сопоставление кластеров и семейств»](matchers/matchers.md).
-- `component_table.py` — протокол `ComponentTable`: всё, что сопоставитель может спросить у таблицы компонент, см. «Таблица компонент».
-- `_lazy_table.py` — `LazyComponentTable`, единственная реализация протокола: ленивый кэш оценок пар «семейство × кластер», группы одинаковых семейств, средние кластеров и сборка смеси.
-- `_pair.py` — чистая функция `evaluate_pair`: оценка одной пары и все её проверки, см. «Оценка пары».
-- `_matching.py` — чистые функции `solve_assignment(cost)` (задача о назначениях с запрещёнными парами, см. {ref}`«Критерий по парам» <init-hungarian>`) и `order_identical(assignment, groups, means)` (порядок одинаковых семейств, см. {ref}`«Порядок одинаковых семейств» <init-order-identical>`).
-- `_validation.py` — чистые функции проверок: `validate_partition(H, k)`, `validate_permutation(assignment, k)` и предикаты порогов из «Вырожденных кластеров».
-- `exceptions.py` — `InitializationError` (наследник `Exception`) и его наследник `ComponentEstimationError`, см. «Ошибки».
+- `cluster/partitioners/` — абстрактный `Partitioner` в `base.py` и реализации `KMeansPartitioner`, `SklearnPartitioner`, `QuantilePartitioner`, `RandomCentersPartitioner`, см. [«Разбиение»](partitioners/partitioners.md).
+- `cluster/component_estimators/` — абстрактный `ComponentEstimator` в `base.py`, реализации `MLEComponentEstimator`, `MomentsComponentEstimator` и составной `ComponentEstimatorChain`, см. [«Оценка параметров компоненты»](component_estimators/component_estimators.md). Там же `_dispatch.py` — свой диспетчер формул по ключу семейства, см. {ref}`«Реестр формул» <init-formula-registry>`.
+- `cluster/matchers/` — абстрактный `Matcher` с шаблонным методом `match` в `base.py` и реализации `HungarianMatcher`, `IdentityMatcher`, `ExhaustiveMatcher`, см. [«Сопоставление кластеров и семейств»](matchers/matchers.md). Там же `_matching.py` — чистые функции `solve_assignment(cost)` (задача о назначениях с запрещёнными парами, см. {ref}`«Критерий по парам» <init-hungarian>`) и `order_identical(assignment, groups, means)` (порядок одинаковых семейств, см. {ref}`«Порядок одинаковых семейств» <init-order-identical>`).
+- `cluster/_table/` — внутренняя кухня `ClusterInitializer`:
+  - `protocol.py` — протокол `ComponentTable`: всё, что сопоставитель может спросить у таблицы компонент, см. «Таблица компонент»; публично экспортируется из пакета;
+  - `_lazy.py` — `LazyComponentTable`, единственная реализация протокола: ленивый кэш оценок пар «семейство × кластер», группы одинаковых семейств, средние кластеров и сборка смеси;
+  - `_pair.py` — чистая функция `evaluate_pair`: оценка одной пары и все её проверки, см. «Оценка пары»;
+  - `_validation.py` — чистые функции проверок: `validate_partition`, `validate_permutation` и предикаты порогов из «Вырожденных кластеров».
 
 Вне модуля, в `core/_components.py`, добавляются четыре функции:
 
@@ -322,7 +350,7 @@ $$
 | Ширина компоненты больше порога | `evaluate_pair` при оценке пары | `ComponentEstimationError` |
 | У `Normal` дисперсия и у `Exponential` среднее больше `NUMERICAL_TOLERANCE` M-шага | `evaluate_pair`, временно | `ComponentEstimationError` |
 
-Все пороги — маленькие чистые предикаты в `_validation.py`, чтобы их можно было проверить тестами ровно на границе.
+Все пороги — маленькие чистые предикаты в `cluster/_table/_validation.py`, чтобы их можно было проверить тестами ровно на границе.
 
 #### Структура разбиения
 
