@@ -88,6 +88,7 @@ initializers/
 ├── refining.py
 └── cluster/
     ├── __init__.py
+    ├── table.py
     ├── partitioners/
     │   ├── base.py
     │   └── ...
@@ -100,7 +101,6 @@ initializers/
     │   ├── _matching.py
     │   └── ...
     └── _table/
-        ├── protocol.py
         ├── _lazy.py
         ├── _pair.py
         └── _validation.py
@@ -115,8 +115,8 @@ initializers/
 - `cluster/partitioners/` — абстрактный `Partitioner` в `base.py` и реализации `KMeansPartitioner`, `SklearnPartitioner`, `QuantilePartitioner`, `RandomCentersPartitioner`, см. [«Разбиение»](partitioners/partitioners.md).
 - `cluster/component_estimators/` — абстрактный `ComponentEstimator` в `base.py`, реализации `MLEComponentEstimator`, `MomentsComponentEstimator` и составной `ComponentEstimatorChain`, см. [«Оценка параметров компоненты»](component_estimators/component_estimators.md). Там же `_dispatch.py` — свой диспетчер формул по ключу семейства, см. {ref}`«Реестр формул» <init-formula-registry>`.
 - `cluster/matchers/` — абстрактный `Matcher` с шаблонным методом `match` в `base.py` и реализации `HungarianMatcher`, `IdentityMatcher`, `ExhaustiveMatcher`, см. [«Сопоставление кластеров и семейств»](matchers/matchers.md). Там же `_matching.py` — чистые функции `solve_assignment(cost)` (задача о назначениях с запрещёнными парами, см. {ref}`«Критерий по парам» <init-hungarian>`) и `order_identical(assignment, groups, means)` (порядок одинаковых семейств, см. {ref}`«Порядок одинаковых семейств» <init-order-identical>`).
+- `cluster/table.py` — протокол `ComponentTable`: всё, что сопоставитель может спросить у таблицы компонент, см. «Таблица компонент». Он публичный: на него опираются пользовательские сопоставители. Реализация протокола приватная, в `cluster/_table/`.
 - `cluster/_table/` — внутренняя кухня `ClusterInitializer`:
-  - `protocol.py` — протокол `ComponentTable`: всё, что сопоставитель может спросить у таблицы компонент, см. «Таблица компонент»; публично экспортируется из пакета;
   - `_lazy.py` — `LazyComponentTable`, единственная реализация протокола: ленивый кэш оценок пар «семейство × кластер», группы одинаковых семейств, средние кластеров и сборка смеси;
   - `_pair.py` — чистая функция `evaluate_pair`: оценка одной пары и все её проверки, см. «Оценка пары»;
   - `_validation.py` — чистые функции проверок: `validate_partition`, `validate_permutation` и предикаты порогов из «Вырожденных кластеров».
