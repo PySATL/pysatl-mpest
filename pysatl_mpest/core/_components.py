@@ -1,8 +1,9 @@
 """
-Internal helpers for working with mixture components, which are `pysatl-core` distributions.
+Internal helpers for working with mixture components, which are `pysatl-core` distributions, and
+with the `pysatl-core` parametric families those components are created from.
 
-All access to `pysatl-core` distribution internals is kept in this module so that a change of the
-`pysatl-core` API affects a single place.
+All access to `pysatl-core` distribution and family internals is kept in this module so that a change
+of the `pysatl-core` API affects a single place.
 
 A component created from ``family.view(...)`` stores only its free parameters; the fixed ones live in the
 view. `pysatl-core` has no public way to get from such a component to its view
@@ -23,6 +24,7 @@ from pysatl_core.types import CharacteristicName
 from ..typings import FloatArray
 
 type ComponentKey = tuple[str, str, tuple[tuple[str, float], ...]]
+type FamilyKey = tuple[str, str, tuple[tuple[str, float], ...]]
 
 
 def lpdf(component: ParametricFamilyDistribution, X: ArrayLike) -> np.float64 | FloatArray:
@@ -46,10 +48,7 @@ def free_parameters(component: ParametricFamilyDistribution) -> dict[str, float]
 def fixed_parameters(component: ParametricFamilyDistribution) -> dict[str, float]:
     """Parameters fixed via family view, or empty if created without a view."""
 
-    family = _family(component)
-    if isinstance(family, PartialParametricFamily):
-        return dict(family.fixed_parameters)
-    return {}
+    return family_fixed_parameters(_family(component))
 
 
 def all_parameters(component: ParametricFamilyDistribution) -> dict[str, float]:
@@ -90,6 +89,59 @@ def component_key(component: ParametricFamilyDistribution) -> ComponentKey:
         component.family_name,
         component.parametrization_name,
         tuple(sorted(all_parameters(component).items())),
+    )
+
+
+def family_fixed_parameters(family: ParametricFamily) -> dict[str, float]:
+    """Parameters fixed via ``family.view(...)``, or empty for a family that is not a view.
+
+    The values are returned as passed to ``view`` and the result is a new dictionary, so changing it
+    does not affect the family.
+    """
+
+    if isinstance(family, PartialParametricFamily):
+        return dict(family.fixed_parameters)
+    return {}
+
+
+def family_free_parameter_names(family: ParametricFamily) -> tuple[str, ...]:
+    """Names of the parameters that ``family.distribution(...)`` expects, in declaration order.
+
+    For a plain family these are all parameters of the base parametrization; for a view, the
+    unfixed parameters of its parametrization. The order is the same as in :func:`free_parameters`
+    of a component of this family.
+    """
+
+    return tuple(getattr(family.base, "__dataclass_fields__"))
+
+
+def family_key(family: ParametricFamily) -> FamilyKey:
+    """Hashable key (family name, parametrization, sorted fixed parameter pairs) distinguishing families.
+
+    The parametrization is the one ``family.distribution(...)`` uses by default: the base one for a
+    plain family, the chosen one for a view. A view without fixed parameters in the base
+    parametrization has the same key as the plain family.
+    """
+
+    return (
+        family.name,
+        family.base_parametrization_name,
+        tuple(sorted(family_fixed_parameters(family).items())),
+    )
+
+
+def component_family_key(component: ParametricFamilyDistribution) -> FamilyKey:
+    """Family key of a component, in the form of :func:`family_key`.
+
+    The parametrization is taken from the component itself, so a component of a plain family in a
+    non-base parametrization gets the key of a view in that parametrization. Unlike
+    :func:`component_key`, it does not depend on the values of the free parameters.
+    """
+
+    return (
+        component.family_name,
+        component.parametrization_name,
+        tuple(sorted(fixed_parameters(component).items())),
     )
 
 
