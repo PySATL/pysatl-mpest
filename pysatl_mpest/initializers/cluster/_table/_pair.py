@@ -178,12 +178,14 @@ def _build_component(
                 f"for parameter '{name}'; a real scalar is expected."
             )
 
-    free: dict[str, Any] = {name: float(raw[name]) for name in names}
+    free: dict[str, float] = {name: float(raw[name]) for name in names}
     if not all(np.isfinite(value) for value in free.values()):
         return f"the estimated parameters are not finite: {free}."
 
+    # `distribution` also takes optional keyword arguments of other types, so mypy accepts `**` only for `Any` values.
+    parameters: dict[str, Any] = free
     try:
-        component = family.distribution(**free)
+        component = family.distribution(**parameters)
     except ValueError as error:
         return f"the estimated parameters {free} violate the constraints of the parametrization: {error}"
 
