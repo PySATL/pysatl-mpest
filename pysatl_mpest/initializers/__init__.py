@@ -4,9 +4,10 @@ Initializers build a starting :class:`~pysatl_mpest.core.MixtureModel` from a sa
 The package is under development: it exports the base :class:`Initializer`, the role contracts :class:`Partitioner`,
 :class:`ComponentEstimator` and :class:`Matcher`, the protocol :class:`ComponentTable`, the errors, the
 partitioning methods :class:`KMeansPartitioner`, :class:`QuantilePartitioner`, :class:`RandomCentersPartitioner` and
-:class:`SklearnPartitioner`, and the component estimator :class:`MLEComponentEstimator`. :class:`SklearnPartitioner`
-needs scikit-learn, an optional dependency installed with ``pip install pysatl-mpest[sklearn]``; the rest of the
-package works without it. Ready matchers and initializers come later.
+:class:`SklearnPartitioner`, the component estimator :class:`MLEComponentEstimator`, and the matchers
+:class:`HungarianMatcher` and :class:`IdentityMatcher`. :class:`SklearnPartitioner` needs scikit-learn, an optional
+dependency installed with ``pip install pysatl-mpest[sklearn]``; the rest of the package works without it. Ready
+initializers come later.
 """
 
 __author__ = "Danil Totmyanin"
@@ -16,6 +17,8 @@ __license__ = "SPDX-License-Identifier: MIT"
 from .cluster import (
     ComponentEstimator,
     ComponentTable,
+    HungarianMatcher,
+    IdentityMatcher,
     KMeansPartitioner,
     Matcher,
     MLEComponentEstimator,
@@ -31,6 +34,8 @@ __all__ = [
     "ComponentEstimationError",
     "ComponentEstimator",
     "ComponentTable",
+    "HungarianMatcher",
+    "IdentityMatcher",
     "InitializationError",
     "Initializer",
     "KMeansPartitioner",
