@@ -18,6 +18,7 @@ from pysatl_core.types import CharacteristicName
 from pysatl_mpest.core import _components as cc
 
 from tests.helpers.math_assertions import assert_is_array_type, assert_is_scalar_type
+from tests.mocks.distributions import MockContinuousDistribution
 
 
 class RecordingComponent:
@@ -89,3 +90,22 @@ def test_returns_an_array_for_a_one_element_array(helper, name) -> None:
     component, _ = component_returning(np.array([0.5]))
 
     assert_is_array_type(helper(component, [1.0]), (1,))
+
+
+def test_ppf_asks_the_component_for_quantiles_of_an_array() -> None:
+    component = cast(ParametricFamilyDistribution, MockContinuousDistribution())
+    q = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]])
+
+    result = cc.ppf(component, q)
+
+    assert_is_array_type(result, (2, 3))
+    np.testing.assert_array_equal(result, q)
+
+
+def test_ppf_returns_a_scalar_for_a_scalar_probability() -> None:
+    component = cast(ParametricFamilyDistribution, MockContinuousDistribution())
+
+    result = cc.ppf(component, 0.25)
+
+    assert_is_scalar_type(result)
+    assert result == 0.25  # noqa: PLR2004

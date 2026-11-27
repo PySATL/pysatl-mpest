@@ -6,7 +6,7 @@ __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
-from .component_estimators import ComponentEstimator
+from .component_estimators import ComponentEstimator, MLEComponentEstimator
 from .matchers import Matcher
 from .partitioners import (
     KMeansPartitioner,
@@ -21,6 +21,7 @@ __all__ = [
     "ComponentEstimator",
     "ComponentTable",
     "KMeansPartitioner",
+    "MLEComponentEstimator",
     "Matcher",
     "Partitioner",
     "QuantilePartitioner",

@@ -63,6 +63,20 @@ class TestEvaluation:
         assert_allclose(cc.lpdf(exponential, np.array([-1.0, 0.0])), [-np.inf, np.log(1.5)])
         assert_allclose(cc.pdf(exponential, np.array([-1.0])), [0.0])
 
+    @pytest.mark.parametrize(
+        ("make_component", "expected"),
+        [
+            (lambda: family(FamilyName.NORMAL)(mu=0.0, sigma=2.0), [-1.3489795003921636, 1.3489795003921636]),
+            (lambda: family(FamilyName.EXPONENTIAL)(lambda_=0.5), [0.5753641449035618, 2.772588722239781]),
+            (lambda: family(FamilyName.CONTINUOUS_UNIFORM)(lower_bound=0.0, upper_bound=4.0), [1.0, 3.0]),
+        ],
+        ids=["normal", "exponential", "uniform"],
+    )
+    def test_ppf_gives_the_quartiles_of_a_component(
+        self, make_component: Callable[[], ParametricFamilyDistribution], expected: list[float]
+    ) -> None:
+        assert_allclose(cc.ppf(make_component(), [0.25, 0.75]), expected, rtol=1e-12)
+
 
 class TestParameters:
     def test_returns_plain_component_parameters(self, normal: ParametricFamilyDistribution) -> None:

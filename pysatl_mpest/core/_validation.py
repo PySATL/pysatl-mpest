@@ -8,7 +8,7 @@ __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
-from typing import NamedTuple
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -16,7 +16,8 @@ from ..typings import UnivariateFloatArray, UnivariateIntArray
 from .mixture import MixtureModel
 
 
-class SampleCoverage(NamedTuple):
+@dataclass(frozen=True, slots=True)
+class SampleCoverage:
     """Sample points where the log-density of the mixture is not finite.
 
     Indices are in ascending order in both arrays, and the arrays do not intersect.

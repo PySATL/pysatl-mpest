@@ -39,6 +39,12 @@ def pdf(component: ParametricFamilyDistribution, X: ArrayLike) -> np.float64 | F
     return _evaluate(component, CharacteristicName.PDF, X)
 
 
+def ppf(component: ParametricFamilyDistribution, q: ArrayLike) -> np.float64 | FloatArray:
+    """Quantile function of a component; the probabilities are not checked here."""
+
+    return _evaluate(component, CharacteristicName.PPF, q)
+
+
 def free_parameters(component: ParametricFamilyDistribution) -> dict[str, float]:
     """Free (optimizable) parameters of a component in its current parametrization."""
 

@@ -1,4 +1,4 @@
-"""Hypothesis strategy of inputs for property tests of partitioning methods."""
+"""Hypothesis strategy and a random hard partition for property tests of the initializers."""
 
 __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
@@ -6,7 +6,7 @@ __license__ = "SPDX-License-Identifier: MIT"
 
 import numpy as np
 from hypothesis import strategies as st
-from pysatl_mpest.typings import UnivariateFloatArray
+from pysatl_mpest.typings import MultivariateFloatArray, UnivariateFloatArray
 
 MAX_POINTS = 30
 MAX_CLUSTERS = 5
@@ -41,3 +41,19 @@ def partition_inputs(draw: st.DrawFn, *, distinct_values: bool = False) -> tuple
     k = draw(st.integers(1, min(MAX_CLUSTERS, available)))
     seed = draw(st.integers(0, LARGEST_SEED))
     return X, k, seed
+
+
+def random_partition(n: int, k: int, seed: int) -> MultivariateFloatArray:
+    """Make a random hard partition of ``n`` points into ``k`` clusters, none of them empty.
+
+    The result is a read-only ``float64`` matrix of shape ``(n, k)`` with a single one in each row. Every
+    cluster gets at least one point because a pair of a family and a cluster is evaluated only on a non-empty
+    cluster. The same arguments give the same partition. Requires ``n >= k >= 1``; the arguments are not
+    checked.
+    """
+
+    rng = np.random.default_rng(seed)
+    labels = rng.permutation(np.concatenate([np.arange(k), rng.integers(k, size=n - k)]))
+    H = np.eye(k)[labels]
+    H.flags.writeable = False
+    return H
