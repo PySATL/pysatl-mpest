@@ -7,7 +7,7 @@ __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
 from .component_estimators import ComponentEstimator, MLEComponentEstimator
-from .matchers import Matcher
+from .matchers import HungarianMatcher, IdentityMatcher, Matcher
 from .partitioners import (
     KMeansPartitioner,
     Partitioner,
@@ -20,6 +20,8 @@ from .table import ComponentTable
 __all__ = [
     "ComponentEstimator",
     "ComponentTable",
+    "HungarianMatcher",
+    "IdentityMatcher",
     "KMeansPartitioner",
     "MLEComponentEstimator",
     "Matcher",
