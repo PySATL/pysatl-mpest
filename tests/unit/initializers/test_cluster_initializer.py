@@ -381,6 +381,24 @@ class TestInputCheck:
 
         assert len(partitioner.calls) == 1
 
+    def test_default_threshold_is_computed_on_every_call(
+        self,
+        events: list[str],
+        install_table: Callable[..., list[Any]],
+        normal: ParametricFamily,
+        expon: ParametricFamily,
+    ) -> None:
+        initializer, partitioner, _, _ = make_initializer(events, [0, 0, 1, 1], 2, [1, 0])
+        install_table()
+        expected = "X has 4 points, fewer than the 8 needed for 2 clusters of at least 4 points."
+
+        initializer.initialize(sample(4), [expon, expon], random_state=42)
+        with pytest.raises(ValueError, match=fullmatch(expected)):
+            initializer.initialize(sample(4), [normal, expon], random_state=42)
+
+        assert len(partitioner.calls) == 1
+        assert initializer.min_cluster_size is None
+
     def test_rejects_sample_below_explicit_threshold(self, events: list[str], expon: ParametricFamily) -> None:
         families = [expon, expon]
         initializer, partitioner, _, _ = make_initializer(events, [0, 0, 1, 1, 1], 2, [1, 0], min_cluster_size=3)
@@ -558,7 +576,7 @@ class TestInputCheck:
             ),
         ],
     )
-    def test_failed_input_check_prevents_partitioning_and_table_creation(
+    def test_failure_prevents_partitioning_and_table_creation(
         self,
         events: list[str],
         install_table: Callable[..., list[Any]],
@@ -705,6 +723,15 @@ class TestPartition:
                 3,
                 "cluster 0 has 1, cluster 1 has 2",
                 id="two-small-clusters",
+            ),
+            pytest.param(
+                lambda: [family(FamilyName.EXPONENTIAL), family(FamilyName.EXPONENTIAL)],
+                [0] * 5 + [1] * 2,
+                2,
+                3,
+                3,
+                "cluster 1 has 2",
+                id="small-cluster-not-first",
             ),
             pytest.param(
                 lambda: [family(FamilyName.EXPONENTIAL), family(FamilyName.EXPONENTIAL)],
