@@ -9,7 +9,8 @@ __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
-from typing import Any, NamedTuple
+from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 from pysatl_core.families import ParametricFamily, ParametricFamilyDistribution
@@ -24,7 +25,8 @@ from . import _validation
 _QUARTILES = (0.25, 0.75)
 
 
-class PairEvaluation(NamedTuple):
+@dataclass(frozen=True, slots=True)
+class PairEvaluation:
     """Result of evaluating a pair of a family and a cluster.
 
     An estimated pair has a component, a finite log-likelihood and no reason. A pair that does not
