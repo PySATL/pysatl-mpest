@@ -14,14 +14,13 @@ from pysatl_core.families import ParametricFamily, ParametricFamilyDistribution
 from pysatl_core.types import FamilyName
 from pysatl_mpest.core import MixtureModel
 from pysatl_mpest.initializers.exceptions import InitializationError
-from pysatl_mpest.initializers.initializer import Initializer
 from pysatl_mpest.typings import UnivariateFloatArray
 
 from tests.helpers.estimator_data import exponential, normal
 from tests.helpers.families import family
 from tests.mocks.distributions import ScriptedLpdfDistribution
+from tests.mocks.initializers import ScriptedInitializer
 
-type Build = Callable[[UnivariateFloatArray, Sequence[ParametricFamily], np.random.Generator], MixtureModel]
 type Case = Callable[[], tuple[list[ParametricFamily], MixtureModel]]
 
 
@@ -41,20 +40,6 @@ def good_mixture() -> MixtureModel:
     """A valid mixture of one normal and one exponential component."""
 
     return MixtureModel([normal(0.0, 1.0), exponential(1.0)], [0.5, 0.5])
-
-
-class ScriptedInitializer(Initializer):
-    """Initializer whose result is scripted by the test."""
-
-    def __init__(self, build: Build) -> None:
-        self._build = build
-        self.calls: list[tuple[UnivariateFloatArray, Sequence[ParametricFamily], np.random.Generator]] = []
-
-    def _initialize(
-        self, X: UnivariateFloatArray, families: Sequence[ParametricFamily], rng: np.random.Generator
-    ) -> MixtureModel:
-        self.calls.append((X, families, rng))
-        return self._build(X, families, rng)
 
 
 def returning(mixture: MixtureModel) -> ScriptedInitializer:
