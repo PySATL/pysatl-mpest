@@ -261,6 +261,21 @@ class TestNotEstimated:
             "the cluster has 1 distinct values, fewer than the 2 free parameters of the family.",
         )
 
+    def test_does_not_call_estimator_for_fewer_distinct_values_than_free_parameters(
+        self, normal: ParametricFamily
+    ) -> None:
+        X = univariate([0.1] * 7 + [5.0, 6.0])
+        h = univariate([1.0] * 7 + [0.0, 0.0])
+        estimator = ScriptedEstimator(error=ZeroDivisionError("float division by zero"))
+
+        result = evaluate_pair(X, h, normal, estimator, 1.0)
+
+        assert estimator.calls == []
+        assert_not_estimated(
+            result,
+            "the cluster has 1 distinct values, fewer than the 2 free parameters of the family.",
+        )
+
     @pytest.mark.parametrize(
         ("make_family", "X_values", "h_values", "answer"),
         [

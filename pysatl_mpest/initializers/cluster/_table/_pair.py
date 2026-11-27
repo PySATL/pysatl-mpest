@@ -93,8 +93,8 @@ def evaluate_pair(
     -----
     The checks are performed in this order:
 
+    #. enough distinct values in the cluster, before the estimator is called;
     #. keys of the answer of the estimator;
-    #. enough distinct values in the cluster;
     #. real scalar type and finiteness of every value;
     #. constraints of the parametrization;
     #. interquartile width of the component relative to ``scale``;
@@ -108,34 +108,33 @@ def evaluate_pair(
     with np.errstate(all="ignore"):
         points = X[h > 0]
 
+        names = _components.family_free_parameter_names(family)
+        n_distinct = len(np.unique(points))
+        if not _validation.has_enough_distinct_values(n_distinct, len(names)):
+            return PairEvaluation(
+                None,
+                -np.inf,
+                f"the cluster has {n_distinct} distinct values, "
+                f"fewer than the {len(names)} free parameters of the family.",
+            )
+
         try:
             raw: dict[str, Any] = component_estimator.estimate(X, h, family)
         except ComponentEstimationError as error:
             return PairEvaluation(None, -np.inf, str(error))
 
-        names = _components.family_free_parameter_names(family)
         if set(raw) != set(names):
             raise TypeError(
                 f"The component estimator returned parameters {sorted(raw)}, "
                 f"but the free parameters of the family are {sorted(names)}."
             )
 
-        prepared = _build_component(points, raw, names, family)
+        prepared = _build_component(raw, names, family)
         if isinstance(prepared, str):
             return PairEvaluation(None, -np.inf, prepared)
 
         free, component = prepared
-        lower, upper = np.asarray(_components.ppf(component, _QUARTILES))
-        width = upper - lower
-        if not _validation.component_is_wide_enough(width, scale):
-            return PairEvaluation(
-                None,
-                -np.inf,
-                f"the interquartile width of the component {width} does not exceed "
-                f"{_validation.RELATIVE_WIDTH_TOLERANCE} of the sample standard deviation {scale}.",
-            )
-
-        if failure := _m_step_failure(family, free):
+        if failure := _width_failure(component, scale) or _m_step_failure(family, free):
             return PairEvaluation(None, -np.inf, failure)
 
         logdensities = _components.lpdf(component, points)
@@ -157,18 +156,11 @@ def evaluate_pair(
 
 
 def _build_component(
-    points: UnivariateFloatArray,
     raw: dict[str, Any],
     names: tuple[str, ...],
     family: ParametricFamily,
 ) -> tuple[dict[str, float], ParametricFamilyDistribution] | str:
     """Free parameters and the component built from the estimator answer, or the reason they cannot be built."""
-
-    n_distinct = len(np.unique(points))
-    if not _validation.has_enough_distinct_values(n_distinct, len(names)):
-        return (
-            f"the cluster has {n_distinct} distinct values, fewer than the {len(names)} free parameters of the family."
-        )
 
     for name in names:
         value = raw[name]
@@ -190,6 +182,20 @@ def _build_component(
         return f"the estimated parameters {free} violate the constraints of the parametrization: {error}"
 
     return free, component
+
+
+def _width_failure(component: ParametricFamilyDistribution, scale: float) -> str | None:
+    """Failure message for a component whose interquartile width is degenerate relative to ``scale``, if any."""
+
+    lower, upper = np.asarray(_components.ppf(component, _QUARTILES))
+    width = upper - lower
+    if _validation.component_is_wide_enough(width, scale):
+        return None
+
+    return (
+        f"the interquartile width of the component {width} does not exceed "
+        f"{_validation.RELATIVE_WIDTH_TOLERANCE} of the sample standard deviation {scale}."
+    )
 
 
 def _m_step_failure(family: ParametricFamily, free: dict[str, float]) -> str | None:
