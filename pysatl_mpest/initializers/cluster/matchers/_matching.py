@@ -38,9 +38,14 @@ def solve_assignment(cost: MultivariateFloatArray) -> UnivariateIntArray | None:
     Raises
     ------
     ValueError
-        If ``cost`` contains ``NaN`` or ``-inf``. These values are a bug in the calling
-        code, not a property of the data, so they are rejected before scipy sees them.
+        If ``cost`` is not a square matrix or contains ``NaN`` or ``-inf``. These are bugs
+        in the calling code, not properties of the data, so they are rejected before scipy
+        sees them. After these checks a ``ValueError`` from scipy means only that no
+        feasible assignment exists.
     """
+
+    if cost.ndim != 2 or cost.shape[0] != cost.shape[1]:  # noqa: PLR2004
+        raise ValueError(f"The cost matrix must be square, got an array of shape {cost.shape}.")
 
     if np.isnan(cost).any() or np.isneginf(cost).any():
         raise ValueError("The cost matrix must not contain NaN or -inf.")

@@ -5,6 +5,7 @@ __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
 import itertools
+import re
 
 import numpy as np
 import pytest
@@ -69,6 +70,23 @@ def test_returns_none_when_no_assignment_avoids_forbidden_pairs(cost: np.ndarray
 )
 def test_rejects_nan_and_negative_infinity(cost: np.ndarray) -> None:
     with pytest.raises(ValueError, match="^The cost matrix must not contain NaN or -inf"):
+        solve_assignment(cost)
+
+
+@pytest.mark.parametrize(
+    "cost",
+    [
+        pytest.param(np.zeros(()), id="zero-dimensional"),
+        pytest.param(np.zeros(3), id="one-dimensional"),
+        pytest.param(np.zeros((2, 2, 2)), id="three-dimensional"),
+        pytest.param(np.zeros((2, 3)), id="more-columns"),
+        pytest.param(np.zeros((3, 2)), id="more-rows"),
+    ],
+)
+def test_rejects_cost_that_is_not_a_square_matrix(cost: np.ndarray) -> None:
+    message = f"The cost matrix must be square, got an array of shape {cost.shape}."
+
+    with pytest.raises(ValueError, match=f"^{re.escape(message)}$"):
         solve_assignment(cost)
 
 
