@@ -109,6 +109,22 @@ def test_empty_cluster_is_an_unlucky_run_without_warnings() -> None:
 @pytest.mark.parametrize(
     ("X", "k"),
     [
+        pytest.param(np.array([0.0, 0.25, 4.16197014e-203], dtype=np.float64), 3, id="three-points"),
+        pytest.param(np.arange(1.0, 9.0) * 1e-170, 2, id="range-below-1e-162"),
+    ],
+)
+def test_sample_of_a_tiny_scale_is_an_unlucky_run_without_warnings(X: UnivariateFloatArray, k: int) -> None:
+    X.flags.writeable = False
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        with pytest.raises(InitializationError, match=f"^k-means left one of the {k} clusters without points"):
+            KMeansPartitioner().partition(X, k, np.random.default_rng(0))
+
+
+@pytest.mark.parametrize(
+    ("X", "k"),
+    [
         pytest.param(np.array([1e200, -1e200, 0.0, 1.0], dtype=np.float64), 2, id="squared-range"),
         pytest.param(np.array([1.7e308, -1.7e308, 0.0], dtype=np.float64), 2, id="range"),
         pytest.param(np.array([1e308, 1e308, 1e308], dtype=np.float64), 1, id="sum-of-values"),

@@ -7,7 +7,11 @@ __license__ = "SPDX-License-Identifier: MIT"
 from abc import ABC, abstractmethod
 from typing import final
 
+import numpy as np
+from numpy.typing import ArrayLike
+
 from ....typings import UnivariateIntArray
+from .._table._validation import validate_permutation
 from ..table import ComponentTable
 from ._matching import order_identical
 
@@ -34,8 +38,8 @@ class Matcher(ABC):
     def match(self, table: ComponentTable) -> UnivariateIntArray:
         """Match clusters to families and order identical families.
 
-        The template method calls ``_match`` and then the hook ``_order``. It must not be overridden; type
-        checkers flag an override.
+        The template method calls ``_match``, checks that it returned a permutation, and then calls the hook
+        ``_order`` with the result as an integer array. It must not be overridden; type checkers flag an override.
 
         Parameters
         ----------
@@ -47,9 +51,14 @@ class Matcher(ABC):
         UnivariateIntArray
             Permutation where ``assignment[j]`` is the cluster of family ``j``; identical families are
             ordered by the hook.
+
+        Raises
+        ------
+        ValueError
+            If ``_match`` did not return a permutation of ``0…k-1``; the message contains the returned value.
         """
 
-        return self._order(self._match(table), table)
+        return self._order(_checked_assignment(self._match(table), table.k), table)
 
     @abstractmethod
     def _match(self, table: ComponentTable) -> UnivariateIntArray:
@@ -90,3 +99,11 @@ class Matcher(ABC):
         """
 
         return order_identical(assignment, table.groups(), table.cluster_means())
+
+
+def _checked_assignment(assignment: ArrayLike, k: int) -> UnivariateIntArray:
+    """The result of ``_match`` as an array, checked to be a permutation before the identical families are ordered."""
+
+    received = np.asarray(assignment)
+    validate_permutation(received, k)
+    return received

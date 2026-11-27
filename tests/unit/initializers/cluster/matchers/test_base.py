@@ -4,9 +4,11 @@ __author__ = "Danil Totmyanin"
 __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
+import re
 from typing import cast
 
 import numpy as np
+import pytest
 from pysatl_mpest.initializers.cluster.matchers.base import Matcher
 from pysatl_mpest.initializers.cluster.table import ComponentTable
 from pysatl_mpest.typings import UnivariateFloatArray, UnivariateIntArray
@@ -59,6 +61,22 @@ class KeepingOrderMatcher(FixedMatcher):
         return assignment
 
 
+class RawResultMatcher(Matcher):
+    """Matcher stub whose matching step returns the given object unchanged and that records the ordering calls."""
+
+    def __init__(self, result: object) -> None:
+        self.result = result
+        self.order_calls: list[UnivariateIntArray] = []
+
+    def _match(self, table: ComponentTable) -> UnivariateIntArray:
+        return cast(UnivariateIntArray, self.result)
+
+    def _order(self, assignment: UnivariateIntArray, table: ComponentTable) -> UnivariateIntArray:
+        self.order_calls.append(assignment)
+
+        return super()._order(assignment, table)
+
+
 def test_first_identical_family_gets_cluster_with_smaller_mean() -> None:
     matcher = FixedMatcher([0, 1, 2])
     table = cast(ComponentTable, GroupedTable(((0, 2), (1,)), [7.0, 3.0, 1.0]))
@@ -90,3 +108,42 @@ def test_overridden_ordering_hook_replaces_default_order() -> None:
     ordered_assignment, ordered_table = matcher.order_calls[0]
     assert ordered_assignment is matcher.assignment
     assert ordered_table is table
+
+
+@pytest.mark.parametrize(
+    "result",
+    [
+        pytest.param([0, 5], id="index-out-of-range"),
+        pytest.param([0], id="wrong-length"),
+        pytest.param(np.array([0.0, 1.0]), id="real-values"),
+    ],
+)
+def test_rejects_result_of_matching_step_that_is_not_permutation_before_ordering(result: object) -> None:
+    matcher = RawResultMatcher(result)
+    table = cast(ComponentTable, GroupedTable(((0,), (1,)), [5.0, 1.0]))
+    received = np.asarray(result).tolist()
+
+    with pytest.raises(
+        ValueError, match=rf"^The matcher must return a permutation of length 2, got {re.escape(str(received))}"
+    ):
+        matcher.match(table)
+
+    assert matcher.order_calls == []
+
+
+def test_error_reports_value_returned_by_matching_step_for_identical_families() -> None:
+    matcher = RawResultMatcher([-1, 0])
+    table = cast(ComponentTable, GroupedTable(((0, 1),), [5.0, 1.0]))
+
+    with pytest.raises(ValueError, match=r"got \[-1, 0\]"):
+        matcher.match(table)
+
+
+def test_tuple_from_matching_step_is_ordered_as_array() -> None:
+    matcher = RawResultMatcher((1, 0))
+    table = cast(ComponentTable, GroupedTable(((0,), (1,)), [5.0, 1.0]))
+
+    result = matcher.match(table)
+
+    assert isinstance(result, np.ndarray)
+    np.testing.assert_array_equal(result, [1, 0])

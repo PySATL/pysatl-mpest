@@ -1,13 +1,14 @@
 """
 Initializers build a starting :class:`~pysatl_mpest.core.MixtureModel` from a sample and a list of component families.
 
-The package is under development: it exports the base :class:`Initializer`, the role contracts :class:`Partitioner`,
-:class:`ComponentEstimator` and :class:`Matcher`, the protocol :class:`ComponentTable`, the errors, the
-partitioning methods :class:`KMeansPartitioner`, :class:`QuantilePartitioner`, :class:`RandomCentersPartitioner` and
+The package is under development: it exports the base :class:`Initializer`, the cluster initializer
+:class:`ClusterInitializer` with its role contracts :class:`Partitioner`, :class:`ComponentEstimator` and
+:class:`Matcher` and the protocol :class:`ComponentTable`, the errors, the partitioning methods
+:class:`KMeansPartitioner`, :class:`QuantilePartitioner`, :class:`RandomCentersPartitioner` and
 :class:`SklearnPartitioner`, the component estimator :class:`MLEComponentEstimator`, and the matchers
 :class:`HungarianMatcher` and :class:`IdentityMatcher`. :class:`SklearnPartitioner` needs scikit-learn, an optional
-dependency installed with ``pip install pysatl-mpest[sklearn]``; the rest of the package works without it. Ready
-initializers come later.
+dependency installed with ``pip install pysatl-mpest[sklearn]``; the rest of the package works without it. A
+multistart and a refining initializer come later.
 """
 
 __author__ = "Danil Totmyanin"
@@ -27,10 +28,12 @@ from .cluster import (
     RandomCentersPartitioner,
     SklearnPartitioner,
 )
+from .cluster_initializer import ClusterInitializer
 from .exceptions import ComponentEstimationError, InitializationError
 from .initializer import Initializer
 
 __all__ = [
+    "ClusterInitializer",
     "ComponentEstimationError",
     "ComponentEstimator",
     "ComponentTable",
