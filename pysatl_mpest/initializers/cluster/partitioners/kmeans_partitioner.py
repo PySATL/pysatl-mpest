@@ -71,7 +71,8 @@ class KMeansPartitioner(Partitioner):
         InitializationError
             k-means left one of the clusters without points. Another run may succeed, except on a sample of a
             tiny scale: with a range below about ``1e-162`` the squared distances vanish and every run fails, so the
-            data must be rescaled.
+            data must be rescaled. NumPy warnings of ``kmeans2`` on such a sample are suppressed: the error explains
+            the failure.
         ValueError
             The values of the sample are so large that squared distances overflow ``float64``; the data
             must be rescaled.
@@ -83,7 +84,8 @@ class KMeansPartitioner(Partitioner):
             raise ValueError("The values of X are too large for k-means: squared distances overflow. Rescale the data.")
 
         try:
-            _, labels = kmeans2(X, k, iter=self.max_iter, minit="++", missing="raise", rng=rng)
+            with np.errstate(invalid="ignore"):
+                _, labels = kmeans2(X, k, iter=self.max_iter, minit="++", missing="raise", rng=rng)
         except ClusterError as error:
             raise InitializationError(f"k-means left one of the {k} clusters without points.") from error
 
