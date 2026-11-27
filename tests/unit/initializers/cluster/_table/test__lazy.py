@@ -243,7 +243,7 @@ class TestPairs:
             pytest.param("component", id="component-first"),
         ],
     )
-    def test_pair_is_evaluated_once_whichever_method_requests_it(
+    def test_is_evaluated_once_whichever_method_requests_it(
         self, monkeypatch: pytest.MonkeyPatch, normal: ParametricFamily, expon: ParametricFamily, first: str
     ) -> None:
         X, H = standard_partition()
@@ -405,7 +405,7 @@ class TestPairs:
 class TestMixture:
     """Assembly of a mixture from the cached components."""
 
-    def test_mixture_has_components_in_family_order_and_weights_in_assignment_order(
+    def test_has_components_in_family_order_and_weights_in_assignment_order(
         self, monkeypatch: pytest.MonkeyPatch, normal: ParametricFamily, expon: ParametricFamily
     ) -> None:
         X, H = standard_partition()
@@ -426,7 +426,7 @@ class TestMixture:
         assert mixture.components[2] is c
         np.testing.assert_allclose(mixture.weights, [3 / 7, 3 / 7, 1 / 7], rtol=1e-12)
 
-    def test_mixture_does_not_evaluate_pairs_that_are_already_cached(
+    def test_does_not_evaluate_pairs_that_are_already_cached(
         self, monkeypatch: pytest.MonkeyPatch, normal: ParametricFamily, expon: ParametricFamily
     ) -> None:
         X, H = standard_partition()
@@ -440,7 +440,7 @@ class TestMixture:
 
         assert len(pairs.calls) == 6  # noqa: PLR2004
 
-    def test_mixture_evaluates_only_the_missing_selected_pairs(
+    def test_evaluates_only_the_missing_selected_pairs(
         self, monkeypatch: pytest.MonkeyPatch, normal: ParametricFamily, expon: ParametricFamily
     ) -> None:
         X, H = standard_partition()

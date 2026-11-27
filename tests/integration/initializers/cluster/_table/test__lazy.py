@@ -66,6 +66,14 @@ def design_example_table(normal: ParametricFamily, expon: ParametricFamily) -> L
     return make_table([4.0, 5.0, 6.0, -1.0, 5.0], [0, 0, 0, 1, 1], [normal.view(mu=0), expon])
 
 
+def random_table(inputs: tuple[UnivariateFloatArray, int, int], names: list[FamilyName]) -> LazyComponentTable:
+    """A table over a random partition with the first ``k`` of the drawn families and the real estimator."""
+
+    X, k, seed = inputs
+    H = random_partition(len(X), k, seed)
+    return LazyComponentTable(X, H, [family(name) for name in names[:k]], MLEComponentEstimator())
+
+
 class TestPairs:
     """States of pairs evaluated by the real estimator."""
 
@@ -132,10 +140,35 @@ class TestPairs:
         assert failure.startswith("family 1 (Exponential), cluster 1: ")
 
 
+@settings(deadline=None)
+@given(
+    inputs=partition_inputs(),
+    names=st.lists(st.sampled_from(CELLS), min_size=MAX_CLUSTERS, max_size=MAX_CLUSTERS),
+)
+def test_every_pair_has_a_consistent_state_on_random_partitions(
+    inputs: tuple[UnivariateFloatArray, int, int], names: list[FamilyName]
+) -> None:
+    table = random_table(inputs, names)
+
+    for j, tested_family in enumerate(table.families):
+        for c in range(table.k):
+            value = table.loglikelihood(j, c)
+
+            assert np.isfinite(value) or value == -np.inf
+            assert (table.failure(j, c) is None) == bool(np.isfinite(value))
+
+            try:
+                component = table.component(j, c)
+            except ComponentEstimationError as error:
+                assert str(error) == table.failure(j, c)
+            else:
+                assert _components.component_family_key(component) == _components.family_key(tested_family)
+
+
 class TestIdenticalFamilies:
     """Groups and shared records of families with equal keys."""
 
-    def test_identical_families_form_one_group(self, normal: ParametricFamily, expon: ParametricFamily) -> None:
+    def test_form_one_group(self, normal: ParametricFamily, expon: ParametricFamily) -> None:
         table = make_table(
             [1.0, 2.0, 3.0, 10.0, 11.0, 12.0, 20.0, 21.0, 22.0],
             [0, 0, 0, 1, 1, 1, 2, 2, 2],
@@ -144,9 +177,7 @@ class TestIdenticalFamilies:
 
         assert table.groups() == ((0, 1), (2,))
 
-    def test_identical_families_get_the_same_component_on_every_cluster(
-        self, normal: ParametricFamily, expon: ParametricFamily
-    ) -> None:
+    def test_get_the_same_component_on_every_cluster(self, normal: ParametricFamily, expon: ParametricFamily) -> None:
         table = make_table(
             [1.0, 2.0, 3.0, 10.0, 11.0, 12.0, 20.0, 21.0, 22.0],
             [0, 0, 0, 1, 1, 1, 2, 2, 2],
@@ -170,6 +201,22 @@ class TestIdenticalFamilies:
         assert _components.component_family_key(table.component(0, 0)) == _components.family_key(families[0])
         assert table.component(0, 0) is not table.component(1, 0)
         assert _components.free_parameters(table.component(1, 0))["mu"] == pytest.approx(2.0)
+
+
+@settings(deadline=None)
+@given(
+    inputs=partition_inputs(),
+    names=st.lists(st.sampled_from(CELLS), min_size=MAX_CLUSTERS, max_size=MAX_CLUSTERS),
+)
+def test_identical_families_have_equal_loglikelihoods_on_random_partitions(
+    inputs: tuple[UnivariateFloatArray, int, int], names: list[FamilyName]
+) -> None:
+    table = random_table(inputs, names)
+
+    for group in table.groups():
+        for c in range(table.k):
+            for j in group:
+                assert table.loglikelihood(j, c) == table.loglikelihood(group[0], c)
 
 
 class TestMixture:
@@ -201,7 +248,7 @@ class TestMixture:
         for j in range(2):
             assert _components.component_family_key(mixture.components[j]) == _components.family_key(families[j])
 
-    def test_design_example_mixture_has_cluster_fractions_as_weights_in_assignment_order(
+    def test_design_example_has_cluster_fractions_as_weights_in_assignment_order(
         self, normal: ParametricFamily, expon: ParametricFamily
     ) -> None:
         X = np.asarray([4.0, 5.0, 6.0, -1.0, 5.0], dtype=np.float64)
@@ -230,36 +277,3 @@ class TestMixture:
 
         with pytest.raises(ComponentEstimationError, match=r"^family 1 \(Exponential\), cluster 0: "):
             table.mixture(np.array([1, 0]))
-
-
-@settings(deadline=None)
-@given(
-    inputs=partition_inputs(),
-    names=st.lists(st.sampled_from(CELLS), min_size=MAX_CLUSTERS, max_size=MAX_CLUSTERS),
-)
-def test_every_pair_has_a_consistent_state_on_random_partitions(
-    inputs: tuple[UnivariateFloatArray, int, int], names: list[FamilyName]
-) -> None:
-    X, k, seed = inputs
-    H = random_partition(len(X), k, seed)
-    families = [family(name) for name in names[:k]]
-    table = LazyComponentTable(X, H, families, MLEComponentEstimator())
-
-    for j, tested_family in enumerate(families):
-        for c in range(k):
-            value = table.loglikelihood(j, c)
-
-            assert np.isfinite(value) or value == -np.inf
-            assert (table.failure(j, c) is None) == bool(np.isfinite(value))
-
-            try:
-                component = table.component(j, c)
-            except ComponentEstimationError as error:
-                assert str(error) == table.failure(j, c)
-            else:
-                assert _components.component_family_key(component) == _components.family_key(tested_family)
-
-    for group in table.groups():
-        for c in range(k):
-            for j in group:
-                assert table.loglikelihood(j, c) == table.loglikelihood(group[0], c)
