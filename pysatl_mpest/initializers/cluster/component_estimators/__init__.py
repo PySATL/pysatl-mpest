@@ -7,5 +7,6 @@ __copyright__ = "Copyright (c) 2026 PySATL project"
 __license__ = "SPDX-License-Identifier: MIT"
 
 from .base import ComponentEstimator
+from .mle_component_estimator import MLEComponentEstimator
 
-__all__ = ["ComponentEstimator"]
+__all__ = ["ComponentEstimator", "MLEComponentEstimator"]
