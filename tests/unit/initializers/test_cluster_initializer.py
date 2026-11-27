@@ -167,6 +167,7 @@ def install_table(monkeypatch: pytest.MonkeyPatch, events: list[str]) -> Callabl
                 component_estimator: ComponentEstimator,
             ) -> None:
                 events.append("table")
+                self.k = len(families)
                 self.X = X
                 self.H = H
                 self.families = families

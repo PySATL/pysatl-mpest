@@ -7,6 +7,7 @@ __license__ = "SPDX-License-Identifier: MIT"
 import copy
 import re
 from collections.abc import Callable
+from typing import cast
 
 import numpy as np
 import pytest
@@ -28,7 +29,8 @@ from pysatl_mpest.initializers import (
     RandomCentersPartitioner,
     SklearnPartitioner,
 )
-from pysatl_mpest.typings import UnivariateFloatArray
+from pysatl_mpest.initializers.cluster import ComponentTable
+from pysatl_mpest.typings import UnivariateFloatArray, UnivariateIntArray
 from sklearn.cluster import AgglomerativeClustering, KMeans
 
 from tests.helpers.families import family
@@ -153,6 +155,16 @@ def normal_families(count: int) -> list[ParametricFamily]:
     """A list of ``count`` plain Normal families."""
 
     return [family(FamilyName.NORMAL) for _ in range(count)]
+
+
+class UserMatcher(Matcher):
+    """A user-written matcher that implements only the matching step and returns a fixed result."""
+
+    def __init__(self, result: object) -> None:
+        self.result = result
+
+    def _match(self, table: ComponentTable) -> UnivariateIntArray:
+        return cast(UnivariateIntArray, self.result)
 
 
 class TestKnownMixtures:
@@ -462,6 +474,25 @@ class TestErrors:
 
         with pytest.raises(NotImplementedError, match=fullmatch(expected)):
             ClusterInitializer(QuantilePartitioner()).initialize(three_modes(), families, random_state=42)
+
+    def test_user_matcher_result_that_is_not_permutation_is_value_error(self) -> None:
+        X = np.arange(1.0, 13.0)
+        families = [family(FamilyName.NORMAL), family(FamilyName.EXPONENTIAL)]
+
+        with pytest.raises(ValueError, match=r"^The matcher must return a permutation of length 2, got \[0, 5\]"):
+            ClusterInitializer(QuantilePartitioner(), matcher=UserMatcher([0, 5])).initialize(
+                X, families, random_state=42
+            )
+
+    def test_user_matcher_may_return_a_tuple(self) -> None:
+        X = np.arange(1.0, 13.0)
+        families = [family(FamilyName.NORMAL), family(FamilyName.EXPONENTIAL)]
+
+        mixture = ClusterInitializer(QuantilePartitioner(), matcher=UserMatcher((1, 0))).initialize(
+            X, families, random_state=42
+        )
+
+        assert _components.free_parameters(mixture[0])["mu"] == pytest.approx(9.5)
 
     @pytest.mark.parametrize(
         ("make_sample", "expected"),
