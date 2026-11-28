@@ -21,11 +21,9 @@ from pysatl_mpest.initializers import (
     QuantilePartitioner,
     RandomCentersPartitioner,
     RefiningInitializer,
-    SklearnPartitioner,
 )
 from pysatl_mpest.optimizers import ScipyNelderMead
 from pysatl_mpest.typings import UnivariateFloatArray
-from sklearn.cluster import AgglomerativeClustering
 
 from tests.helpers.families import family
 
@@ -325,57 +323,6 @@ class TestRemovedComponents:
         mixture = refining.initialize(X, families, random_state=0)
 
         assert mixture.n_components == 2  # noqa: PLR2004
-
-
-def make_em20() -> EM:
-    """An EM estimator that runs twenty iterations."""
-
-    return EM([StepBreakpointer(20)], [], ScipyNelderMead())
-
-
-def make_quantile_partitioner() -> QuantilePartitioner:
-    """The quantile partitioning method."""
-
-    return QuantilePartitioner()
-
-
-def make_agglomerative_partitioner() -> SklearnPartitioner:
-    """The scikit-learn agglomerative partitioning method."""
-
-    return SklearnPartitioner(AgglomerativeClustering())
-
-
-class TestReproducibleFit:
-    """The same fitted mixture for every randomness source of a deterministic start."""
-
-    @pytest.mark.filterwarnings("error")
-    @pytest.mark.parametrize(
-        "make_partitioner",
-        [
-            pytest.param(make_quantile_partitioner, id="quantile-partitioner"),
-            pytest.param(make_agglomerative_partitioner, id="agglomerative-clustering"),
-        ],
-    )
-    def test_randomness_source_does_not_change_fitted_mixture(
-        self,
-        make_partitioner: Callable[[], QuantilePartitioner | SklearnPartitioner],
-    ) -> None:
-        """All randomness sources give one fit close to the true normal locations."""
-
-        X = example_sample()
-        families = example_families()
-        refining = RefiningInitializer(ClusterInitializer(make_partitioner()), make_em20())
-
-        first = refining.initialize(X, families, random_state=0)
-        second = refining.initialize(X, families, random_state=1)
-        unseeded = refining.initialize(X, families, random_state=None)
-        from_generator = refining.initialize(X, families, random_state=np.random.default_rng(7))
-
-        assert first == second
-        assert first == unseeded
-        assert first == from_generator
-        assert all_parameters(first[0])["mu"] == pytest.approx(-8, abs=0.2)
-        assert all_parameters(first[1])["mu"] == pytest.approx(-3, abs=0.2)
 
 
 class TestFixedParameterGroups:

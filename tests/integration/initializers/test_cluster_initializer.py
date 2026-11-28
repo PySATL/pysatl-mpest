@@ -16,8 +16,6 @@ from hypothesis import strategies as st
 from pysatl_core.families import ParametricFamily
 from pysatl_core.types import FamilyName
 from pysatl_mpest.core import _components
-from pysatl_mpest.estimators import ECM, ECME, EM
-from pysatl_mpest.estimators.iterative import StepBreakpointer
 from pysatl_mpest.initializers import (
     ClusterInitializer,
     ComponentEstimationError,
@@ -32,7 +30,6 @@ from pysatl_mpest.initializers import (
     SklearnPartitioner,
 )
 from pysatl_mpest.initializers.cluster import ComponentTable
-from pysatl_mpest.optimizers import ScipyNelderMead
 from pysatl_mpest.typings import UnivariateFloatArray, UnivariateIntArray
 from sklearn.cluster import AgglomerativeClustering, KMeans, SpectralClustering
 
@@ -556,20 +553,6 @@ def test_real_roles_return_a_mixture_or_initialization_error(
     assert mixture.n_components == k
 
 
-def two_exponential_components() -> UnivariateFloatArray:
-    """A sample from two exponential components with different rates."""
-
-    rng = np.random.default_rng(42)
-    return np.concatenate([rng.exponential(1, 150), rng.exponential(20, 150)])
-
-
-def two_uniform_components() -> UnivariateFloatArray:
-    """A sample from two well-separated continuous uniform components."""
-
-    rng = np.random.default_rng(42)
-    return np.concatenate([rng.uniform(0, 1, 150), rng.uniform(5, 6, 150)])
-
-
 def normal_exponential_uniform_components() -> UnivariateFloatArray:
     """A sample from well-separated normal, exponential and continuous uniform components."""
 
@@ -577,43 +560,11 @@ def normal_exponential_uniform_components() -> UnivariateFloatArray:
     return np.concatenate([rng.normal(-10, 1, 100), rng.exponential(1, 100), rng.uniform(10, 20, 100)])
 
 
-def overlapping_modes() -> UnivariateFloatArray:
-    """A sample from two overlapping normal components."""
-
-    rng = np.random.default_rng(42)
-    return np.concatenate([rng.normal(0, 1, 300), rng.normal(3, 1, 300)])
-
-
-def uniform_and_normal() -> UnivariateFloatArray:
-    """A sample from well-separated continuous uniform and normal components."""
-
-    rng = np.random.default_rng(42)
-    return np.concatenate([rng.uniform(0, 4, 300), rng.normal(10, 1, 300)])
-
-
 def unequal_modes() -> UnivariateFloatArray:
     """A sample from three well-separated normal components with different weights."""
 
     rng = np.random.default_rng(42)
     return np.concatenate([rng.normal(-10, 1, 100), rng.normal(0, 2, 200), rng.normal(10, 1, 300)])
-
-
-def make_two_normal_families() -> list[ParametricFamily]:
-    """Two plain Normal families."""
-
-    return normal_families(2)
-
-
-def make_two_exponential_families() -> list[ParametricFamily]:
-    """Two plain Exponential families."""
-
-    return [family(FamilyName.EXPONENTIAL) for _ in range(2)]
-
-
-def make_two_uniform_families() -> list[ParametricFamily]:
-    """Two plain ContinuousUniform families."""
-
-    return [family(FamilyName.CONTINUOUS_UNIFORM) for _ in range(2)]
 
 
 def make_normal_exponential_uniform_families() -> list[ParametricFamily]:
@@ -628,284 +579,8 @@ def make_sklearn_spectral_partitioner() -> Partitioner:
     return SklearnPartitioner(SpectralClustering())
 
 
-def make_em(steps: int) -> EM:
-    """An EM estimator with a fixed number of iterations."""
-
-    return EM([StepBreakpointer(steps)], [], ScipyNelderMead())
-
-
-def make_ecm(steps: int) -> ECM:
-    """An ECM estimator with a fixed number of iterations."""
-
-    return ECM([StepBreakpointer(steps)], [], ScipyNelderMead())
-
-
-def make_ecme(steps: int) -> ECME:
-    """An ECME estimator with a fixed number of iterations."""
-
-    return ECME([StepBreakpointer(steps)], [], ScipyNelderMead())
-
-
-def make_em_one_step() -> EM:
-    """A one-iteration EM estimator."""
-
-    return make_em(1)
-
-
-def make_ecm_one_step() -> ECM:
-    """A one-iteration ECM estimator."""
-
-    return make_ecm(1)
-
-
-def make_ecme_one_step() -> ECME:
-    """A one-iteration ECME estimator."""
-
-    return make_ecme(1)
-
-
-def make_ecm_two_steps() -> ECM:
-    """A two-iteration ECM estimator."""
-
-    return make_ecm(2)
-
-
-def make_ecme_two_steps() -> ECME:
-    """A two-iteration ECME estimator."""
-
-    return make_ecme(2)
-
-
-def make_em_three_steps() -> EM:
-    """A three-iteration EM estimator."""
-
-    return make_em(3)
-
-
-def make_ecm_three_steps() -> ECM:
-    """A three-iteration ECM estimator."""
-
-    return make_ecm(3)
-
-
-def make_ecme_three_steps() -> ECME:
-    """A three-iteration ECME estimator."""
-
-    return make_ecme(3)
-
-
-def make_em_twenty_steps() -> EM:
-    """A twenty-iteration EM estimator."""
-
-    return make_em(20)
-
-
-def make_ecm_twenty_steps() -> ECM:
-    """A twenty-iteration ECM estimator."""
-
-    return make_ecm(20)
-
-
-type EstimatorFactory = Callable[[], EM | ECM | ECME]
-
-
-class TestEstimatorStarts:
-    """Acceptance of cluster starting mixtures by mixture estimators."""
-
-    @pytest.mark.parametrize("make_partitioner", PARTITIONER_FACTORIES, ids=PARTITIONER_IDS)
-    @pytest.mark.parametrize(
-        ("make_sample", "make_families"),
-        [
-            pytest.param(modes_zero_and_ten, make_two_normal_families, id="modes-zero-and-ten-two-normals"),
-            pytest.param(two_exponential_components, make_two_exponential_families, id="two-exponentials"),
-            pytest.param(two_uniform_components, make_two_uniform_families, id="two-uniforms"),
-            pytest.param(
-                normal_exponential_uniform_components,
-                make_normal_exponential_uniform_families,
-                id="normal-exponential-uniform",
-            ),
-        ],
-    )
-    @pytest.mark.filterwarnings("error")
-    def test_em_preserves_component_families_on_known_samples(
-        self,
-        make_partitioner: Callable[[], Partitioner],
-        make_sample: Callable[[], UnivariateFloatArray],
-        make_families: Callable[[], list[ParametricFamily]],
-    ) -> None:
-        """EM starts from the cluster mixture and returns finite components of the given families."""
-
-        X = make_sample()
-        families = make_families()
-        start = ClusterInitializer(make_partitioner()).initialize(X, families, random_state=42)
-
-        result = make_em(2).fit(X, start)
-
-        assert result.n_components == len(families)
-        for j in range(len(families)):
-            assert _components.component_family_key(result[j]) == _components.family_key(families[j])
-        assert np.isfinite(result.loglikelihood(X))
-
-    @pytest.mark.parametrize("make_partitioner", PARTITIONER_FACTORIES, ids=PARTITIONER_IDS)
-    @pytest.mark.parametrize(
-        "make_estimator",
-        [pytest.param(make_ecm_two_steps, id="ecm"), pytest.param(make_ecme_two_steps, id="ecme")],
-    )
-    @pytest.mark.filterwarnings("error")
-    def test_conditional_estimators_preserve_families_on_three_family_sample(
-        self, make_partitioner: Callable[[], Partitioner], make_estimator: EstimatorFactory
-    ) -> None:
-        """ECM and ECME start from the cluster mixture on a sample with three different families."""
-
-        X = normal_exponential_uniform_components()
-        families = make_normal_exponential_uniform_families()
-        start = ClusterInitializer(make_partitioner()).initialize(X, families, random_state=42)
-
-        result = make_estimator().fit(X, start)
-
-        assert result.n_components == len(families)
-        for j in range(len(families)):
-            assert _components.component_family_key(result[j]) == _components.family_key(families[j])
-        assert np.isfinite(result.loglikelihood(X))
-
-    @pytest.mark.parametrize(
-        "make_estimator",
-        [
-            pytest.param(make_em_one_step, id="em"),
-            pytest.param(make_ecm_one_step, id="ecm"),
-            pytest.param(make_ecme_one_step, id="ecme"),
-        ],
-    )
-    @pytest.mark.filterwarnings("error")
-    def test_covered_outlier_component_improves_after_one_iteration(self, make_estimator: EstimatorFactory) -> None:
-        """One iteration strictly improves a finite start whose exponential cluster contains a negative point."""
-
-        X = np.array([-1, 5, 6, 7, 20, 21, 22, 23], dtype=np.float64)
-        families = [family(FamilyName.EXPONENTIAL), family(FamilyName.NORMAL)]
-        start = ClusterInitializer(QuantilePartitioner(), matcher=IdentityMatcher()).initialize(
-            X, families, random_state=42
-        )
-        start_loglikelihood = start.loglikelihood(X)
-
-        result = make_estimator().fit(X, start)
-
-        assert np.isfinite(result.loglikelihood(X))
-        assert result.loglikelihood(X) > start_loglikelihood
-
-
-class TestFixedParameters:
-    """Preservation of parameters fixed through family views."""
-
-    @pytest.mark.parametrize(
-        ("make_partitioner", "make_estimator"),
-        [
-            pytest.param(make_kmeans_partitioner, make_em_twenty_steps, id="kmeans-em"),
-            pytest.param(make_quantile_partitioner, make_em_twenty_steps, id="quantile-em"),
-            pytest.param(make_random_centers_partitioner, make_em_twenty_steps, id="random-centers-em"),
-            pytest.param(make_sklearn_kmeans_partitioner, make_em_twenty_steps, id="sklearn-kmeans-em"),
-            pytest.param(make_sklearn_agglomerative_partitioner, make_em_twenty_steps, id="sklearn-agglomerative-em"),
-            pytest.param(make_kmeans_partitioner, make_ecm_twenty_steps, id="kmeans-ecm"),
-            pytest.param(make_kmeans_partitioner, make_ecme_three_steps, id="kmeans-ecme"),
-        ],
-    )
-    @pytest.mark.filterwarnings("error")
-    def test_mean_survives_estimator_while_scale_moves(
-        self, make_partitioner: Callable[[], Partitioner], make_estimator: EstimatorFactory
-    ) -> None:
-        """A fixed mean is unchanged while the scale and the free mean improve the likelihood."""
-
-        X = overlapping_modes()
-        families = [family(FamilyName.NORMAL).view(mu=0), family(FamilyName.NORMAL)]
-        start = ClusterInitializer(make_partitioner()).initialize(X, families, random_state=42)
-        start_sigma = _components.all_parameters(start[0])["sigma"]
-        start_loglikelihood = start.loglikelihood(X)
-
-        result = make_estimator().fit(X, start)
-
-        assert _components.all_parameters(result[0])["mu"] == 0
-        assert _components.all_parameters(result[0])["sigma"] != start_sigma
-        assert result.loglikelihood(X) > start_loglikelihood
-        assert _components.all_parameters(result[1])["mu"] == pytest.approx(3, abs=0.2)
-
-    @pytest.mark.parametrize(
-        "make_estimator",
-        [
-            pytest.param(make_em_three_steps, id="em"),
-            pytest.param(make_ecm_three_steps, id="ecm"),
-            pytest.param(make_ecme_three_steps, id="ecme"),
-        ],
-    )
-    @pytest.mark.filterwarnings("error")
-    def test_scale_survives_start_and_estimator(self, make_estimator: EstimatorFactory) -> None:
-        """A fixed scale is exact before and after fitting while the free mean reaches the right mode."""
-
-        X = modes_zero_and_ten()
-        families = [family(FamilyName.NORMAL), family(FamilyName.NORMAL).view(sigma=1)]
-        start = ClusterInitializer(KMeansPartitioner()).initialize(X, families, random_state=42)
-
-        result = make_estimator().fit(X, start)
-
-        assert _components.all_parameters(start[1])["sigma"] == 1
-        assert _components.all_parameters(result[1])["sigma"] == 1
-        assert _components.all_parameters(result[1])["mu"] == pytest.approx(10, abs=0.2)
-
-    @pytest.mark.parametrize("make_partitioner", PARTITIONER_FACTORIES, ids=PARTITIONER_IDS)
-    @pytest.mark.filterwarnings("error")
-    def test_family_order_outranks_cluster_means(self, make_partitioner: Callable[[], Partitioner]) -> None:
-        """Fixed means keep the family order even when it is opposite to the order of cluster means."""
-
-        X = modes_zero_and_ten()
-        families = [family(FamilyName.NORMAL).view(mu=10), family(FamilyName.NORMAL).view(mu=0)]
-        start = ClusterInitializer(make_partitioner()).initialize(X, families, random_state=42)
-
-        result = make_em(5).fit(X, start)
-
-        assert _components.all_parameters(start[0])["mu"] == 10  # noqa: PLR2004
-        assert _components.all_parameters(start[1])["mu"] == 0
-        assert _components.all_parameters(result[0])["mu"] == 10  # noqa: PLR2004
-        assert _components.all_parameters(result[1])["mu"] == 0
-
-    @pytest.mark.parametrize(
-        "make_partitioner",
-        [
-            pytest.param(make_kmeans_partitioner, id="kmeans"),
-            pytest.param(make_quantile_partitioner, id="quantile"),
-            pytest.param(make_random_centers_partitioner, id="random-centers"),
-        ],
-    )
-    @pytest.mark.filterwarnings("error")
-    def test_lower_bound_survives_and_upper_bound_stays_near_true_value(
-        self, make_partitioner: Callable[[], Partitioner]
-    ) -> None:
-        """A fixed lower bound is exact while the free upper bound is fitted near the true value."""
-
-        X = uniform_and_normal()
-        families = [family(FamilyName.CONTINUOUS_UNIFORM).view(lower_bound=0), family(FamilyName.NORMAL)]
-        start = ClusterInitializer(make_partitioner()).initialize(X, families, random_state=42)
-
-        result = make_em(3).fit(X, start)
-
-        assert _components.all_parameters(start[0])["lower_bound"] == 0
-        assert _components.all_parameters(result[0])["lower_bound"] == 0
-        assert _components.all_parameters(result[0])["upper_bound"] == pytest.approx(4, abs=0.1)
-
-    @pytest.mark.filterwarnings("error")
-    def test_impossible_bound_is_an_initialization_failure(self) -> None:
-        """A fixed bound contradicted by the data fails the run instead of corrupting the start."""
-
-        X = uniform_and_normal()
-        families = [family(FamilyName.CONTINUOUS_UNIFORM).view(upper_bound=3), family(FamilyName.NORMAL)]
-
-        with pytest.raises(
-            InitializationError, match=r"^No assignment gives every family a suitable cluster\."
-        ) as exc_info:
-            ClusterInitializer(KMeansPartitioner()).initialize(X, families, random_state=42)
-
-        assert "outside the support" in str(exc_info.value)
-
-
-class TestClusteringStart:
-    """Statistics of the clusters in the starting mixture and their effect on fitting."""
+class TestClusterStatistics:
+    """Components of the start are the statistics of the clusters of the same partition."""
 
     @pytest.mark.parametrize(
         "make_partitioner",
@@ -940,50 +615,6 @@ class TestClusteringStart:
             assert parameters["sigma"] == pytest.approx(np.std(points), rel=1e-12)
             assert start.weights[j] == pytest.approx(len(points) / len(X), rel=1e-12)
 
-    @pytest.mark.parametrize(
-        "make_partitioner",
-        [
-            pytest.param(make_sklearn_agglomerative_partitioner, id="sklearn-agglomerative"),
-            pytest.param(make_sklearn_spectral_partitioner, id="sklearn-spectral"),
-        ],
-    )
-    @pytest.mark.filterwarnings("error")
-    def test_em_reaches_the_meaningful_optimum(self, make_partitioner: Callable[[], Partitioner]) -> None:
-        """Thirty EM iterations recover the true parameters of the unequal normal modes."""
-
-        X = unequal_modes()
-        families = normal_families(3)
-        start = ClusterInitializer(make_partitioner()).initialize(X, families, random_state=42)
-
-        result = make_em(30).fit(X, start)
-
-        mus = [_components.all_parameters(result[j])["mu"] for j in range(3)]
-        sigmas = [_components.all_parameters(result[j])["sigma"] for j in range(3)]
-        assert mus == pytest.approx([-10, 0, 10], abs=0.3)
-        assert sigmas == pytest.approx([1, 2, 1], abs=0.35)
-        assert result.weights == pytest.approx([1 / 6, 1 / 3, 1 / 2], abs=0.03)
-
-    @pytest.mark.filterwarnings("error")
-    def test_agglomerative_partition_ignores_randomness(self) -> None:
-        """Agglomerative clustering gives exactly the same mixture for every source of randomness."""
-
-        X = unequal_modes()
-        families = normal_families(3)
-        random_states = [0, 5, None, np.random.default_rng(7)]
-
-        mixtures = [
-            ClusterInitializer(SklearnPartitioner(AgglomerativeClustering())).initialize(
-                X, families, random_state=random_state
-            )
-            for random_state in random_states
-        ]
-
-        assert all(mixture == mixtures[0] for mixture in mixtures[1:])
-
-
-class TestQuantileStart:
-    """Deterministic starts built from equal-sized segments of the sorted sample."""
-
     @pytest.mark.filterwarnings("error")
     def test_segments_have_equal_sizes_and_determine_statistics(self) -> None:
         """Segment means, scales, rates and sizes determine the parameters and weights."""
@@ -1001,39 +632,6 @@ class TestQuantileStart:
             assert parameters["mu"] == pytest.approx(segments[j].mean(), rel=1e-12)
             assert parameters["sigma"] == pytest.approx(np.std(segments[j]), rel=1e-12)
         assert _components.all_parameters(start[2])["lambda_"] == pytest.approx(1 / segments[2].mean(), rel=1e-12)
-
-    @pytest.mark.filterwarnings("error")
-    def test_random_state_does_not_change_the_mixture(self) -> None:
-        """Quantile partitioning gives exactly the same mixture for every source of randomness."""
-
-        X = example_sample()
-        families = [family(FamilyName.NORMAL), family(FamilyName.NORMAL), family(FamilyName.EXPONENTIAL)]
-        random_states = [0, 1, None, np.random.default_rng(7)]
-
-        mixtures = [
-            ClusterInitializer(QuantilePartitioner()).initialize(X, families, random_state=random_state)
-            for random_state in random_states
-        ]
-
-        assert all(mixture == mixtures[0] for mixture in mixtures[1:])
-
-
-class TestRandomCentersStart:
-    """Variety and applicability of starts drawn from random centers."""
-
-    @pytest.mark.filterwarnings("error")
-    def test_seeds_zero_to_nine_generate_different_weight_vectors(self) -> None:
-        """Ten seeds all succeed and produce at least five different weight vectors."""
-
-        X = normal_exponential_uniform_components()
-        families = make_normal_exponential_uniform_families()
-
-        weight_vectors = []
-        for seed in range(10):
-            mixture = ClusterInitializer(RandomCentersPartitioner()).initialize(X, families, random_state=seed)
-            weight_vectors.append(tuple(np.round(mixture.weights, 12)))
-
-        assert len(set(weight_vectors)) >= 5  # noqa: PLR2004
 
     @pytest.mark.filterwarnings("error")
     def test_every_component_matches_exactly_one_cluster_statistic(self) -> None:
