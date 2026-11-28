@@ -36,6 +36,9 @@ hypothesis = "^6.131.7"
 pytest-cov = "^7.0.0"
 mutmut = "^3.8.0"
 scikit-learn = ">=1.6.0,<2.0.0"
+matplotlib = "^3.9.2"
+nbmake = "^1.5.4"
+jupyterlab = "^4.2.5"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.2.3"
