@@ -36,6 +36,9 @@ hypothesis = "^6.131.7"
 pytest-cov = "^7.0.0"
 mutmut = "^3.8.0"
 scikit-learn = ">=1.6.0,<2.0.0"
+matplotlib = "^3.9.2"
+nbmake = "^1.5.4"
+jupyterlab = "^4.2.5"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8.2.3"
@@ -96,5 +99,6 @@ only_mutate = [
     "pysatl_mpest/initializers/*.py",
 ]
 # Our default pytest options measure coverage and fail below a threshold, which mutmut does itself in another way.
-pytest_add_cli_args = ["-o", "addopts=", "-p", "no:cacheprovider"]
+# End-to-end scenarios only confirm behaviour that unit and integration tests own, so mutants are killed without them.
+pytest_add_cli_args = ["-o", "addopts=", "-p", "no:cacheprovider", "--ignore=tests/e2e"]
 pytest_add_cli_args_test_selection = ["tests"]
