@@ -31,7 +31,7 @@ from pysatl_mpest.initializers import (
 )
 from pysatl_mpest.initializers.cluster import ComponentTable
 from pysatl_mpest.typings import UnivariateFloatArray, UnivariateIntArray
-from sklearn.cluster import AgglomerativeClustering, KMeans
+from sklearn.cluster import AgglomerativeClustering, KMeans, SpectralClustering
 
 from tests.helpers.families import family
 from tests.helpers.partitions import MAX_CLUSTERS, partition_inputs
@@ -551,3 +551,116 @@ def test_real_roles_return_a_mixture_or_initialization_error(
         return
 
     assert mixture.n_components == k
+
+
+def normal_exponential_uniform_components() -> UnivariateFloatArray:
+    """A sample from well-separated normal, exponential and continuous uniform components."""
+
+    rng = np.random.default_rng(42)
+    return np.concatenate([rng.normal(-10, 1, 100), rng.exponential(1, 100), rng.uniform(10, 20, 100)])
+
+
+def unequal_modes() -> UnivariateFloatArray:
+    """A sample from three well-separated normal components with different weights."""
+
+    rng = np.random.default_rng(42)
+    return np.concatenate([rng.normal(-10, 1, 100), rng.normal(0, 2, 200), rng.normal(10, 1, 300)])
+
+
+def make_normal_exponential_uniform_families() -> list[ParametricFamily]:
+    """Plain Normal, Exponential and ContinuousUniform families."""
+
+    return [family(FamilyName.NORMAL), family(FamilyName.EXPONENTIAL), family(FamilyName.CONTINUOUS_UNIFORM)]
+
+
+def make_sklearn_spectral_partitioner() -> Partitioner:
+    """The scikit-learn spectral partitioning method."""
+
+    return SklearnPartitioner(SpectralClustering())
+
+
+class TestClusterStatistics:
+    """Components of the start are the statistics of the clusters of the same partition."""
+
+    @pytest.mark.parametrize(
+        "make_partitioner",
+        [
+            pytest.param(make_kmeans_partitioner, id="kmeans"),
+            pytest.param(make_sklearn_kmeans_partitioner, id="sklearn-kmeans"),
+            pytest.param(make_sklearn_agglomerative_partitioner, id="sklearn-agglomerative"),
+            pytest.param(make_sklearn_spectral_partitioner, id="sklearn-spectral"),
+            pytest.param(make_quantile_partitioner, id="quantile"),
+            pytest.param(make_random_centers_partitioner, id="random-centers"),
+        ],
+    )
+    @pytest.mark.filterwarnings("error")
+    def test_component_statistics_match_mean_ordered_clusters(
+        self, make_partitioner: Callable[[], Partitioner]
+    ) -> None:
+        """Component means, scales and weights equal the statistics of the mean-ordered manual clusters."""
+
+        X = unequal_modes()
+        families = normal_families(3)
+        partitioner = make_partitioner()
+        H = partitioner.partition(X, 3, np.random.default_rng(42))
+        means = np.array([X[H[:, cluster] > 0].mean() for cluster in range(3)])
+        mean_ordered_clusters = np.argsort(means)
+
+        start = ClusterInitializer(make_partitioner()).initialize(X, families, random_state=42)
+
+        for j, cluster in enumerate(mean_ordered_clusters):
+            points = X[H[:, cluster] > 0]
+            parameters = _components.all_parameters(start[j])
+            assert parameters["mu"] == pytest.approx(points.mean(), rel=1e-12)
+            assert parameters["sigma"] == pytest.approx(np.std(points), rel=1e-12)
+            assert start.weights[j] == pytest.approx(len(points) / len(X), rel=1e-12)
+
+    @pytest.mark.filterwarnings("error")
+    def test_segments_have_equal_sizes_and_determine_statistics(self) -> None:
+        """Segment means, scales, rates and sizes determine the parameters and weights."""
+
+        X = example_sample()
+        families = [family(FamilyName.NORMAL), family(FamilyName.NORMAL), family(FamilyName.EXPONENTIAL)]
+        segments = np.array_split(np.sort(X), 3)
+
+        start = ClusterInitializer(QuantilePartitioner()).initialize(X, families, random_state=42)
+
+        assert [len(segment) for segment in segments] == [234, 233, 233]
+        assert start.weights == pytest.approx([234 / 700, 233 / 700, 233 / 700], rel=1e-12)
+        for j in range(2):
+            parameters = _components.all_parameters(start[j])
+            assert parameters["mu"] == pytest.approx(segments[j].mean(), rel=1e-12)
+            assert parameters["sigma"] == pytest.approx(np.std(segments[j]), rel=1e-12)
+        assert _components.all_parameters(start[2])["lambda_"] == pytest.approx(1 / segments[2].mean(), rel=1e-12)
+
+    @pytest.mark.filterwarnings("error")
+    def test_every_component_matches_exactly_one_cluster_statistic(self) -> None:
+        """Every family receives the only cluster whose closed-form statistics are its parameters."""
+
+        X = normal_exponential_uniform_components()
+        families = make_normal_exponential_uniform_families()
+        H = RandomCentersPartitioner().partition(X, 3, np.random.default_rng(1))
+
+        start = ClusterInitializer(RandomCentersPartitioner()).initialize(X, families, random_state=1)
+
+        matched_clusters = []
+        for j in range(len(families)):
+            parameters = _components.all_parameters(start[j])
+            matches = []
+            for cluster in range(3):
+                points = X[H[:, cluster] > 0]
+                if j == 0:
+                    expected = {"mu": float(points.mean()), "sigma": float(np.std(points))}
+                elif j == 1:
+                    expected = {"lambda_": float(1 / points.mean())}
+                else:
+                    expected = {"lower_bound": float(points.min()), "upper_bound": float(points.max())}
+                if all(parameters[name] == pytest.approx(value, rel=1e-12) for name, value in expected.items()):
+                    matches.append(cluster)
+
+            assert len(matches) == 1
+            cluster = matches[0]
+            matched_clusters.append(cluster)
+            assert start.weights[j] == pytest.approx(np.count_nonzero(H[:, cluster]) / len(X), rel=1e-12)
+
+        assert len(set(matched_clusters)) == len(families)

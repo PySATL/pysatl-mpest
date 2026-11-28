@@ -323,3 +323,43 @@ class TestRemovedComponents:
         mixture = refining.initialize(X, families, random_state=0)
 
         assert mixture.n_components == 2  # noqa: PLR2004
+
+
+class TestFixedParameterGroups:
+    """ECM parameter groups of a family with a fixed parameter."""
+
+    @pytest.mark.filterwarnings("error")
+    def test_matching_manual_fit_preserves_fixed_scale(self) -> None:
+        """A fit through the initializer matches a manual fit and keeps the fixed scale."""
+
+        X = modes_zero_ten_sample()
+        normal = normal_family()
+        families = [normal, normal.view(sigma=1)]
+        inner = ClusterInitializer(RandomCentersPartitioner())
+        groups = {0: [{"mu"}, {"sigma"}], 1: [{"mu"}]}
+
+        result = RefiningInitializer(inner, make_ecm3(), fit_kwargs={"parameter_groups": groups}).initialize(
+            X, families, random_state=42
+        )
+
+        start = inner.initialize(X, families, random_state=42)
+        expected = make_ecm3().fit(X, start, parameter_groups=groups)
+        assert result == expected
+        assert all_parameters(result[1])["sigma"] == 1
+
+    @pytest.mark.filterwarnings("error")
+    def test_group_with_fixed_parameter_fails_at_fit_call(self) -> None:
+        """A group naming a fixed parameter is accepted at creation and rejected by the estimator call."""
+
+        X = modes_zero_ten_sample()
+        normal = normal_family()
+        families = [normal, normal.view(sigma=1)]
+        inner = ClusterInitializer(RandomCentersPartitioner())
+        refining = RefiningInitializer(
+            inner,
+            make_ecm3(),
+            fit_kwargs={"parameter_groups": {1: [{"mu"}, {"sigma"}]}},
+        )
+
+        with pytest.raises(ValueError, match="^Invalid parameter_groups for component 1"):
+            refining.initialize(X, families, random_state=42)
