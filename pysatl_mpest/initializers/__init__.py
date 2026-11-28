@@ -8,8 +8,9 @@ The package is under development: it exports the base :class:`Initializer`, the 
 :class:`SklearnPartitioner`, the component estimator :class:`MLEComponentEstimator`, and the matchers
 :class:`HungarianMatcher` and :class:`IdentityMatcher`. :class:`SklearnPartitioner` needs scikit-learn, an optional
 dependency installed with ``pip install pysatl-mpest[sklearn]``; the rest of the package works without it. The
-wrapper :class:`MultiStartInitializer` repeats another initializer with independent generators and keeps the best
-start; a refining initializer that improves the start with a mixture estimator comes later.
+wrapper :class:`MultiStartInitializer` repeats another initializer and keeps the best start, and
+:class:`RefiningInitializer` improves a start with a mixture estimator of :mod:`pysatl_mpest.estimators`, the only
+dependency of the package on the estimators.
 """
 
 __author__ = "Danil Totmyanin"
@@ -33,6 +34,7 @@ from .cluster_initializer import ClusterInitializer
 from .exceptions import ComponentEstimationError, InitializationError
 from .initializer import Initializer
 from .multi_start import MultiStartInitializer
+from .refining import RefiningInitializer
 
 __all__ = [
     "ClusterInitializer",
@@ -50,5 +52,6 @@ __all__ = [
     "Partitioner",
     "QuantilePartitioner",
     "RandomCentersPartitioner",
+    "RefiningInitializer",
     "SklearnPartitioner",
 ]
