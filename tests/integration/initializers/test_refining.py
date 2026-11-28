@@ -21,9 +21,11 @@ from pysatl_mpest.initializers import (
     QuantilePartitioner,
     RandomCentersPartitioner,
     RefiningInitializer,
+    SklearnPartitioner,
 )
 from pysatl_mpest.optimizers import ScipyNelderMead
 from pysatl_mpest.typings import UnivariateFloatArray
+from sklearn.cluster import AgglomerativeClustering
 
 from tests.helpers.families import family
 
@@ -323,3 +325,94 @@ class TestRemovedComponents:
         mixture = refining.initialize(X, families, random_state=0)
 
         assert mixture.n_components == 2  # noqa: PLR2004
+
+
+def make_em20() -> EM:
+    """An EM estimator that runs twenty iterations."""
+
+    return EM([StepBreakpointer(20)], [], ScipyNelderMead())
+
+
+def make_quantile_partitioner() -> QuantilePartitioner:
+    """The quantile partitioning method."""
+
+    return QuantilePartitioner()
+
+
+def make_agglomerative_partitioner() -> SklearnPartitioner:
+    """The scikit-learn agglomerative partitioning method."""
+
+    return SklearnPartitioner(AgglomerativeClustering())
+
+
+class TestReproducibleFit:
+    """The same fitted mixture for every randomness source of a deterministic start."""
+
+    @pytest.mark.filterwarnings("error")
+    @pytest.mark.parametrize(
+        "make_partitioner",
+        [
+            pytest.param(make_quantile_partitioner, id="quantile-partitioner"),
+            pytest.param(make_agglomerative_partitioner, id="agglomerative-clustering"),
+        ],
+    )
+    def test_randomness_source_does_not_change_fitted_mixture(
+        self,
+        make_partitioner: Callable[[], QuantilePartitioner | SklearnPartitioner],
+    ) -> None:
+        """All randomness sources give one fit close to the true normal locations."""
+
+        X = example_sample()
+        families = example_families()
+        refining = RefiningInitializer(ClusterInitializer(make_partitioner()), make_em20())
+
+        first = refining.initialize(X, families, random_state=0)
+        second = refining.initialize(X, families, random_state=1)
+        unseeded = refining.initialize(X, families, random_state=None)
+        from_generator = refining.initialize(X, families, random_state=np.random.default_rng(7))
+
+        assert first == second
+        assert first == unseeded
+        assert first == from_generator
+        assert all_parameters(first[0])["mu"] == pytest.approx(-8, abs=0.2)
+        assert all_parameters(first[1])["mu"] == pytest.approx(-3, abs=0.2)
+
+
+class TestFixedParameterGroups:
+    """ECM parameter groups of a family with a fixed parameter."""
+
+    @pytest.mark.filterwarnings("error")
+    def test_matching_manual_fit_preserves_fixed_scale(self) -> None:
+        """A fit through the initializer matches a manual fit and keeps the fixed scale."""
+
+        X = modes_zero_ten_sample()
+        normal = normal_family()
+        families = [normal, normal.view(sigma=1)]
+        inner = ClusterInitializer(RandomCentersPartitioner())
+        groups = {0: [{"mu"}, {"sigma"}], 1: [{"mu"}]}
+
+        result = RefiningInitializer(inner, make_ecm3(), fit_kwargs={"parameter_groups": groups}).initialize(
+            X, families, random_state=42
+        )
+
+        start = inner.initialize(X, families, random_state=42)
+        expected = make_ecm3().fit(X, start, parameter_groups=groups)
+        assert result == expected
+        assert all_parameters(result[1])["sigma"] == 1
+
+    @pytest.mark.filterwarnings("error")
+    def test_group_with_fixed_parameter_fails_at_fit_call(self) -> None:
+        """A group naming a fixed parameter is accepted at creation and rejected by the estimator call."""
+
+        X = modes_zero_ten_sample()
+        normal = normal_family()
+        families = [normal, normal.view(sigma=1)]
+        inner = ClusterInitializer(RandomCentersPartitioner())
+        refining = RefiningInitializer(
+            inner,
+            make_ecm3(),
+            fit_kwargs={"parameter_groups": {1: [{"mu"}, {"sigma"}]}},
+        )
+
+        with pytest.raises(ValueError, match="^Invalid parameter_groups for component 1"):
+            refining.initialize(X, families, random_state=42)
