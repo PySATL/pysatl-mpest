@@ -15,6 +15,8 @@ from hypothesis import strategies as st
 from pysatl_core.families import ParametricFamily
 from pysatl_core.types import FamilyName
 from pysatl_mpest.core import MixtureModel, _components
+from pysatl_mpest.estimators import ECM, ECME, EM
+from pysatl_mpest.estimators.iterative import PriorThresholdPruner, StepBreakpointer
 from pysatl_mpest.initializers import (
     ClusterInitializer,
     ComponentEstimationError,
@@ -28,7 +30,9 @@ from pysatl_mpest.initializers import (
     Partitioner,
     QuantilePartitioner,
     RandomCentersPartitioner,
+    RefiningInitializer,
 )
+from pysatl_mpest.optimizers import ScipyNelderMead
 from pysatl_mpest.typings import UnivariateFloatArray
 
 from tests.helpers.families import family
@@ -397,6 +401,207 @@ def test_real_cluster_initializers_return_mixture_or_raise_initialization_error(
 
     try:
         mixture = MultiStartInitializer(inner, n_init).initialize(X, families, random_state=seed)
+    except InitializationError as error:
+        assert type(error) is InitializationError
+        assert isinstance(error.__cause__, InitializationError)
+        return
+
+    assert mixture.n_components == k
+
+
+def four_modes() -> UnivariateFloatArray:
+    """A sample from four normal components, two of them small."""
+
+    rng = np.random.default_rng(42)
+    return np.concatenate([rng.normal(-6, 1, 200), rng.normal(-2, 1, 60), rng.normal(3, 1, 200), rng.normal(7, 1, 60)])
+
+
+def distant_small_mode() -> UnivariateFloatArray:
+    """A sample with a small normal component far from the main one."""
+
+    rng = np.random.default_rng(42)
+    return np.concatenate([rng.normal(0, 1, 300), rng.normal(100, 1, 30)])
+
+
+def make_em(iterations: int) -> EM:
+    """An EM estimator with the given number of iterations."""
+
+    return EM([StepBreakpointer(iterations)], [], ScipyNelderMead())
+
+
+def make_em3() -> EM:
+    """An EM estimator with three iterations."""
+
+    return make_em(3)
+
+
+def make_ecm3() -> ECM:
+    """An ECM estimator with three iterations."""
+
+    return ECM([StepBreakpointer(3)], [], ScipyNelderMead())
+
+
+def make_ecme3() -> ECME:
+    """An ECME estimator with three iterations."""
+
+    return ECME([StepBreakpointer(3)], [], ScipyNelderMead())
+
+
+class TestRefinedRuns:
+    """Multistart over runs refined by a mixture estimator."""
+
+    @pytest.mark.filterwarnings("error")
+    def test_choice_uses_fitted_mixture_quality(self) -> None:
+        X = four_modes()
+        families = [family(FamilyName.NORMAL) for _ in range(4)]
+        refined = RefiningInitializer(ClusterInitializer(RandomCentersPartitioner()), make_em(10))
+
+        result = MultiStartInitializer(refined, 8).initialize(X, families, random_state=0)
+        expected, _ = manual_best(refined, X, families, 0, 8)
+
+        plain_best, _ = manual_best(ClusterInitializer(RandomCentersPartitioner()), X, families, 0, 8)
+        refined_plain_best = make_em(10).fit(X, plain_best)
+
+        assert result == expected
+        assert refined_plain_best.loglikelihood(X) < result.loglikelihood(X)
+
+    @pytest.mark.parametrize(
+        ("make_estimator", "fit_kwargs", "n_init"),
+        [
+            pytest.param(make_em3, {}, 4, id="em-4-runs"),
+            pytest.param(
+                make_ecm3,
+                {"parameter_groups": {0: [{"sigma"}, {"mu"}]}},
+                4,
+                id="ecm-parameter-groups-4-runs",
+            ),
+            pytest.param(make_ecme3, {}, 2, id="ecme-2-runs"),
+        ],
+    )
+    @pytest.mark.filterwarnings("error")
+    def test_matches_manual_best_with_each_estimator(
+        self,
+        make_estimator: Callable[[], EM | ECM | ECME],
+        fit_kwargs: dict[str, object],
+        n_init: int,
+    ) -> None:
+        X = example_sample()
+        families = example_families()
+        refined = RefiningInitializer(ClusterInitializer(KMeansPartitioner()), make_estimator(), fit_kwargs=fit_kwargs)
+
+        result = MultiStartInitializer(refined, n_init).initialize(X, families, random_state=42)
+        expected, _ = manual_best(refined, X, families, 42, n_init)
+
+        assert result == expected
+        assert result.n_components == len(families)
+        for j in range(len(families)):
+            assert _components.component_family_key(result[j]) == _components.family_key(families[j])
+
+    def test_run_with_pruned_component_is_skipped(self) -> None:
+        X = distant_small_mode()
+        families = [family(FamilyName.NORMAL), family(FamilyName.NORMAL)]
+        estimator = EM([StepBreakpointer(2)], [PriorThresholdPruner(0.2)], ScipyNelderMead())
+        refined = RefiningInitializer(ClusterInitializer(RandomCentersPartitioner()), estimator)
+        n_init = 10
+        expected, failed = manual_best(refined, X, families, 42, n_init)
+        assert 0 < failed < n_init
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            result = MultiStartInitializer(refined, n_init).initialize(X, families, random_state=42)
+
+        assert result == expected
+        assert len(caught) == 1
+        assert caught[0].category is RuntimeWarning
+        expected_warning = f"{failed} of 10 runs failed; the last reason: The estimator returned 1 of 2 components."
+        assert str(caught[0].message) == expected_warning
+
+    def test_pruned_component_in_every_run_raises(self) -> None:
+        X = distant_small_mode()
+        families = [family(FamilyName.NORMAL), family(FamilyName.NORMAL)]
+        estimator = EM([StepBreakpointer(2)], [PriorThresholdPruner(0.2)], ScipyNelderMead())
+        refined = RefiningInitializer(ClusterInitializer(KMeansPartitioner()), estimator)
+        message = "All 10 runs failed; the last reason: The estimator returned 1 of 2 components."
+
+        with pytest.raises(InitializationError, match=rf"^{re.escape(message)}$") as exc_info:
+            MultiStartInitializer(refined, 10).initialize(X, families, random_state=42)
+
+        error = exc_info.value
+        assert type(error) is InitializationError
+        assert str(error) == message
+        assert type(error.__cause__) is InitializationError
+
+    @pytest.mark.filterwarnings("error")
+    def test_estimator_error_interrupts_multistart(self) -> None:
+        X = example_sample()
+        families = example_families()
+        estimator = ECM([StepBreakpointer(3)], [], ScipyNelderMead())
+        refined = RefiningInitializer(
+            ClusterInitializer(KMeansPartitioner()), estimator, fit_kwargs={"parameter_groups": {0: [{"mu"}]}}
+        )
+
+        with pytest.raises(ValueError, match="^Invalid parameter_groups"):
+            MultiStartInitializer(refined, 3).initialize(X, families, random_state=42)
+
+    @pytest.mark.filterwarnings(r"ignore:\d+ of \d+ runs failed:RuntimeWarning")
+    @pytest.mark.filterwarnings("error")
+    def test_integer_seed_reproduces_composition_after_other_seeded_call(self) -> None:
+        X = example_sample()
+        families = example_families()
+        initializer = MultiStartInitializer(
+            RefiningInitializer(ClusterInitializer(RandomCentersPartitioner()), make_em(3)), 3
+        )
+
+        first = initializer.initialize(X, families, random_state=42)
+        initializer.initialize(X, families, random_state=7)
+        third = MultiStartInitializer(
+            RefiningInitializer(ClusterInitializer(RandomCentersPartitioner()), make_em(3)), 3
+        ).initialize(X, families, random_state=42)
+
+        assert first == third
+
+    @pytest.mark.filterwarnings(r"ignore:\d+ of \d+ runs failed:RuntimeWarning")
+    @pytest.mark.filterwarnings("error")
+    def test_reverse_composition_refines_only_best_start(self) -> None:
+        X = example_sample()
+        families = example_families()
+        multistart = MultiStartInitializer(ClusterInitializer(RandomCentersPartitioner()), 4)
+        estimator = make_em(3)
+
+        result = RefiningInitializer(multistart, estimator).initialize(X, families, random_state=42)
+        start = multistart.initialize(X, families, random_state=42)
+        expected = estimator.fit(X, start)
+
+        assert result == expected
+
+
+@settings(deadline=None)
+@pytest.mark.filterwarnings(r"ignore:\d+ of \d+ runs failed:RuntimeWarning")
+@pytest.mark.filterwarnings("error")
+@given(
+    inputs=partition_inputs(distinct_values=True),
+    family_indices=st.lists(st.integers(0, len(FACTORIES) - 1), min_size=MAX_CLUSTERS, max_size=MAX_CLUSTERS),
+    partitioner_index=st.integers(0, len(PARTITIONER_FACTORIES) - 1),
+    matcher_index=st.integers(0, len(MATCHER_FACTORIES) - 1),
+    n_init=st.integers(1, 3),
+)
+def test_refined_cluster_initializers_return_mixture_or_raise_initialization_error(
+    inputs: tuple[UnivariateFloatArray, int, int],
+    family_indices: list[int],
+    partitioner_index: int,
+    matcher_index: int,
+    n_init: int,
+) -> None:
+    X, k, seed = inputs
+    assume(np.std(X) > 0 or len(np.unique(X)) == 1)
+    families = [FACTORIES[index]() for index in family_indices[:k]]
+    partitioner = PARTITIONER_FACTORIES[partitioner_index]()
+    matcher = MATCHER_FACTORIES[matcher_index]()
+    inner = ClusterInitializer(partitioner, matcher=matcher, min_cluster_size=1)
+    refined = RefiningInitializer(inner, make_em(2))
+
+    try:
+        mixture = MultiStartInitializer(refined, n_init).initialize(X, families, random_state=seed)
     except InitializationError as error:
         assert type(error) is InitializationError
         assert isinstance(error.__cause__, InitializationError)
