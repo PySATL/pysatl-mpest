@@ -29,3 +29,6 @@ jobs:
 
       - name: Run tests
         run:  poetry run pytest
+
+      - name: Run notebooks
+        run: poetry run pytest -o addopts= --nbmake notebooks
